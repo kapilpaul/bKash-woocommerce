@@ -1,0 +1,13 @@
+.bkash-loader {
+    position: fixed;
+    z-index: 99;
+    width: 100%;
+    height: 100%;
+    background-color: #ffffffc2;
+    left: 0;
+    top: 0;
+    background-image: url('../images/bkash.gif');
+    background-position: center;
+    background-repeat: no-repeat;
+    display: none;
+}
