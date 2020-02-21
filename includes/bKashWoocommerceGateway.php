@@ -109,7 +109,7 @@ class bKashWoocommerceGateway extends WC_Payment_Gateway
             return;
         }
         wp_dequeue_script('wc-checkout');
-        wp_enqueue_script('bkash_sandbox', 'https://scripts.sandbox.bka.sh/versions/1.2.0-beta/checkout/bKash-checkout-sandbox.js', array(), '1.2.0', true);
+        wp_enqueue_script('bkash_sandbox', 'https://scripts.pay.bka.sh/versions/1.2.0-beta/checkout/bKash-checkout.js', array(), '1.2.0', true);
         wp_register_script('wcb-checkout', plugins_url('js/bkash.js', dirname(__FILE__)), array('jquery', 'woocommerce', 'wc-country-select', 'wc-address-i18n'), '3.9.1', true);
         wp_enqueue_script('wcb-checkout');
 
