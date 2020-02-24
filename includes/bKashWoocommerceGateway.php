@@ -42,6 +42,12 @@ class bKashWoocommerceGateway extends WC_Payment_Gateway
                 'label' => __('Enable bKash', 'bKash-wc'),
                 'default' => 'yes'
             ),
+            'test_mode' => array(
+                'title' => __('Test Mode', 'bKash-wc'),
+                'type' => 'select',
+                'options' => ["on" => "ON", "off" => "OFF"],
+                'default' => __('off', 'bKash-wc'),
+            ),
             'title' => array(
                 'title' => __('Title', 'bKash-wc'),
                 'type' => 'text',
@@ -109,7 +115,14 @@ class bKashWoocommerceGateway extends WC_Payment_Gateway
             return;
         }
         wp_dequeue_script('wc-checkout');
-        wp_enqueue_script('bkash_sandbox', 'https://scripts.pay.bka.sh/versions/1.2.0-beta/checkout/bKash-checkout.js', array(), '1.2.0', true);
+
+        if ($this->get_option('test_mode') == 'off') {
+            $script = "https://scripts.pay.bka.sh/versions/1.2.0-beta/checkout/bKash-checkout.js";
+        } else {
+            $script = "https://scripts.sandbox.bka.sh/versions/1.2.0-beta/checkout/bKash-checkout-sandbox.js";
+        }
+
+        wp_enqueue_script('bkash_checkout', $script, array(), '1.2.0', true);
         wp_register_script('wcb-checkout', plugins_url('js/bkash.js', dirname(__FILE__)), array('jquery', 'woocommerce', 'wc-country-select', 'wc-address-i18n'), '3.9.1', true);
         wp_enqueue_script('wcb-checkout');
 
@@ -131,13 +144,16 @@ class bKashWoocommerceGateway extends WC_Payment_Gateway
             'nonce' => wp_create_nonce('wc-bkash-process'),
         );
 
-        if ($token = BkashQuery::getToken()) {
+        if (($this->get_option('test_mode') == 'off') && ($token = BkashQuery::getToken())) {
             $headers = [
                 "Content-Type" => "application/json",
                 "Authorization" => "Bearer $token",
                 "X-APP-Key" => $this->get_option('app_key')
             ];
             $data['headers'] = $headers;
+        } else {
+            $data['headers'] = [];
+            $data['test_mode'] = true;
         }
 
         $params = array(
@@ -154,6 +170,6 @@ class bKashWoocommerceGateway extends WC_Payment_Gateway
         );
 
         wp_localize_script('wcb-checkout', 'wc_checkout_params', $params);
-        wp_localize_script('bkash_sandbox', 'bkash_params', $data);
+        wp_localize_script('bkash_checkout', 'bkash_params', $data);
     }
 }
