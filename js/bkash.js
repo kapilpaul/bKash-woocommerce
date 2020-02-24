@@ -787,11 +787,17 @@ jQuery(function($) {
       merchantInvoiceNumber
     ) {
       loader.style.display = "block";
-      var paymentID;
-      let createCheckoutUrl =
-        "https://checkout.sandbox.bka.sh/v1.2.0-beta/checkout/payment/create";
-      let executeCheckoutUrl =
-        "https://checkout.sandbox.bka.sh/v1.2.0-beta/checkout/payment/execute";
+      let paymentID;
+      let createCheckoutUrl;
+      let executeCheckoutUrl;
+
+      if(typeof bkash_params.test_mode !== 'undefined') {
+        createCheckoutUrl = 'https://merchantserver.sandbox.bka.sh/api/checkout/v1.2.0-beta/payment/create';
+        executeCheckoutUrl = 'https://merchantserver.sandbox.bka.sh/api/checkout/v1.2.0-beta/payment/execute';
+      } else {
+        createCheckoutUrl = "https://checkout.sandbox.bka.sh/v1.2.0-beta/checkout/payment/create";
+        executeCheckoutUrl = "https://checkout.sandbox.bka.sh/v1.2.0-beta/checkout/payment/execute";
+      }
 
       if (typeof bkash_params.headers !== "undefined") {
         bKash.init({
@@ -816,10 +822,6 @@ jQuery(function($) {
                     bKash.create().onSuccess(data);
                   } else {
                     bKash.create().onError();
-                    alert(
-                      data.errorMessage +
-                        " Tag should be 2 digit, Length should be 2 digit, Value should be number of character                      mention in Length, ex.MI041234, supported tags are MI, MW, RF "
-                    );
                   }
                 },
                 error: function(errorMessage) {
@@ -839,7 +841,6 @@ jQuery(function($) {
                   paymentID: paymentID
                 }),
                 success: async function(data) {
-                  confirm(JSON.stringify(data));
                   if (data && data.paymentID != null) {
                     let paymentData = {
                       payment_id: data.paymentID,

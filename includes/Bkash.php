@@ -49,12 +49,11 @@ class Bkash
             $transaction_status = sanitize_key($_POST['transaction_status']);
             $invoice_number = sanitize_key($_POST['invoice_number']);
             $order = wc_get_order($order_number);
+            $orderGrandTotal = (float)$order->get_total();
 
-            $paymentInfo = BkashQuery::verifyPayment($payment_id);
+            $paymentInfo = BkashQuery::verifyPayment($payment_id, $orderGrandTotal);
 
             if ($paymentInfo) {
-                $orderGrandTotal = (float)$order->get_total();
-
                 if ($paymentInfo['amount'] == $orderGrandTotal) {
                     $insertData = [
                         "order_number" => $order_number,
