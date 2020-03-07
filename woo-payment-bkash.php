@@ -40,7 +40,7 @@
 
 use Inc\Base\BkashWoocommerceActivator;
 use Inc\Base\BkashWoocommerceDeactivator;
-use Inc\bKashWoocommerceGateway;
+use Inc\WC_PGW_BKASH;
 
 if (!defined('ABSPATH')) die;
 
@@ -69,6 +69,8 @@ final class WC_WP_bKash
     /**
      * necessary activations when
      * activate plugin
+     *
+     * @return void
      */
     public function active()
     {
@@ -77,6 +79,8 @@ final class WC_WP_bKash
 
     /**
      * deactivation on plugin deactivate
+     *
+     * @return void
      */
     public function deactivate()
     {
@@ -85,6 +89,8 @@ final class WC_WP_bKash
 
     /**
      * initialize woocommerce payment gateway
+     *
+     * @return void
      */
     public function init()
     {
@@ -103,9 +109,21 @@ final class WC_WP_bKash
      */
     public function register_gateway($gateways)
     {
-        $gateways[] = new bKashWoocommerceGateway();
+        $gateways[] = new WC_PGW_BKASH();
         return $gateways;
     }
 }
 
-new WC_WP_bKash();
+
+/**
+ * initialize bkash class
+ * @return void
+ */
+function init_wc_bkash()
+{
+    new WC_WP_bKash();
+}
+
+//kick start the plugin
+init_wc_bkash();
+

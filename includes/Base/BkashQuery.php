@@ -7,9 +7,9 @@
 namespace Inc\Base;
 
 
-use Inc\bKashWoocommerceGateway;
+use Inc\WC_PGW_BKASH;
 
-class BkashQuery extends bKashWoocommerceGateway
+class BkashQuery extends WC_PGW_BKASH
 {
     private static $selfClassInstance;
 
@@ -25,6 +25,8 @@ class BkashQuery extends bKashWoocommerceGateway
     }
 
     /**
+     * Grant Token Url
+     *
      * @return string
      */
     public static function grantTokenUrl()
@@ -37,6 +39,8 @@ class BkashQuery extends bKashWoocommerceGateway
     }
 
     /**
+     * Payment Query Url
+     *
      * @return string
      */
     public static function paymentQueryUrl()
@@ -49,7 +53,9 @@ class BkashQuery extends bKashWoocommerceGateway
     }
 
     /**
-     * @return bool
+     * Get Token
+     *
+     * @return bool|mixed
      */
     public static function getToken()
     {
