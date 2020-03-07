@@ -101,6 +101,10 @@ class Bkash
         return $insert;
     }
 
+    /**
+     * @param $data
+     * @return bool
+     */
     public function validateFields($data)
     {
         foreach ($data as $key => $value) {

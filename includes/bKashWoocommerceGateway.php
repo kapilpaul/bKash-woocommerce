@@ -6,10 +6,12 @@ use Inc\Base\BkashQuery;
 use WC_AJAX;
 use WC_Payment_Gateway;
 
-class bKashWoocommerceGateway extends WC_Payment_Gateway
+class WC_PGW_BKASH extends WC_Payment_Gateway
 {
+
     /**
      * Initialize the gateway
+     * WC_PGW_BKASH constructor.
      */
     public function __construct()
     {
@@ -31,6 +33,7 @@ class bKashWoocommerceGateway extends WC_Payment_Gateway
 
     /**
      * Admin configuration parameters
+     *
      * @return void
      */
     public function init_form_fields()
@@ -103,6 +106,8 @@ class bKashWoocommerceGateway extends WC_Payment_Gateway
 
     /**
      * include payment scripts
+     *
+     * @return void
      */
     public function payment_scripts()
     {
@@ -133,6 +138,8 @@ class bKashWoocommerceGateway extends WC_Payment_Gateway
 
     /**
      * localize scripts and pass data
+     *
+     * @return void
      */
     public function localizeScripts()
     {

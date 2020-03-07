@@ -795,8 +795,8 @@ jQuery(function($) {
         createCheckoutUrl = 'https://merchantserver.sandbox.bka.sh/api/checkout/v1.2.0-beta/payment/create';
         executeCheckoutUrl = 'https://merchantserver.sandbox.bka.sh/api/checkout/v1.2.0-beta/payment/execute';
       } else {
-        createCheckoutUrl = "https://checkout.sandbox.bka.sh/v1.2.0-beta/checkout/payment/create";
-        executeCheckoutUrl = "https://checkout.sandbox.bka.sh/v1.2.0-beta/checkout/payment/execute";
+        createCheckoutUrl = "https://checkout.pay.bka.sh/v1.2.0-beta/checkout/payment/create";
+        executeCheckoutUrl = "https://checkout.pay.bka.sh/v1.2.0-beta/checkout/payment/execute";
       }
 
       if (typeof bkash_params.headers !== "undefined") {
