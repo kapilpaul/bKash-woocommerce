@@ -2,9 +2,9 @@
 
 Contributors: [kapilpaul](https://kapilpaul.me)
 
-Donate link: http://kapilpaul.me/
+Donate link: https://kapilpaul.me/
 
-Tags: bkash, bkash-payment, bkash payment, bkashPayment, bkash payment method, woocommerce bkash, bkash Bangladesh, bkash wordpress, bkash woocommerce
+Tags: bkash, mobile-banking, bkash-payment, bkash payment, bkashPayment, bkash payment method, woocommerce bkash, bkash Bangladesh, bkash wordpress, bkash woocommerce
 
 Requires at least: 4.0
 
@@ -29,13 +29,8 @@ Woocommerce payment method for bKash for easy checkout.
 
 ##### Installation Guide
 
-1. Install and active this plugin from wordpress.org
-2. Add this code to your functions.php
- ```
-wp_enqueue_script('bkash_jquery', 'https://code.jquery.com/jquery-3.3.1.min.js', array(), '3.3.1', false);
- ``` 
-3. Go to Woocommerce settings for payments. Here you can see bKash as a payment method. Enable this and open settings for this payment method.
-4. Collect your <b><i>USERNAME, PASSWORD, APP_KEY, APP_SECRET</i></b> from bKash. Place this in here and you are able to collect your payment.
+1. After activate the plugin you need to go to Woocommerce settings for payments. Here you can see bKash as a payment method. Enable this and open settings for this payment method.
+2. Collect your <b><i>USERNAME, PASSWORD, APP_KEY, APP_SECRET</i></b> from bKash. Place this in here and you are able to collect your payment.
 
 [youtube](https://www.youtube.com/watch?v=U83RE3Kfy1A)
 

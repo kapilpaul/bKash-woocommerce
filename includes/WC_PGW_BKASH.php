@@ -127,7 +127,13 @@ class WC_PGW_BKASH extends WC_Payment_Gateway
             $script = "https://scripts.sandbox.bka.sh/versions/1.2.0-beta/checkout/bKash-checkout-sandbox.js";
         }
 
-        wp_enqueue_script('bkash_checkout', $script, array(), '1.2.0', true);
+        //loading this scripts only in checkout page
+        if (is_checkout()) {
+            wp_enqueue_script('bkash_jquery', 'https://code.jquery.com/jquery-3.3.1.min.js', array(), '3.3.1', false);
+
+            wp_enqueue_script('bkash_checkout', $script, array(), '1.2.0', true);
+        }
+
         wp_register_script('wcb-checkout', plugins_url('js/bkash.js', dirname(__FILE__)), array('jquery', 'woocommerce', 'wc-country-select', 'wc-address-i18n'), '3.9.1', true);
         wp_enqueue_script('wcb-checkout');
 

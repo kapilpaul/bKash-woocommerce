@@ -1,6 +1,6 @@
 === Payment Gateway bKash for WC ===
 Contributors: kapilpaul
-Donate link: http://kapilpaul.me/
+Donate link: https://kapilpaul.me/
 Tags: bkash, bkash-payment, bkash payment, bkashPayment, bkash payment method, woocommerce bkash, bkash Bangladesh, bkash wordpress, bkash woocommerce
 Requires at least: 4.0
 Tested up to: 5.3.2
@@ -19,20 +19,18 @@ Woocommerce payment method for bKash for easy checkout.
 
 = Installation Guide =
 
-1. Install and active this plugin from wordpress.org
-2. Add this code "wp_enqueue_script('bkash_jquery', 'https://code.jquery.com/jquery-3.3.1.min.js', array(), '3.3.1', false);" to your functions.php
-3. Go to Woocommerce settings for payments. Here you can see bKash as a payment method. Enable this and open settings for this payment method.
-4. Collect your USERNAME, PASSWORD, APP_KEY, APP_SECRET from bKash. Place this in here and you are able to collect your payment.
+1. After activate the plugin you need to go to Woocommerce settings for payments. Here you can see bKash as a payment method. Enable this and open settings for this payment method.
+2. Collect your USERNAME, PASSWORD, APP_KEY, APP_SECRET from bKash. Place this in here and you are able to collect your payment.
 
 [youtube https://www.youtube.com/watch?v=U83RE3Kfy1A]
 
 
+[Github Link](https://github.com/kapilpaul/bKash-woocommerce)
+
 == Installation ==
 
-1. Install and active this plugin from wordpress.org
-2. Add this code "wp_enqueue_script('bkash_jquery', 'https://code.jquery.com/jquery-3.3.1.min.js', array(), '3.3.1', false);" to your functions.php
-3. Go to Woocommerce settings for payments. Here you can see bKash as a payment method. Enable this and open settings for this payment method.
-4. Collect your USERNAME, PASSWORD, APP_KEY, APP_SECRET from bKash. Place this in here and you are able to collect your payment.
+1. After activate the plugin you need to go to Woocommerce settings for payments. Here you can see bKash as a payment method. Enable this and open settings for this payment method.
+2. Collect your USERNAME, PASSWORD, APP_KEY, APP_SECRET from bKash. Place this in here and you are able to collect your payment.
 
 == Frequently Asked Questions ==
 
@@ -56,4 +54,3 @@ Yes. Follow the installation process and you are good to go.
 3. Order details data
 4. bKash as a payment method
 5. bkash main payment
-
