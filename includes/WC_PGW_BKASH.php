@@ -129,8 +129,8 @@ class WC_PGW_BKASH extends WC_Payment_Gateway
 
         //loading this scripts only in checkout page
         if (is_checkout()) {
+            wp_dequeue_script('jquery');
             wp_enqueue_script('bkash_jquery', 'https://code.jquery.com/jquery-3.3.1.min.js', array(), '3.3.1', false);
-
             wp_enqueue_script('bkash_checkout', $script, array(), '1.2.0', true);
         }
 
