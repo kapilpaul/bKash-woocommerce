@@ -42,28 +42,29 @@ use Inc\Base\BkashWoocommerceActivator;
 use Inc\Base\BkashWoocommerceDeactivator;
 use Inc\WC_PGW_BKASH;
 
-if (!defined('ABSPATH')) die;
+if ( ! defined( 'ABSPATH' ) ) die;
 
-defined('ABSPATH') || exit;
+defined( 'ABSPATH' ) || exit;
 
-if (file_exists(dirname(__FILE__) . '/vendor/autoload.php')) {
-    require_once dirname(__FILE__) . '/vendor/autoload.php';
+if ( file_exists( dirname( __FILE__ ) . '/vendor/autoload.php' ) ) {
+    require_once dirname( __FILE__ ) . '/vendor/autoload.php';
 }
 
-if (!in_array('woocommerce/woocommerce.php', apply_filters('active_plugins', get_option('active_plugins')))) return;
+if ( ! in_array( 'woocommerce/woocommerce.php', apply_filters( 'active_plugins', get_option( 'active_plugins' ) ) ) ) return;
 
-final class WC_WP_bKash
-{
+/**
+ * Class WC_WP_bKash
+ */
+final class WC_WP_bKash {
     /**
      * WC_WP_bKash constructor.
      */
-    public function __construct()
-    {
-        register_activation_hook(__FILE__, array($this, 'active'));
-        register_deactivation_hook(__FILE__, array($this, 'deactivate'));
+    public function __construct() {
+        register_activation_hook( __FILE__, array( $this, 'active' ) );
+        register_deactivation_hook( __FILE__, array( $this, 'deactivate' ) );
 
-        add_action('plugins_loaded', array($this, 'init'));
-        add_filter('woocommerce_payment_gateways', array($this, 'register_gateway'));
+        add_action( 'plugins_loaded', array( $this, 'init' ) );
+        add_filter( 'woocommerce_payment_gateways', array( $this, 'register_gateway' ) );
     }
 
     /**
@@ -72,8 +73,7 @@ final class WC_WP_bKash
      *
      * @return void
      */
-    public function active()
-    {
+    public function active() {
         BkashWoocommerceActivator::do_install();
     }
 
@@ -82,8 +82,7 @@ final class WC_WP_bKash
      *
      * @return void
      */
-    public function deactivate()
-    {
+    public function deactivate() {
         BkashWoocommerceDeactivator::deactivate();
     }
 
@@ -92,9 +91,8 @@ final class WC_WP_bKash
      *
      * @return void
      */
-    public function init()
-    {
-        if (!class_exists('WC_Payment_Gateway')) {
+    public function init() {
+        if ( ! class_exists( 'WC_Payment_Gateway' ) ) {
             return;
         }
 
@@ -104,11 +102,12 @@ final class WC_WP_bKash
 
     /**
      * Register WooCommerce Payment Gateway
+     *
      * @param array $gateways
+     *
      * @return array
      */
-    public function register_gateway($gateways)
-    {
+    public function register_gateway( $gateways ) {
         $gateways[] = new WC_PGW_BKASH();
         return $gateways;
     }
@@ -119,8 +118,7 @@ final class WC_WP_bKash
  * initialize bkash class
  * @return void
  */
-function init_wc_bkash()
-{
+function init_wc_bkash() {
     new WC_WP_bKash();
 }
 

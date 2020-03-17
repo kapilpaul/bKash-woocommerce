@@ -23,8 +23,7 @@
 
 namespace Inc\Base;
 
-class BkashWoocommerceActivator
-{
+class BkashWoocommerceActivator {
 
     /**
      * Short Description. (use period)
@@ -33,9 +32,8 @@ class BkashWoocommerceActivator
      *
      * @since    1.0.0
      */
-    public static function do_install()
-    {
-        if (!self::has_woocommerce()) {
+    public static function do_install() {
+        if ( ! self::has_woocommerce() ) {
             return;
         }
 
@@ -45,16 +43,14 @@ class BkashWoocommerceActivator
     /**
      * @return bool
      */
-    public static function has_woocommerce()
-    {
-        return class_exists('WooCommerce');
+    public static function has_woocommerce() {
+        return class_exists( 'WooCommerce' );
     }
 
     /**
      * Install table for bkash
      */
-    public static function install()
-    {
+    public static function install() {
         global $wpdb;
         $table_name = $wpdb->prefix . 'bkash_transactions';
 
