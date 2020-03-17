@@ -23,8 +23,7 @@
 
 namespace Inc\Base;
 
-class BkashWoocommerceDeactivator
-{
+class BkashWoocommerceDeactivator {
 
     /**
      * Short Description. (use period)
@@ -33,8 +32,7 @@ class BkashWoocommerceDeactivator
      *
      * @since    1.0.0
      */
-    public static function deactivate()
-    {
+    public static function deactivate() {
         flush_rewrite_rules();
     }
 
