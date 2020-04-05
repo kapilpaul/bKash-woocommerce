@@ -61,9 +61,18 @@ if ( ! in_array( 'woocommerce/woocommerce.php', apply_filters( 'active_plugins',
  */
 final class WC_WP_bKash {
 	/**
+	 * Plugin version
+	 *
+	 * @var string
+	 */
+	const version = '1.0.0';
+
+	/**
 	 * WC_WP_bKash constructor.
 	 */
 	public function __construct() {
+		$this->define_constants();
+
 		register_activation_hook( __FILE__, array( $this, 'active' ) );
 		register_deactivation_hook( __FILE__, array( $this, 'deactivate' ) );
 
@@ -103,6 +112,18 @@ final class WC_WP_bKash {
 		new \Inc\Bkash();
 	}
 
+	/**
+	 * Define the constants
+	 *
+	 * @return void
+	 */
+	public function define_constants() {
+		define( 'WC_WP_BKASH_VERSION', self::version );
+		define( 'WC_WP_BKASH_FILE', __FILE__ );
+		define( 'WC_WP_BKASH_PATH', dirname( WC_WP_BKASH_FILE ) );
+		define( 'WC_WP_BKASH_INCLUDES', WC_WP_BKASH_PATH . '/includes' );
+		define( 'WC_WP_BKASH_URL', plugins_url( '', WC_WP_BKASH_FILE ) );
+	}
 
 	/**
 	 * Register WooCommerce Payment Gateway
