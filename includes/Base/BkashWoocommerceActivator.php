@@ -37,6 +37,7 @@ class BkashWoocommerceActivator {
 			return;
 		}
 
+		self::add_version();
 		self::install();
 	}
 
@@ -45,6 +46,19 @@ class BkashWoocommerceActivator {
 	 */
 	public static function has_woocommerce() {
 		return class_exists( 'WooCommerce' );
+	}
+
+	/**
+	 * Add time and version on DB
+	 */
+	public static function add_version() {
+		$installed = get_option( 'wcwpbkash_installed' );
+
+		if ( ! $installed ) {
+			update_option( 'wcwpbkash_installed', time() );
+		}
+
+		update_option( 'wcwpbkash_version', WC_WP_BKASH_VERSION );
 	}
 
 	/**
