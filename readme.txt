@@ -3,7 +3,7 @@ Contributors: kapilpaul
 Donate link: https://kapilpaul.me/
 Tags: bkash, bkash-payment, bkash payment, bkashPayment, bkash payment method, woocommerce bkash, bkash Bangladesh, bkash wordpress, bkash woocommerce
 Requires at least: 4.0
-Tested up to: 5.3.2
+Tested up to: 5.4
 Stable tag: trunk
 Requires PHP: 5.6
 License: GPLv2 or later
@@ -58,3 +58,23 @@ Yes. Follow the installation process and you are good to go.
 3. Order details data
 4. bKash as a payment method
 5. bkash main payment
+6. bkash Payment List
+
+== Changelog ==
+
+= v1.1.0 (April 13, 2020) =
+
+ - Added payments list view
+ - Search option in view
+ - Added some constants
+
+= v1.0.0 (Feburuary 21, 2020) =
+
+- bkash payment method for woocommerce
+- Testing environment
+- Payment for orders
+
+== Upgrade Notice ==
+
+= 1.1.0 =
+**Important Update** This update changes code structures for improving performance. Make sure to take backup and read the changlogs first before upgrade process.
