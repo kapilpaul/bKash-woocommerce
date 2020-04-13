@@ -9,6 +9,9 @@ namespace Inc;
 use Inc\Base\BkashQuery;
 
 class Bkash {
+	/**
+	 * @var string
+	 */
 	private $table = 'bkash_transactions';
 
 	/**

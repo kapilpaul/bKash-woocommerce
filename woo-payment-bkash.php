@@ -3,10 +3,10 @@
  * Plugin Name: Payment Gateway bKash for WC
  * Plugin URI: https://kapilpaul.me/
  * Description: An eCommerce payment method that helps you sell anything. Beautifully.
- * Version: 1.0.0
+ * Version: 1.1.0
  * Author: Kapil Paul
  * Author URI: https://kapilpaul.me
- * Text Domain: bKash-wc
+ * Text Domain: bkash-wc
  * License: GPLv2 or later
  *
  * @package bKash-woocommerce
@@ -107,6 +107,19 @@ final class WC_WP_bKash {
 	public function init() {
 		if ( ! class_exists( 'WC_Payment_Gateway' ) ) {
 			return;
+		}
+
+		$this->includes();
+	}
+
+	/**
+	 * Include the required files
+	 *
+	 * @return void
+	 */
+	public function includes() {
+		if ( is_admin() ) {
+			new \Inc\Admin();
 		}
 
 		new \Inc\Bkash();
