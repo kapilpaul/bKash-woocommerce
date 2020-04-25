@@ -824,7 +824,7 @@ jQuery(function($) {
               bKash.create().onError();
               bKashCheckout.paymentError(redirectSuccessUrl);
             }
-            });
+          });
         },
         executeRequestOnAuthorization: function() {
           let execute_payment_data = {
@@ -865,6 +865,7 @@ jQuery(function($) {
         },
         onClose: function() {
           bKash.execute().onError();
+          bKashCheckout.paymentError(redirectSuccessUrl);
         }
       });
       $("#bKash_button").removeAttr("disabled");

@@ -186,7 +186,7 @@ class BkashQuery extends WC_PGW_BKASH {
 	 * @return bool|mixed|string
 	 */
 	public static function createPayment( $amount, $invoice ) {
-		if ( ! self::checkTestMode() && self::getToken() ) {
+		if ( ! self::checkTestMode() && ! self::getToken() ) {
 			return false;
 		}
 
@@ -212,9 +212,10 @@ class BkashQuery extends WC_PGW_BKASH {
 	 * @return bool|mixed|string
 	 */
 	public static function executePayment( $payment_id ) {
-		if ( ! self::checkTestMode() && self::getToken() ) {
+		if ( ! self::checkTestMode() && ! self::getToken() ) {
 			return false;
 		}
+
 		$data = [];
 
 		if ( self::checkTestMode() ) {
@@ -223,10 +224,9 @@ class BkashQuery extends WC_PGW_BKASH {
 
 		$response = self::makeRequest( self::paymentExecuteUrl( $payment_id ), $data, self::getAuthorizationHeader() );
 
-//		if ( isset( $response['paymentID'] ) && $response['paymentID'] ) {
-		return $response;
-
-//		}
+		if ( isset( $response['paymentID'] ) && $response['paymentID'] ) {
+			return $response;
+		}
 
 		return false;
 	}
@@ -243,6 +243,7 @@ class BkashQuery extends WC_PGW_BKASH {
 			$headers = [
 				"Authorization" => "Bearer {$token}",
 				"X-App-Key"     => $selfClass->get_option( 'app_key' ),
+				"Content-Type"  => 'application/json',
 			];
 
 			$args = [ 'headers' => $headers ];
@@ -259,12 +260,16 @@ class BkashQuery extends WC_PGW_BKASH {
 	 * @return bool
 	 */
 	public static function checkTestMode() {
-		$selfClass = self::getSelfClass();
+		try {
+			$selfClass = self::getSelfClass();
 
-		if ( $selfClass->get_option( 'test_mode' ) == 'on' ) {
-			return true;
+			if ( $selfClass->get_option( 'test_mode' ) == 'on' ) {
+				return true;
+			}
+
+			return false;
+		} catch ( \Exception $e ) {
+			return $e->getMessage();
 		}
-
-		return false;
 	}
 }

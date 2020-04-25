@@ -62,6 +62,11 @@ Yes. Follow the installation process and you are good to go.
 
 == Changelog ==
 
+= v1.1.1 (April 25, 2020) =
+
+ - Added create payment through plugin
+ - Added execute payment through plugin
+
 = v1.1.0 (April 13, 2020) =
 
  - Added payments list view
