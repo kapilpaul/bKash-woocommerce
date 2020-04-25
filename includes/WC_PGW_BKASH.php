@@ -16,10 +16,10 @@ class WC_PGW_BKASH extends WC_Payment_Gateway {
 		$this->id                 = 'bkash';
 		$this->icon               = false;
 		$this->has_fields         = true;
-		$this->method_title       = __( 'bKash', 'bKash-wc' );
-		$this->method_description = __( 'Pay via bKash payment', 'bKash-wc' );
+		$this->method_title       = __( 'bKash', 'bkash-wc' );
+		$this->method_description = __( 'Pay via bKash payment', 'bkash-wc' );
 		$title                    = $this->get_option( 'title' );
-		$this->title              = empty( $title ) ? __( 'bKash', 'bKash-wc' ) : $title;
+		$this->title              = empty( $title ) ? __( 'bKash', 'bkash-wc' ) : $title;
 		$this->description        = $this->get_option( 'description' );
 
 		$this->init_form_fields();
@@ -40,43 +40,43 @@ class WC_PGW_BKASH extends WC_Payment_Gateway {
 	public function init_form_fields() {
 		$this->form_fields = array(
 			'enabled'     => array(
-				'title'   => __( 'Enable/Disable', 'bKash-wc' ),
+				'title'   => __( 'Enable/Disable', 'bkash-wc' ),
 				'type'    => 'checkbox',
-				'label'   => __( 'Enable bKash', 'bKash-wc' ),
+				'label'   => __( 'Enable bKash', 'bkash-wc' ),
 				'default' => 'yes',
 			),
 			'test_mode'   => array(
-				'title'   => __( 'Test Mode', 'bKash-wc' ),
+				'title'   => __( 'Test Mode', 'bkash-wc' ),
 				'type'    => 'select',
 				'options' => [ "on" => "ON", "off" => "OFF" ],
-				'default' => __( 'off', 'bKash-wc' ),
+				'default' => __( 'off', 'bkash-wc' ),
 			),
 			'title'       => array(
-				'title'   => __( 'Title', 'bKash-wc' ),
+				'title'   => __( 'Title', 'bkash-wc' ),
 				'type'    => 'text',
-				'default' => __( 'bKash Payment', 'bKash-wc' ),
+				'default' => __( 'bKash Payment', 'bkash-wc' ),
 			),
 			'username'    => array(
-				'title' => __( 'User Name', 'bKash-wc' ),
+				'title' => __( 'User Name', 'bkash-wc' ),
 				'type'  => 'text',
 			),
 			'password'    => array(
-				'title' => __( 'Password', 'bKash-wc' ),
+				'title' => __( 'Password', 'bkash-wc' ),
 				'type'  => 'password',
 			),
 			'app_key'     => array(
-				'title' => __( 'App Key', 'bKash-wc' ),
+				'title' => __( 'App Key', 'bkash-wc' ),
 				'type'  => 'text',
 			),
 			'app_secret'  => array(
-				'title' => __( 'App Secret', 'bKash-wc' ),
+				'title' => __( 'App Secret', 'bkash-wc' ),
 				'type'  => 'text',
 			),
 			'description' => array(
-				'title'       => __( 'Description', 'bKash-wc' ),
+				'title'       => __( 'Description', 'bkash-wc' ),
 				'type'        => 'textarea',
-				'description' => __( 'Payment method description that the customer will see on your checkout.', 'bKash-wc' ),
-				'default'     => __( 'Pay via bKash', 'bKash-wc' ),
+				'description' => __( 'Payment method description that the customer will see on your checkout.', 'bkash-wc' ),
+				'default'     => __( 'Pay via bKash', 'bkash-wc' ),
 				'desc_tip'    => true,
 			),
 		);
@@ -156,20 +156,8 @@ class WC_PGW_BKASH extends WC_Payment_Gateway {
 
 		$data = array(
 			'amount' => $woocommerce->cart->cart_contents_total,
-			'nonce'  => wp_create_nonce( 'wc-bkash-process' ),
+			'nonce'  => wp_create_nonce( 'wc-bkash-nonce' ),
 		);
-
-		if ( ( $this->get_option( 'test_mode' ) == 'off' ) && ( $token = BkashQuery::getToken() ) ) {
-			$headers         = [
-				"Content-Type"  => "application/json",
-				"Authorization" => "Bearer $token",
-				"X-APP-Key"     => $this->get_option( 'app_key' ),
-			];
-			$data['headers'] = $headers;
-		} else {
-			$data['headers']   = [];
-			$data['test_mode'] = true;
-		}
 
 		$params = array(
 			'ajax_url'                  => WC()->ajax_url(),

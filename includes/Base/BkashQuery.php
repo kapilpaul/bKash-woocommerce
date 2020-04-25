@@ -14,6 +14,9 @@ use Inc\WC_PGW_BKASH;
  * @package Inc\Base
  */
 class BkashQuery extends WC_PGW_BKASH {
+	/**
+	 * class instance
+	 */
 	private static $selfClassInstance;
 
 	/**
@@ -33,12 +36,9 @@ class BkashQuery extends WC_PGW_BKASH {
 	 * @return string
 	 */
 	public static function grantTokenUrl() {
-		$selfClass = self::getSelfClass();
-		if ( $selfClass->get_option( 'test_mode' ) == 'on' ) {
-			return 'https://checkout.sandbox.bka.sh/v1.2.0-beta/checkout/token/grant';
-		}
+		$env = self::checkTestMode() ? 'sandbox' : 'pay';
 
-		return 'https://checkout.pay.bka.sh/v1.2.0-beta/checkout/token/grant';
+		return "https://checkout.$env.bka.sh/v1.2.0-beta/checkout/token/grant";
 	}
 
 	/**
@@ -47,12 +47,45 @@ class BkashQuery extends WC_PGW_BKASH {
 	 * @return string
 	 */
 	public static function paymentQueryUrl() {
-		$selfClass = self::getSelfClass();
-		if ( $selfClass->get_option( 'test_mode' ) == 'on' ) {
-			return 'https://checkout.sandbox.bka.sh/v1.2.0-beta/checkout/payment/query/';
+		$env = self::checkTestMode() ? 'sandbox' : 'pay';
+
+		return "https://checkout.$env.bka.sh/v1.2.0-beta/checkout/payment/query/";
+	}
+
+	/**
+	 * Payment Create Url
+	 *
+	 * @return string
+	 */
+	public static function paymentCreateUrl() {
+		return self::getPaymentUrl( 'create' );
+	}
+
+	/**
+	 * Payment execute Url
+	 *
+	 * @param $payment_id
+	 *
+	 * @return string
+	 */
+	public static function paymentExecuteUrl( $payment_id = '' ) {
+		$url = self::getPaymentUrl( 'execute' );
+		$url = self::checkTestMode() ? $url : $url . "/$payment_id";
+
+		return $url;
+	}
+
+	/**
+	 * @param $type
+	 *
+	 * @return string
+	 */
+	public static function getPaymentUrl( $type ) {
+		if ( self::checkTestMode() ) {
+			return "https://merchantserver.sandbox.bka.sh/api/checkout/v1.2.0-beta/payment/$type";
 		}
 
-		return 'https://checkout.pay.bka.sh/v1.2.0-beta/checkout/payment/query/';
+		return "https://checkout.pay.bka.sh/v1.2.0-beta/checkout/payment/$type";
 	}
 
 	/**
@@ -102,17 +135,21 @@ class BkashQuery extends WC_PGW_BKASH {
 	 * @return mixed|string
 	 */
 	public static function makeRequest( $url, $data, $headers = [] ) {
+		if ( isset( $headers['headers'] ) ) {
+			$headers = $headers['headers'];
+		}
+
 		$args = array(
 			'body'        => json_encode( $data ),
-			'timeout'     => '15',
-			'redirection' => '15',
+			'timeout'     => '30',
+			'redirection' => '30',
 			'httpversion' => '1.0',
 			'blocking'    => true,
 			'headers'     => $headers,
 			'cookies'     => [],
 		);
 
-		$response = wp_remote_retrieve_body( wp_remote_post( $url, $args ) );
+		$response = wp_remote_retrieve_body( wp_remote_post( esc_url_raw( $url ), $args ) );
 
 		return json_decode( $response, true );
 	}
@@ -126,10 +163,81 @@ class BkashQuery extends WC_PGW_BKASH {
 	 * @return bool|mixed|string
 	 */
 	public static function verifyPayment( $paymentID, $orderTotal ) {
-		$selfClass = self::getSelfClass();
-		if ( $selfClass->get_option( 'test_mode' ) == 'on' ) {
+		if ( self::checkTestMode() ) {
 			return [ 'amount' => $orderTotal ];
 		}
+
+		if ( $token = self::getToken() ) {
+			$response = wp_remote_get( self::paymentQueryUrl() . $paymentID, self::getAuthorizationHeader() );
+			$result   = json_decode( wp_remote_retrieve_body( $response ), true );
+
+			if ( ! isset( $result['errorCode'] ) && ! isset( $result['errorMessage'] ) ) {
+				return $result;
+			}
+		}
+
+		return false;
+	}
+
+	/**
+	 * @param $invoice
+	 * @param $amount
+	 *
+	 * @return bool|mixed|string
+	 */
+	public static function createPayment( $amount, $invoice ) {
+		if ( ! self::checkTestMode() && self::getToken() ) {
+			return false;
+		}
+
+		$payment_data = [
+			'amount'                => $amount,
+			'currency'              => 'BDT',
+			'intent'                => 'sale',
+			'merchantInvoiceNumber' => $invoice,
+		];
+
+		$response = self::makeRequest( self::paymentCreateUrl(), $payment_data, self::getAuthorizationHeader() );
+
+		if ( isset( $response['paymentID'] ) && $response['paymentID'] ) {
+			return $response;
+		}
+
+		return false;
+	}
+
+	/**
+	 * @param $payment_id
+	 *
+	 * @return bool|mixed|string
+	 */
+	public static function executePayment( $payment_id ) {
+		if ( ! self::checkTestMode() && self::getToken() ) {
+			return false;
+		}
+		$data = [];
+
+		if ( self::checkTestMode() ) {
+			$data = [ 'paymentID' => $payment_id ];
+		}
+
+		$response = self::makeRequest( self::paymentExecuteUrl( $payment_id ), $data, self::getAuthorizationHeader() );
+
+//		if ( isset( $response['paymentID'] ) && $response['paymentID'] ) {
+		return $response;
+
+//		}
+
+		return false;
+	}
+
+	/**
+	 * Get Authorization header for bkash
+	 *
+	 * @return array
+	 */
+	public static function getAuthorizationHeader() {
+		$selfClass = self::getSelfClass();
 
 		if ( $token = self::getToken() ) {
 			$headers = [
@@ -137,16 +245,24 @@ class BkashQuery extends WC_PGW_BKASH {
 				"X-App-Key"     => $selfClass->get_option( 'app_key' ),
 			];
 
-			$args = array(
-				'headers' => $headers,
-			);
+			$args = [ 'headers' => $headers ];
 
-			$response = wp_remote_get( self::paymentQueryUrl() . $paymentID, $args );
-			$result   = json_decode( wp_remote_retrieve_body( $response ), true );
+			return $args;
+		}
 
-			if ( ! isset( $result['errorCode'] ) && ! isset( $result['errorMessage'] ) ) {
-				return $result;
-			}
+		return [ 'headers' => [ "Content-Type" => 'application/json' ] ];
+	}
+
+	/**
+	 * Check if test mode is on or not
+	 *
+	 * @return bool
+	 */
+	public static function checkTestMode() {
+		$selfClass = self::getSelfClass();
+
+		if ( $selfClass->get_option( 'test_mode' ) == 'on' ) {
+			return true;
 		}
 
 		return false;

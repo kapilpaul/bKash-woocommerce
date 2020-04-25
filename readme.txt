@@ -1,7 +1,7 @@
 === Payment Gateway bKash for WC ===
 Contributors: kapilpaul
 Donate link: https://kapilpaul.me/
-Tags: bkash, bkash-payment, bkash payment, bkashPayment, bkash payment method, woocommerce bkash, bkash Bangladesh, bkash wordpress, bkash woocommerce
+Tags: bkash, woocommerce pgw, bdt, mobilebanking, bangladesh
 Requires at least: 4.0
 Tested up to: 5.4
 Stable tag: trunk
