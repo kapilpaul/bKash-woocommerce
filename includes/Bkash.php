@@ -131,32 +131,33 @@ class Bkash {
 	 * @return void
 	 */
 	public function create_payment_request() {
-		if ( ! wp_verify_nonce( $_POST['_ajax_nonce'], 'wc-bkash-nonce' ) ) {
-			$this->send_json_error( 'Something went wrong here!' );
-			wp_die();
+		try {
+			if ( ! wp_verify_nonce( $_POST['_ajax_nonce'], 'wc-bkash-nonce' ) ) {
+				$this->send_json_error( 'Something went wrong here!' );
+			}
+
+			if ( ! $this->validateFields( $_POST ) ) {
+				$this->send_json_error( 'Empty value is not allowed' );
+			}
+
+			$order_number = ( isset( $_POST['order_number'] ) ) ? sanitize_key( $_POST['order_number'] ) : '';
+
+			$order = wc_get_order( $order_number );
+
+			if ( ! is_object( $order ) ) {
+				$this->send_json_error( 'Wrong or invalid order ID' );
+			}
+
+			$response = BkashQuery::createPayment( (float) $order->get_total(), $order_number );
+
+			if ( $response ) {
+				wp_send_json_success( $response );
+			}
+
+			$this->send_json_error( 'Something went wrong!' );
+		} catch ( \Exception $e ) {
+			$this->send_json_error( $e->getMessage() );
 		}
-
-		if ( ! $this->validateFields( $_POST ) ) {
-			$this->send_json_error( 'Empty value is not allowed' );
-			wp_die();
-		}
-
-		$order_number = ( isset( $_POST['order_number'] ) ) ? sanitize_key( $_POST['order_number'] ) : '';
-
-		$order = wc_get_order( $order_number );
-
-		if ( ! is_object( $order ) ) {
-			$this->send_json_error( 'Wrong or invalid order ID' );
-			wp_die();
-		}
-
-		$response = BkashQuery::createPayment( (float) $order->get_total(), $order_number );
-
-		if ( $response ) {
-			wp_send_json_success( $response );
-		}
-
-		$this->send_json_error( 'Something went wrong!' );
 	}
 
 	/**
@@ -165,25 +166,28 @@ class Bkash {
 	 * @return void
 	 */
 	public function execute_payment_request() {
-		if ( ! wp_verify_nonce( $_POST['_ajax_nonce'], 'wc-bkash-nonce' ) ) {
-			$this->send_json_error( 'Something went wrong here!' );
-			wp_die();
+		try {
+			if ( ! wp_verify_nonce( $_POST['_ajax_nonce'], 'wc-bkash-nonce' ) ) {
+				$this->send_json_error( 'Something went wrong here!' );
+			}
+
+			if ( ! $this->validateFields( $_POST ) ) {
+				$this->send_json_error( 'Empty value is not allowed' );
+			}
+
+			$payment_id = ( isset( $_POST['payment_id'] ) ) ? sanitize_text_field( $_POST['payment_id'] ) : '';
+
+			$response = BkashQuery::executePayment( $payment_id );
+
+			if ( $response ) {
+				wp_send_json_success( $response );
+			}
+
+			$this->send_json_error( 'Something went wrong!' );
+
+		} catch ( \Exception $e ) {
+			$this->send_json_error( $e->getMessage() );
 		}
-
-		if ( ! $this->validateFields( $_POST ) ) {
-			$this->send_json_error( 'Empty value is not allowed' );
-			wp_die();
-		}
-
-		$payment_id = ( isset( $_POST['payment_id'] ) ) ? sanitize_text_field( $_POST['payment_id'] ) : '';
-
-		$response = BkashQuery::executePayment( $payment_id );
-
-		if ( $response ) {
-			wp_send_json_success( $response );
-		}
-
-		$this->send_json_error( 'Something went wrong!' );
 	}
 
 	/**
