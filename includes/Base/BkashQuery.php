@@ -164,7 +164,13 @@ class BkashQuery extends WC_PGW_BKASH {
 	 */
 	public static function verifyPayment( $paymentID, $orderTotal ) {
 		if ( self::checkTestMode() ) {
-			return [ 'amount' => $orderTotal ];
+			return [
+				'amount' => $orderTotal,
+				'paymentID' => $paymentID,
+				'trxID' => $paymentID,
+				'transactionStatus' => 'completed',
+				'merchantInvoiceNumber' => 'test-invoice-number'
+			];
 		}
 
 		if ( $token = self::getToken() ) {

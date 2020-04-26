@@ -3,7 +3,7 @@
  * Plugin Name: Payment Gateway bKash for WC
  * Plugin URI: https://kapilpaul.me/
  * Description: An eCommerce payment method that helps you sell anything. Beautifully.
- * Version: 1.1.1
+ * Version: 1.1.3
  * Author: Kapil Paul
  * Author URI: https://kapilpaul.me
  * Text Domain: bkash-wc

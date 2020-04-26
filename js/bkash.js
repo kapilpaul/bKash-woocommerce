@@ -12,6 +12,9 @@ jQuery(function($) {
   bkashBtn.style.display = "none";
   document.body.appendChild(bkashBtn);
 
+  let order_review = false;
+  let order_review_url;
+
   // wc_checkout_params is required to continue, ensure the object exists
   if (typeof wc_checkout_params === "undefined") {
     return false;
@@ -618,8 +621,20 @@ jQuery(function($) {
         });
       }
     },
-    submitOrder: function() {
+    submitOrder: function(e) {
       wc_checkout_form.blockOnSubmit($(this));
+      let method = $(this).find('input[name="payment_method"]:checked').val();
+
+      if (method === "bkash") {
+        e.preventDefault();
+        order_review = true;
+
+        let url = $(this).find('input[name="_wp_http_referer"]').val().match(/^.*\/(\d+)\/.*$/);
+        order_review_url = url[0];
+        let order_number = url[1];
+
+        bKashCheckout.init(order_number);
+      }
     },
     submit: function() {
       wc_checkout_form.reset_update_checkout_timer();
@@ -695,12 +710,7 @@ jQuery(function($) {
                 }
 
                 if (wc_checkout_form.get_payment_method() === "bkash") {
-                  bKashCheckout.init(
-                    redirectUrl,
-                    result.order_number,
-                    result.amount,
-                    result.order_number
-                  );
+                  bKashCheckout.init(result.order_number, redirectUrl);
                 } else {
                   window.location = redirectUrl;
                 }
@@ -780,23 +790,18 @@ jQuery(function($) {
   };
 
   var bKashCheckout = {
-    init: function(
-      redirectSuccessUrl,
+    init: async function(
       order_number,
-      amount,
-      merchantInvoiceNumber
+      redirectSuccessUrl = false
     ) {
       loader.style.display = "block";
       let paymentID;
 
+      let payment_request = await bKashCheckout.getPaymentRequestData(order_number);
+
       bKash.init({
         paymentMode: "checkout",
-        paymentRequest: {
-          amount: amount,
-          intent: "sale",
-          currency: "BDT",
-          merchantInvoiceNumber: merchantInvoiceNumber
-        },
+        paymentRequest: payment_request,
         createRequest: function(request) {
           let create_payment_data = {
             order_number: order_number,
@@ -827,6 +832,7 @@ jQuery(function($) {
         executeRequestOnAuthorization: function() {
           let execute_payment_data = {
             payment_id: paymentID,
+            order_number: order_number,
             action: "wc-bkash-execute-payment-request",
             _ajax_nonce: bkash_params.nonce
           };
@@ -835,9 +841,9 @@ jQuery(function($) {
             url: wc_checkout_params.ajax_url,
             method: "POST",
             data: execute_payment_data,
-            success: async function(data) {
-              if (data.success && data.data.paymentID != null) {
-                data = data.data;
+            success: async function(response) {
+              if (response.success && response.data.paymentID != null) {
+                let data = response.data;
                 let paymentData = {
                   payment_id: data.paymentID,
                 };
@@ -846,7 +852,7 @@ jQuery(function($) {
                   order_number,
                   paymentData
                 );
-                window.location.href = redirectSuccessUrl;
+                window.location.href = data.order_success_url;
               } else {
                 bKash.execute().onError(); //run clean up code
                 bKashCheckout.paymentError(redirectSuccessUrl);
@@ -879,7 +885,6 @@ jQuery(function($) {
         data: data,
         method: "POST",
         success: function(response) {
-          console.log(response);
           if (response.success) {
             return true;
           }
@@ -887,6 +892,31 @@ jQuery(function($) {
         error: function(error) {
           return true;
         }
+      });
+    },
+    getPaymentRequestData: async function(order_number) {
+      return await bKashCheckout.getOrderAmount(order_number).then(response => {
+        if (response.success) {
+          return {
+            amount: response.data.amount,
+            intent: "sale",
+            currency: "BDT",
+            merchantInvoiceNumber: order_number
+          }
+        }
+      });
+    },
+    getOrderAmount: function(order_number) {
+      let data = {
+        action: "wc-bkash-get-order-amount",
+        _ajax_nonce: bkash_params.nonce,
+        order_number: order_number,
+      };
+
+      return $.ajax({
+        url: wc_checkout_params.ajax_url,
+        data: data,
+        method: "POST",
       });
     },
     paymentError: function (redirectUrl, errorText = false) {
@@ -897,6 +927,11 @@ jQuery(function($) {
       wc_checkout_form.submit_error(
           '<div class="woocommerce-error">' + errorText + '</div>'
       );
+
+      if (order_review && order_review_url) {
+        redirectUrl = order_review_url;
+      }
+
       window.location.href = redirectUrl;
     }
   };

@@ -21,6 +21,7 @@ class Bkash {
 		add_action( 'wp_ajax_wc-bkash-process', array( $this, 'paymentStore' ) );
 		add_action( 'wp_ajax_wc-bkash-create-payment-request', array( $this, 'create_payment_request' ) );
 		add_action( 'wp_ajax_wc-bkash-execute-payment-request', array( $this, 'execute_payment_request' ) );
+		add_action( 'wp_ajax_wc-bkash-get-order-amount', array( $this, 'get_order_amount' ) );
 	}
 
 	/**
@@ -159,7 +160,7 @@ class Bkash {
 	}
 
 	/**
-	 * create payment request for bKash
+	 * Execute payment request for bKash
 	 *
 	 * @return void
 	 */
@@ -173,15 +174,58 @@ class Bkash {
 				$this->send_json_error( 'Empty value is not allowed' );
 			}
 
-			$payment_id = ( isset( $_POST['payment_id'] ) ) ? sanitize_text_field( $_POST['payment_id'] ) : '';
+			$payment_id   = ( isset( $_POST['payment_id'] ) ) ? sanitize_text_field( $_POST['payment_id'] ) : '';
+			$order_number = ( isset( $_POST['order_number'] ) ) ? sanitize_text_field( $_POST['order_number'] ) : '';
+
+			$order = wc_get_order( $order_number );
+
+			if ( ! is_object( $order ) ) {
+				$this->send_json_error( 'Wrong or invalid order ID' );
+			}
 
 			$response = BkashQuery::executePayment( $payment_id );
 
 			if ( $response ) {
+				$response['order_success_url'] = $order->get_checkout_order_received_url();
 				wp_send_json_success( $response );
 			}
 
 			$this->send_json_error( 'Something went wrong!' );
+
+		} catch ( \Exception $e ) {
+			$this->send_json_error( $e->getMessage() );
+		}
+	}
+
+	/**
+	 * get order amount
+	 *
+	 * @return void
+	 */
+	public function get_order_amount() {
+		try {
+			if ( ! wp_verify_nonce( $_POST['_ajax_nonce'], 'wc-bkash-nonce' ) ) {
+				$this->send_json_error( 'Something went wrong here!' );
+			}
+
+			if ( ! $this->validateFields( $_POST ) ) {
+				$this->send_json_error( 'Empty value is not allowed' );
+			}
+
+			$order_number = ( isset( $_POST['order_number'] ) ) ? sanitize_text_field( $_POST['order_number'] ) : '';
+
+			$order = wc_get_order( $order_number );
+
+			if ( ! is_object( $order ) ) {
+				$this->send_json_error( 'Wrong or invalid order ID' );
+			}
+
+			$order_data = [
+				'amount'            => (float) $order->get_total(),
+				'order_success_url' => $order->get_checkout_order_received_url(),
+			];
+
+			wp_send_json_success( $order_data );
 
 		} catch ( \Exception $e ) {
 			$this->send_json_error( $e->getMessage() );
