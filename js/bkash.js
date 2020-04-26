@@ -788,8 +788,6 @@ jQuery(function($) {
     ) {
       loader.style.display = "block";
       let paymentID;
-      let createCheckoutUrl;
-      let executeCheckoutUrl;
 
       bKash.init({
         paymentMode: "checkout",
@@ -842,9 +840,6 @@ jQuery(function($) {
                 data = data.data;
                 let paymentData = {
                   payment_id: data.paymentID,
-                  trx_id: data.trxID,
-                  transaction_status: data.transactionStatus,
-                  invoice_number: data.merchantInvoiceNumber
                 };
 
                 await bKashCheckout.sendPaymentInfo(
@@ -864,8 +859,8 @@ jQuery(function($) {
           });
         },
         onClose: function() {
-          bKash.execute().onError();
-          bKashCheckout.paymentError(redirectSuccessUrl);
+          loader.style.display = "none";
+          bKashCheckout.paymentError(redirectSuccessUrl, 'bKash payment canceled.');
         }
       });
       $("#bKash_button").removeAttr("disabled");
@@ -877,9 +872,6 @@ jQuery(function($) {
         _ajax_nonce: bkash_params.nonce,
         order_number: order_number,
         payment_id: paymentInfo["payment_id"],
-        trx_id: paymentInfo["trx_id"],
-        transaction_status: paymentInfo["transaction_status"],
-        invoice_number: paymentInfo["invoice_number"]
       };
 
       $.ajax({
@@ -887,6 +879,7 @@ jQuery(function($) {
         data: data,
         method: "POST",
         success: function(response) {
+          console.log(response);
           if (response.success) {
             return true;
           }
@@ -896,11 +889,15 @@ jQuery(function($) {
         }
       });
     },
-    paymentError: function (redirectUrl) {
-      // wc_checkout_form.submit_error(
-      //     '<div class="woocommerce-error">bKash payment is not successfull</div>'
-      // );
-      // window.location.href = redirectUrl;
+    paymentError: function (redirectUrl, errorText = false) {
+      if(! errorText) {
+        errorText = "bKash payment is not successfull";
+      }
+
+      wc_checkout_form.submit_error(
+          '<div class="woocommerce-error">' + errorText + '</div>'
+      );
+      window.location.href = redirectUrl;
     }
   };
 

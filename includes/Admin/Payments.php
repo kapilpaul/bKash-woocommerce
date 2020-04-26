@@ -34,7 +34,6 @@ class Payments {
 		}
 	}
 
-
 	/**
 	 * Get all payment list form bkash table
 	 *
@@ -71,6 +70,26 @@ class Payments {
 	}
 
 	/**
+	 * Get payment form bkash table
+	 *
+	 * @param $order_number
+	 *
+	 * @return array|object|null
+	 */
+
+	public function get_bkash_payment( $order_number ) {
+		global $wpdb;
+
+		$query = "SELECT * FROM {$wpdb->prefix}bkash_transactions WHERE order_number='%d'";
+
+		$item = $wpdb->get_row(
+			$wpdb->prepare( $query, $order_number )
+		);
+
+		return $item;
+	}
+
+	/**
 	 * Get Count of total payments in DB
 	 * @return string|null
 	 */
@@ -92,6 +111,19 @@ function get_bkash_payments_list( $args = [] ) {
 	$payments = Payments::init();
 
 	return $payments->get_bkash_payments_list( $args );
+}
+
+/**
+ * get_bkash_payment_by_id
+ *
+ * @param $order_number
+ *
+ * @return array|object|null
+ */
+function get_bkash_payment( $order_number ) {
+	$payments = Payments::init();
+
+	return $payments->get_bkash_payment( $order_number );
 }
 
 /**
