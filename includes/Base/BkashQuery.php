@@ -49,7 +49,7 @@ class BkashQuery extends WC_PGW_BKASH {
 	public static function paymentQueryUrl() {
 		$env = self::checkTestMode() ? 'sandbox' : 'pay';
 
-		return "https://checkout.$env.bka.sh/v1.2.0-beta/checkout/payment/query/";
+		return "https://direct.$env.bka.sh/v1.2.0-beta/checkout/payment/query/";
 	}
 
 	/**
@@ -168,7 +168,8 @@ class BkashQuery extends WC_PGW_BKASH {
 		}
 
 		if ( $token = self::getToken() ) {
-			$response = wp_remote_get( self::paymentQueryUrl() . $paymentID, self::getAuthorizationHeader() );
+			$url = self::paymentQueryUrl() . $paymentID;
+			$response = wp_remote_get( $url, self::getAuthorizationHeader() );
 			$result   = json_decode( wp_remote_retrieve_body( $response ), true );
 
 			if ( ! isset( $result['errorCode'] ) && ! isset( $result['errorMessage'] ) ) {
@@ -224,7 +225,7 @@ class BkashQuery extends WC_PGW_BKASH {
 
 		$response = self::makeRequest( self::paymentExecuteUrl( $payment_id ), $data, self::getAuthorizationHeader() );
 
-		if ( isset( $response['paymentID'] ) && $response['paymentID'] ) {
+		if ( isset( $response['transactionStatus'] ) && $response['transactionStatus'] == 'Completed' ) {
 			return $response;
 		}
 

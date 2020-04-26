@@ -2,6 +2,7 @@
 
 namespace Inc;
 
+use Inc\Admin\Payments;
 use Inc\Base\BkashQuery;
 use WC_AJAX;
 use WC_Payment_Gateway;
@@ -29,6 +30,7 @@ class WC_PGW_BKASH extends WC_Payment_Gateway {
 			$this,
 			'process_admin_options',
 		) );
+		add_action( 'woocommerce_thankyou_' . $this->id, array( $this, 'thank_you_page' ) );
 		add_action( 'wp_enqueue_scripts', array( $this, 'payment_scripts' ) );
 	}
 
@@ -174,5 +176,45 @@ class WC_PGW_BKASH extends WC_Payment_Gateway {
 
 		wp_localize_script( 'wcb-checkout', 'wc_checkout_params', $params );
 		wp_localize_script( 'bkash_checkout', 'bkash_params', $data );
+	}
+
+	/**
+     * Thank you page after order
+     *
+	 * @param $order_id
+	 *
+	 * @return void
+	 */
+	public function thank_you_page( $order_id ) {
+		$order = wc_get_order( $order_id );
+
+		if ( 'bkash' === $order->get_payment_method() ) {
+			$payments     = Payments::init();
+			$payment_data = $payments->get_bkash_payment( $order_id );
+
+			if ( $payment_data ) {
+				$trx_id = $payment_data->trx_id;
+				$status = $payment_data->transaction_status;
+			}
+
+			?>
+            <ul class="woocommerce-order-overview woocommerce-thankyou-order-details order_details">
+				<?php if ( isset( $trx_id ) ) { ?>
+                    <li class="woocommerce-order-overview__payment-method method">
+                        bKash Transaction ID: <strong><?php echo $trx_id; ?></strong>
+                    </li>
+				<?php } ?>
+                <li class="woocommerce-order-overview__payment-method method">
+                    Payment Status:
+					<?php if ( isset( $status ) ) { ?>
+                        <strong><?php echo strtoupper( $status ); ?></strong>
+					<?php } else { ?>
+                        <strong><?php echo __( 'NOT PAID', 'bkash-wc' ); ?></strong>
+					<?php } ?>
+                </li>
+            </ul>
+			<?php
+		}
+
 	}
 }
