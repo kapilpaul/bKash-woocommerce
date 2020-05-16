@@ -196,6 +196,7 @@ class WC_PGW_BKASH extends WC_Payment_Gateway {
 				$trx_id = $payment_data->trx_id;
 				$status = $payment_data->transaction_status;
 			}
+			$status = $order->needs_payment() ? 'NOT PAID' : 'Completed';
 
 			?>
             <ul class="woocommerce-order-overview woocommerce-thankyou-order-details order_details">
@@ -206,11 +207,7 @@ class WC_PGW_BKASH extends WC_Payment_Gateway {
 				<?php } ?>
                 <li class="woocommerce-order-overview__payment-method method">
                     Payment Status:
-					<?php if ( isset( $status ) ) { ?>
-                        <strong><?php echo strtoupper( $status ); ?></strong>
-					<?php } else { ?>
-                        <strong><?php echo __( 'NOT PAID', 'bkash-wc' ); ?></strong>
-					<?php } ?>
+                    <strong><?php echo strtoupper( $status ); ?></strong>
                 </li>
             </ul>
 			<?php
