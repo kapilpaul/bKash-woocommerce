@@ -76,7 +76,6 @@ class Payments {
 	 *
 	 * @return array|object|null
 	 */
-
 	public function get_bkash_payment( $order_number ) {
 		global $wpdb;
 
