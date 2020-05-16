@@ -97,10 +97,11 @@ class WC_PGW_BKASH extends WC_Payment_Gateway {
 		WC()->cart->empty_cart();
 
 		return array(
-			'result'       => 'success',
-			'order_number' => $order_id,
-			'amount'       => (float) $order->get_total(),
-			'redirect'     => $this->get_return_url( $order ),
+			'result'             => 'success',
+			'order_number'       => $order_id,
+			'amount'             => (float) $order->get_total(),
+			'checkout_order_pay' => $order->get_checkout_payment_url(),
+			'redirect'           => $this->get_return_url( $order ),
 		);
 	}
 
@@ -178,8 +179,8 @@ class WC_PGW_BKASH extends WC_Payment_Gateway {
 	}
 
 	/**
-     * Thank you page after order
-     *
+	 * Thank you page after order
+	 *
 	 * @param $order_id
 	 *
 	 * @return void

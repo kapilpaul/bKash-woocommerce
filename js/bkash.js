@@ -710,7 +710,7 @@ jQuery(function($) {
                 }
 
                 if (wc_checkout_form.get_payment_method() === "bkash") {
-                  bKashCheckout.init(result.order_number, redirectUrl);
+                  bKashCheckout.init(result.order_number, result.checkout_order_pay);
                 } else {
                   window.location = redirectUrl;
                 }
@@ -792,7 +792,7 @@ jQuery(function($) {
   var bKashCheckout = {
     init: async function(
       order_number,
-      redirectSuccessUrl = false
+      redirect_url = false
     ) {
       loader.style.display = "block";
       let paymentID;
@@ -820,12 +820,12 @@ jQuery(function($) {
                 bKash.create().onSuccess(data);
               } else {
                 bKash.create().onError();
-                bKashCheckout.paymentError(redirectSuccessUrl);
+                bKashCheckout.paymentError(redirect_url);
               }
             },
             error: function(errorMessage) {
               bKash.create().onError();
-              bKashCheckout.paymentError(redirectSuccessUrl);
+              bKashCheckout.paymentError(redirect_url);
             }
           });
         },
@@ -844,55 +844,25 @@ jQuery(function($) {
             success: async function(response) {
               if (response.success && response.data.paymentID != null) {
                 let data = response.data;
-                let paymentData = {
-                  payment_id: data.paymentID,
-                };
-
-                await bKashCheckout.sendPaymentInfo(
-                  order_number,
-                  paymentData
-                );
                 window.location.href = data.order_success_url;
               } else {
                 bKash.execute().onError(); //run clean up code
-                bKashCheckout.paymentError(redirectSuccessUrl);
+                bKashCheckout.paymentError(redirect_url);
               }
             },
             error: function() {
               bKash.execute().onError(); // Run clean up code
-              bKashCheckout.paymentError(redirectSuccessUrl);
+              bKashCheckout.paymentError(redirect_url);
             }
           });
         },
         onClose: function() {
           loader.style.display = "none";
-          bKashCheckout.paymentError(redirectSuccessUrl, 'bKash payment canceled.');
+          bKashCheckout.paymentError(redirect_url, 'bKash payment canceled.');
         }
       });
       $("#bKash_button").removeAttr("disabled");
       $("#bKash_button").click();
-    },
-    sendPaymentInfo: async function(order_number, paymentInfo) {
-      var data = {
-        action: "wc-bkash-process",
-        _ajax_nonce: bkash_params.nonce,
-        order_number: order_number,
-        payment_id: paymentInfo["payment_id"],
-      };
-
-      $.ajax({
-        url: wc_checkout_params.ajax_url,
-        data: data,
-        method: "POST",
-        success: function(response) {
-          if (response.success) {
-            return true;
-          }
-        },
-        error: function(error) {
-          return true;
-        }
-      });
     },
     getPaymentRequestData: async function(order_number) {
       return await bKashCheckout.getOrderAmount(order_number).then(response => {

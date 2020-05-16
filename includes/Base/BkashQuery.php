@@ -6,7 +6,6 @@
 
 namespace Inc\Base;
 
-
 use Inc\WC_PGW_BKASH;
 
 /**
@@ -165,22 +164,24 @@ class BkashQuery extends WC_PGW_BKASH {
 	public static function verifyPayment( $paymentID, $orderTotal ) {
 		if ( self::checkTestMode() ) {
 			return [
-				'amount' => $orderTotal,
-				'paymentID' => $paymentID,
-				'trxID' => $paymentID,
-				'transactionStatus' => 'completed',
-				'merchantInvoiceNumber' => 'test-invoice-number'
+				'amount'                => $orderTotal,
+				'paymentID'             => $paymentID,
+				'trxID'                 => $paymentID,
+				'transactionStatus'     => 'completed',
+				'merchantInvoiceNumber' => 'test-invoice-number',
 			];
 		}
 
 		if ( $token = self::getToken() ) {
-			$url = self::paymentQueryUrl() . $paymentID;
+			$url      = self::paymentQueryUrl() . $paymentID;
 			$response = wp_remote_get( $url, self::getAuthorizationHeader() );
 			$result   = json_decode( wp_remote_retrieve_body( $response ), true );
 
-			if ( ! isset( $result['errorCode'] ) && ! isset( $result['errorMessage'] ) ) {
-				return $result;
+			if ( isset( $result['errorCode'] ) && isset( $result['errorMessage'] ) ) {
+				return false;
 			}
+
+			return $result;
 		}
 
 		return false;
