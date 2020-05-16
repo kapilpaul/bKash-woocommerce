@@ -34,51 +34,54 @@ class Bkash {
 	 *
 	 * @param $payment_id
 	 *
+	 * @param $order_number
+	 *
+	 * @param bool $bkash_response_data
+	 *
 	 * @return bool
 	 */
-	public function payment_store( $payment_id ) {
+	public function payment_store( $payment_id, $order_number, $bkash_response_data = false ) {
 		try {
 			$payment_id      = sanitize_text_field( $payment_id );
+			$this->order     = $order = wc_get_order( $order_number );
 			$orderGrandTotal = (float) $this->order->get_total();
+
+			if ( $bkash_response_data['amount'] == $orderGrandTotal ) {
+				$this->order->add_order_note(
+					sprintf( __( 'bKash payment completed.Transaction ID #%s! Amount: %s', 'bkash-wc' ),
+						$bkash_response_data['trxID'],
+						$orderGrandTotal
+					)
+				);
+
+				$this->order->payment_complete();
+
+			} else {
+				$this->order->update_status(
+					'on-hold',
+					__( "Partial payment.Transaction ID #{$bkash_response_data['trxID']}! Amount: {$bkash_response_data['amount']}", 'bkash-wc' )
+				);
+			}
 
 			$paymentInfo = BkashQuery::verifyPayment( $payment_id, $orderGrandTotal );
 
-			if ( $paymentInfo ) {
-				$trx_id = sanitize_text_field( $paymentInfo['trxID'] );
-
-				$insertData = [
-					"order_number"       => $this->order->get_id(),
-					"payment_id"         => $paymentInfo['paymentID'],
-					"trx_id"             => $paymentInfo['trxID'],
-					"transaction_status" => $paymentInfo['transactionStatus'],
-					"invoice_number"     => $paymentInfo['merchantInvoiceNumber'],
-					"amount"             => $paymentInfo['amount'],
-				];
-
-				$this->insertBkashPayment( $insertData );
-
-				if ( $paymentInfo['amount'] == $orderGrandTotal ) {
-					$this->order->add_order_note(
-						sprintf( __( 'bKash payment completed.Transaction ID #%s! Amount: %s', 'bkash-wc' ),
-							$trx_id,
-							$orderGrandTotal
-						)
-					);
-
-					$this->order->payment_complete();
-
-					return true;
-				} else {
-					$this->order->update_status(
-						'on-hold',
-						__( 'Partial payment.Transaction ID #%s! Amount: %s', 'bkash-wc' ),
-						$trx_id,
-						$paymentInfo['amount']
-					);
-				}
+			if ( isset( $paymentInfo['transactionStatus'] ) && isset( $paymentInfo['trxID'] ) ) {
+			} else {
+				$paymentInfo = $bkash_response_data;
 			}
 
-			return false;
+
+			$insertData = [
+				"order_number"       => $this->order->get_id(),
+				"payment_id"         => $paymentInfo['paymentID'],
+				"trx_id"             => $paymentInfo['trxID'],
+				"transaction_status" => $paymentInfo['transactionStatus'],
+				"invoice_number"     => $paymentInfo['merchantInvoiceNumber'],
+				"amount"             => $paymentInfo['amount'],
+			];
+
+			$this->insertBkashPayment( $insertData );
+
 		} catch ( \Exception $e ) {
 			return false;
 		}
@@ -184,7 +187,7 @@ class Bkash {
 			$response = BkashQuery::executePayment( $payment_id );
 
 			if ( $response ) {
-				$this->payment_store( $response['paymentID'] );
+				$this->payment_store( $response['paymentID'], $order_number, $response );
 				$response['order_success_url'] = $order->get_checkout_order_received_url();
 				wp_send_json_success( $response );
 			}
