@@ -42,15 +42,15 @@ class Bkash {
 	 */
 	public function payment_store( $payment_id, $order_number, $bkash_response_data = false ) {
 		try {
-			$payment_id      = sanitize_text_field( $payment_id );
-			$this->order     = $order = wc_get_order( $order_number );
-			$orderGrandTotal = (float) $this->order->get_total();
+			$payment_id        = sanitize_text_field( $payment_id );
+			$this->order       = $order = wc_get_order( $order_number );
+			$order_grand_total = (float) $this->order->get_total();
 
-			if ( $bkash_response_data['amount'] == $orderGrandTotal ) {
+			if ( $bkash_response_data['amount'] == $order_grand_total ) {
 				$this->order->add_order_note(
-					sprintf( __( 'bKash payment completed.Transaction ID #%s! Amount: %s', 'bkash-wc' ),
+					sprintf( __( 'bKash payment completed. Transaction ID #%s! Amount: %s', 'bkash-wc' ),
 						$bkash_response_data['trxID'],
-						$orderGrandTotal
+						$order_grand_total
 					)
 				);
 
@@ -63,24 +63,23 @@ class Bkash {
 				);
 			}
 
-			$paymentInfo = BkashQuery::verifyPayment( $payment_id, $orderGrandTotal );
+			$payment_info = BkashQuery::verifyPayment( $payment_id, $order_grand_total );
 
-			if ( isset( $paymentInfo['transactionStatus'] ) && isset( $paymentInfo['trxID'] ) ) {
+			if ( isset( $payment_info['transactionStatus'] ) && isset( $payment_info['trxID'] ) ) {
 			} else {
-				$paymentInfo = $bkash_response_data;
+				$payment_info = $bkash_response_data;
 			}
 
-
-			$insertData = [
+			$insert_data = [
 				"order_number"       => $this->order->get_id(),
-				"payment_id"         => $paymentInfo['paymentID'],
-				"trx_id"             => $paymentInfo['trxID'],
-				"transaction_status" => $paymentInfo['transactionStatus'],
-				"invoice_number"     => $paymentInfo['merchantInvoiceNumber'],
-				"amount"             => $paymentInfo['amount'],
+				"payment_id"         => $payment_info['paymentID'],
+				"trx_id"             => $payment_info['trxID'],
+				"transaction_status" => $payment_info['transactionStatus'],
+				"invoice_number"     => $payment_info['merchantInvoiceNumber'],
+				"amount"             => $payment_info['amount'],
 			];
 
-			$this->insertBkashPayment( $insertData );
+			insert_bkash_transaction( $insert_data );
 
 		} catch ( \Exception $e ) {
 			return false;
@@ -88,34 +87,11 @@ class Bkash {
 	}
 
 	/**
-	 * insert Payment info
-	 * to bKash transactions table
-	 *
-	 * @param $paymentInfo
-	 *
-	 * @return false|int
-	 */
-	public function insertBkashPayment( $paymentInfo ) {
-		global $wpdb;
-
-		$insert = $wpdb->insert( $wpdb->prefix . $this->table, array(
-			"order_number"       => sanitize_text_field( $paymentInfo['order_number'] ),
-			"payment_id"         => sanitize_text_field( $paymentInfo['payment_id'] ),
-			"trx_id"             => sanitize_text_field( $paymentInfo['trx_id'] ),
-			"transaction_status" => sanitize_text_field( $paymentInfo['transaction_status'] ),
-			"invoice_number"     => sanitize_text_field( $paymentInfo['invoice_number'] ),
-			"amount"             => sanitize_text_field( $paymentInfo['amount'] ),
-		) );
-
-		return $insert;
-	}
-
-	/**
 	 * @param $data
 	 *
 	 * @return bool
 	 */
-	public function validateFields( $data ) {
+	public function validate_fields( $data ) {
 		foreach ( $data as $key => $value ) {
 			if ( empty( $value ) ) {
 				return false;
@@ -136,7 +112,7 @@ class Bkash {
 				$this->send_json_error( 'Something went wrong here!' );
 			}
 
-			if ( ! $this->validateFields( $_POST ) ) {
+			if ( ! $this->validate_fields( $_POST ) ) {
 				$this->send_json_error( 'Empty value is not allowed' );
 			}
 
@@ -171,7 +147,7 @@ class Bkash {
 				$this->send_json_error( 'Something went wrong here!' );
 			}
 
-			if ( ! $this->validateFields( $_POST ) ) {
+			if ( ! $this->validate_fields( $_POST ) ) {
 				$this->send_json_error( 'Empty value is not allowed' );
 			}
 
@@ -210,7 +186,7 @@ class Bkash {
 				$this->send_json_error( 'Something went wrong here!' );
 			}
 
-			if ( ! $this->validateFields( $_POST ) ) {
+			if ( ! $this->validate_fields( $_POST ) ) {
 				$this->send_json_error( 'Empty value is not allowed' );
 			}
 
