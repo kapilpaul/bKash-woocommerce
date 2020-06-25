@@ -15,12 +15,20 @@ class ComposerStaticInit338a965d5d22f17000395e2e207c2c02
         array (
             'Inc\\' => 4,
         ),
+        'A' => 
+        array (
+            'Appsero\\' => 8,
+        ),
     );
 
     public static $prefixDirsPsr4 = array (
         'Inc\\' => 
         array (
             0 => __DIR__ . '/../..' . '/includes',
+        ),
+        'Appsero\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/appsero/client/src',
         ),
     );
 

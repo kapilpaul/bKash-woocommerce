@@ -26,6 +26,14 @@ Woocommerce payment method for bKash for easy checkout.
 
 [youtube https://www.youtube.com/watch?v=U83RE3Kfy1A]
 
+## Privacy Policy
+Payment Gateway bKash for WC uses [Appsero](https://appsero.com) SDK to collect some telemetry data upon user's confirmation. This helps us to troubleshoot problems faster & make product improvements.
+
+Appsero SDK **does not gather any data by default.** The SDK only starts gathering basic telemetry data **when a user allows it via the admin notice**. We collect the data to ensure a great user experience for all our users.
+
+Integrating Appsero SDK **DOES NOT IMMEDIATELY** start gathering data, **without confirmation from users in any case.**
+
+Learn more about how [Appsero collects and uses this data](https://appsero.com/privacy-policy/).
 
 [Github Link](https://github.com/kapilpaul/bKash-woocommerce)
 
@@ -62,6 +70,11 @@ Yes. Follow the installation process and you are good to go.
 
 == Changelog ==
 
+= v1.2.0 (June 25, 2020) =
+
+ - Bulk delete, single delete added in payment list
+ - Added appsero tracker for plugin analytics
+
 = v1.1.1 (April 25, 2020) =
 
  - Added create payment through plugin
@@ -80,6 +93,9 @@ Yes. Follow the installation process and you are good to go.
 - Payment for orders
 
 == Upgrade Notice ==
+
+= 1.2.0 =
+**Important Update** This update added the appsero tracker to get the analytics and performance of the plugin.
 
 = 1.1.0 =
 **Important Update** This update changes code structures for improving performance. Make sure to take backup and read the changlogs first before upgrade process.

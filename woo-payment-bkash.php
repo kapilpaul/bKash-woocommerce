@@ -3,7 +3,7 @@
  * Plugin Name: Payment Gateway bKash for WC
  * Plugin URI: https://kapilpaul.me/
  * Description: An eCommerce payment method that helps you sell anything. Beautifully.
- * Version: 1.1.3
+ * Version: 1.2.0
  * Author: Kapil Paul
  * Author URI: https://kapilpaul.me
  * Text Domain: bkash-wc
@@ -152,6 +152,23 @@ final class WC_WP_bKash {
 	}
 }
 
+/**
+ * Initialize the plugin tracker
+ *
+ * @return void
+ */
+function appsero_init_tracker_woo_payment_bkash() {
+
+	if ( ! class_exists( 'Appsero\Client' ) ) {
+		require_once __DIR__ . '/appsero/src/Client.php';
+	}
+
+	$client = new Appsero\Client( 'f5998f6a-c466-4c4e-8627-0188f177e7f5', 'Payment Gateway bKash for WC', __FILE__ );
+
+	// Active insights
+	$client->insights()->hide_notice()->init();
+
+}
 
 /**
  * initialize bkash class
@@ -163,4 +180,7 @@ function init_wc_bkash() {
 
 //kick start the plugin
 init_wc_bkash();
+
+//kick start the tracker
+appsero_init_tracker_woo_payment_bkash();
 

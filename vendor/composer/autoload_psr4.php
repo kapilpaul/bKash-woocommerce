@@ -7,4 +7,5 @@ $baseDir = dirname($vendorDir);
 
 return array(
     'Inc\\' => array($baseDir . '/includes'),
+    'Appsero\\' => array($vendorDir . '/appsero/client/src'),
 );
