@@ -3,7 +3,7 @@
  * Plugin Name: Payment Gateway bKash for WC
  * Plugin URI: https://kapilpaul.me/
  * Description: An eCommerce payment method that helps you sell anything. Beautifully.
- * Version: 1.2.0
+ * Version: 1.3.0
  * Author: Kapil Paul
  * Author URI: https://kapilpaul.me
  * Text Domain: bkash-wc
@@ -65,7 +65,7 @@ final class WC_WP_bKash {
 	 *
 	 * @var string
 	 */
-	const version = '1.0.0';
+	const version = '1.3.0';
 
 	/**
 	 * WC_WP_bKash constructor.
@@ -76,8 +76,28 @@ final class WC_WP_bKash {
 		register_activation_hook( __FILE__, array( $this, 'active' ) );
 		register_deactivation_hook( __FILE__, array( $this, 'deactivate' ) );
 
-		add_action( 'plugins_loaded', array( $this, 'init' ) );
+		$this->appsero_init_tracker_woo_payment_bkash();
+
+		add_action( 'plugins_loaded', array( $this, 'init_plugin' ) );
 		add_filter( 'woocommerce_payment_gateways', array( $this, 'register_gateway' ) );
+	}
+
+	/**
+	 * Initializes the WC_WP_bKash() class
+	 *
+	 * Checks for an existing WC_WP_bKash() instance
+	 * and if it doesn't find one, creates it.
+	 *
+	 * @return DCoders_Nagad|bool
+	 */
+	public static function init() {
+		static $instance = false;
+
+		if ( ! $instance ) {
+			$instance = new WC_WP_bKash();
+		}
+
+		return $instance;
 	}
 
 	/**
@@ -104,7 +124,7 @@ final class WC_WP_bKash {
 	 *
 	 * @return void
 	 */
-	public function init() {
+	public function init_plugin() {
 		if ( ! class_exists( 'WC_Payment_Gateway' ) ) {
 			return;
 		}
@@ -150,37 +170,31 @@ final class WC_WP_bKash {
 
 		return $gateways;
 	}
-}
 
-/**
- * Initialize the plugin tracker
- *
- * @return void
- */
-function appsero_init_tracker_woo_payment_bkash() {
+	/**
+	 * Initialize Appsero Tracker
+	 *
+	 * @return  void
+	 */
+	public function appsero_init_tracker_woo_payment_bkash() {
+		if ( ! class_exists( 'Appsero\Client' ) ) {
+			require_once __DIR__ . '/appsero/src/Client.php';
+		}
 
-	if ( ! class_exists( 'Appsero\Client' ) ) {
-		require_once __DIR__ . '/appsero/src/Client.php';
+		$client = new Appsero\Client( 'f5998f6a-c466-4c4e-8627-0188f177e7f5', 'Payment Gateway bKash for WC', __FILE__ );
+
+		// Active insights
+		$client->insights()->init();
 	}
-
-	$client = new Appsero\Client( 'f5998f6a-c466-4c4e-8627-0188f177e7f5', 'Payment Gateway bKash for WC', __FILE__ );
-
-	// Active insights
-	$client->insights()->hide_notice()->init();
-
 }
 
 /**
  * initialize bkash class
- * @return void
+ * @return \WC_WP_bKash|bool
  */
 function init_wc_bkash() {
-	new WC_WP_bKash();
+	return WC_WP_bKash::init();
 }
 
 //kick start the plugin
 init_wc_bkash();
-
-//kick start the tracker
-appsero_init_tracker_woo_payment_bkash();
-

@@ -45,6 +45,7 @@ class Bkash {
 			$payment_id        = sanitize_text_field( $payment_id );
 			$this->order       = $order = wc_get_order( $order_number );
 			$order_grand_total = (float) $this->order->get_total();
+			$order_grand_total = BkashQuery::get_final_amount( $order_grand_total );
 
 			if ( $bkash_response_data['amount'] == $order_grand_total ) {
 				$this->order->add_order_note(
@@ -198,8 +199,10 @@ class Bkash {
 				$this->send_json_error( 'Wrong or invalid order ID' );
 			}
 
+			$total = BkashQuery::get_final_amount( (float) $order->get_total() );
+
 			$order_data = [
-				'amount'            => (float) $order->get_total(),
+				'amount'            => (float) $total,
 				'order_success_url' => $order->get_checkout_order_received_url(),
 			];
 

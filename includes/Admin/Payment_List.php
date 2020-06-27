@@ -191,6 +191,10 @@ class Payment_List extends \WP_List_Table {
 	public function get_column_actions( $item, $column_name ) {
 		$order = wc_get_order( $item->order_number );
 
+		if ( ! is_object( $order ) ) {
+			return sprintf('Invalid!');
+		}
+
 		$actions = [];
 
 		$actions['delete'] = sprintf(

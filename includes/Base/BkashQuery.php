@@ -97,13 +97,12 @@ class BkashQuery extends WC_PGW_BKASH {
 			return $token;
 		}
 
-		$selfClass = self::getSelfClass();
-		$userName  = $selfClass->get_option( 'username' );
-		$password  = $selfClass->get_option( 'password' );
+		$userName = self::get_pgw_option( 'username' );
+		$password = self::get_pgw_option( 'password' );
 
 		$data = [
-			"app_key"    => $selfClass->get_option( 'app_key' ),
-			"app_secret" => $selfClass->get_option( 'app_secret' ),
+			"app_key"    => self::get_pgw_option( 'app_key' ),
+			"app_secret" => self::get_pgw_option( 'app_secret' ),
 		];
 
 		$headers = [
@@ -198,6 +197,8 @@ class BkashQuery extends WC_PGW_BKASH {
 			return false;
 		}
 
+		$amount = self::get_final_amount( $amount );
+
 		$payment_data = [
 			'amount'                => $amount,
 			'currency'              => 'BDT',
@@ -245,12 +246,10 @@ class BkashQuery extends WC_PGW_BKASH {
 	 * @return array
 	 */
 	public static function getAuthorizationHeader() {
-		$selfClass = self::getSelfClass();
-
 		if ( $token = self::getToken() ) {
 			$headers = [
 				"Authorization" => "Bearer {$token}",
-				"X-App-Key"     => $selfClass->get_option( 'app_key' ),
+				"X-App-Key"     => self::get_pgw_option( 'app_key' ),
 				"Content-Type"  => 'application/json',
 			];
 
@@ -269,9 +268,7 @@ class BkashQuery extends WC_PGW_BKASH {
 	 */
 	public static function checkTestMode() {
 		try {
-			$selfClass = self::getSelfClass();
-
-			if ( $selfClass->get_option( 'test_mode' ) == 'on' ) {
+			if ( self::get_pgw_option( 'test_mode' ) == 'on' ) {
 				return true;
 			}
 
@@ -279,5 +276,46 @@ class BkashQuery extends WC_PGW_BKASH {
 		} catch ( \Exception $e ) {
 			return $e->getMessage();
 		}
+	}
+
+	/**
+	 * calculate final amount based on bKash charge option
+	 *
+	 * @since 1.3.0
+	 *
+	 * @param $amount
+	 *
+	 * @return float|int
+	 */
+	public static function get_final_amount( $amount ) {
+		if ( self::get_pgw_option( 'transaction_charge' ) == 'yes' ) {
+			$charge_type   = self::get_pgw_option( 'charge_type' );
+			$charge_amount = (float) self::get_pgw_option( 'charge_amount' );
+
+			if ( $charge_type == 'percentage' ) {
+				$amount = $amount + $amount * ( $charge_amount / 100 );
+			} else {
+				$amount = $amount + $charge_amount;
+			}
+		}
+
+		$amount = number_format($amount, 2, '.', '');
+
+		return $amount;
+	}
+
+	/**
+	 * Get payment gateway settings option
+	 *
+	 * @since 1.3.0
+	 *
+	 * @param $key
+	 *
+	 * @return string
+	 */
+	public static function get_pgw_option( $key ) {
+		$self_class = self::getSelfClass();
+
+		return $self_class->get_option( $key );
 	}
 }

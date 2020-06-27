@@ -26,10 +26,7 @@ class WC_PGW_BKASH extends WC_Payment_Gateway {
 		$this->init_form_fields();
 		$this->init_settings();
 
-		add_action( 'woocommerce_update_options_payment_gateways_' . $this->id, array(
-			$this,
-			'process_admin_options',
-		) );
+		add_action( 'woocommerce_update_options_payment_gateways_' . $this->id, array( $this, 'process_admin_options' ) );
 		add_action( 'woocommerce_thankyou_' . $this->id, array( $this, 'thank_you_page' ) );
 		add_action( 'wp_enqueue_scripts', array( $this, 'payment_scripts' ) );
 	}
@@ -40,48 +37,67 @@ class WC_PGW_BKASH extends WC_Payment_Gateway {
 	 * @return void
 	 */
 	public function init_form_fields() {
-		$this->form_fields = array(
-			'enabled'     => array(
+		$this->form_fields = [
+			'enabled'            => [
 				'title'   => __( 'Enable/Disable', 'bkash-wc' ),
 				'type'    => 'checkbox',
 				'label'   => __( 'Enable bKash', 'bkash-wc' ),
 				'default' => 'yes',
-			),
-			'test_mode'   => array(
+			],
+			'test_mode'          => [
 				'title'   => __( 'Test Mode', 'bkash-wc' ),
 				'type'    => 'select',
 				'options' => [ "on" => "ON", "off" => "OFF" ],
 				'default' => __( 'off', 'bkash-wc' ),
-			),
-			'title'       => array(
+			],
+			'title'              => [
 				'title'   => __( 'Title', 'bkash-wc' ),
 				'type'    => 'text',
 				'default' => __( 'bKash Payment', 'bkash-wc' ),
-			),
-			'username'    => array(
+			],
+			'username'           => [
 				'title' => __( 'User Name', 'bkash-wc' ),
 				'type'  => 'text',
-			),
-			'password'    => array(
+			],
+			'password'           => [
 				'title' => __( 'Password', 'bkash-wc' ),
 				'type'  => 'password',
-			),
-			'app_key'     => array(
+			],
+			'app_key'            => [
 				'title' => __( 'App Key', 'bkash-wc' ),
 				'type'  => 'text',
-			),
-			'app_secret'  => array(
+			],
+			'app_secret'         => [
 				'title' => __( 'App Secret', 'bkash-wc' ),
 				'type'  => 'text',
-			),
-			'description' => array(
+			],
+			'transaction_charge' => [
+				'title'   => __( 'Enable bKash Charge', 'bkash-wc' ),
+				'type'    => 'checkbox',
+				'label'   => __( '&nbsp;', 'bkash-wc' ),
+				'default' => 'no',
+			],
+			'charge_type'        => [
+				'title'   => __( 'Charge Type', 'bkash-wc' ),
+				'type'    => 'select',
+				'options' => [ "fixed" => "Fixed", "percentage" => "Percentage" ],
+				'default' => 'percentage',
+				'description' => __( 'This option will only work when the bKash Charge is enabled', 'bkash-wc' ),
+			],
+			'charge_amount'      => [
+				'title'   => __( 'Charge Amount', 'bkash-wc' ),
+				'type'    => 'text',
+				'default' => 2,
+				'description' => __( 'This option will only work when the bKash Charge is enabled', 'bkash-wc' ),
+			],
+			'description'        => [
 				'title'       => __( 'Description', 'bkash-wc' ),
 				'type'        => 'textarea',
 				'description' => __( 'Payment method description that the customer will see on your checkout.', 'bkash-wc' ),
 				'default'     => __( 'Pay via bKash', 'bkash-wc' ),
 				'desc_tip'    => true,
-			),
-		);
+			],
+		];
 	}
 
 	/**
@@ -189,8 +205,7 @@ class WC_PGW_BKASH extends WC_Payment_Gateway {
 		$order = wc_get_order( $order_id );
 
 		if ( 'bkash' === $order->get_payment_method() ) {
-			$payments     = Payments::init();
-			$payment_data = $payments->get_bkash_payment( $order_id );
+			$payment_data = get_bkash_payment( $order_id );
 
 			if ( $payment_data ) {
 				$trx_id = $payment_data->trx_id;

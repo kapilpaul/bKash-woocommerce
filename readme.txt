@@ -24,9 +24,11 @@ Woocommerce payment method for bKash for easy checkout.
 
 ** NB: Please note that this plugin requires jQuery 3.3.1 . Otherwise bKash script does not work with WordPress default jQuery. So called the jQuery 3.3.1 in checkout only. **
 
+= Demo Video =
+
 [youtube https://www.youtube.com/watch?v=U83RE3Kfy1A]
 
-## Privacy Policy
+= Privacy Policy =
 Payment Gateway bKash for WC uses [Appsero](https://appsero.com) SDK to collect some telemetry data upon user's confirmation. This helps us to troubleshoot problems faster & make product improvements.
 
 Appsero SDK **does not gather any data by default.** The SDK only starts gathering basic telemetry data **when a user allows it via the admin notice**. We collect the data to ensure a great user experience for all our users.
@@ -35,7 +37,8 @@ Integrating Appsero SDK **DOES NOT IMMEDIATELY** start gathering data, **without
 
 Learn more about how [Appsero collects and uses this data](https://appsero.com/privacy-policy/).
 
-[Github Link](https://github.com/kapilpaul/bKash-woocommerce)
+= Contributing and Reporting Bugs =
+Payment Gateway bKash for WC is being developed on GitHub. If you’re interested in contributing to the plugin, please look at [Github page](https://github.com/kapilpaul/bKash-woocommerce).
 
 == Installation ==
 
@@ -69,30 +72,34 @@ Yes. Follow the installation process and you are good to go.
 6. bkash Payment List
 
 == Changelog ==
+= v1.3.0 (June 28, 2020) =
+* Added: bKash transaction charge option.
+* Updated: thank you page bug.
+
+= v1.2.1 (June 27, 2020) =
+* Fixed missing file bug.
 
 = v1.2.0 (June 25, 2020) =
-
- - Bulk delete, single delete added in payment list
- - Added appsero tracker for plugin analytics
+* Added: Bulk delete, single delete in payment list
+* Added: appsero tracker for plugin analytics
 
 = v1.1.1 (April 25, 2020) =
-
- - Added create payment through plugin
- - Added execute payment through plugin
+* Added: create payment through plugin
+* Added: execute payment through plugin
 
 = v1.1.0 (April 13, 2020) =
-
- - Added payments list view
- - Search option in view
- - Added some constants
+* Added: Payments list view
+* Added: Search option in view
+* Added: Some constants
 
 = v1.0.0 (Feburuary 21, 2020) =
-
-- bkash payment method for woocommerce
-- Testing environment
-- Payment for orders
+* bkash payment method for woocommerce
+* Testing environment
+* Payment for orders
 
 == Upgrade Notice ==
+= 1.3.0 =
+**Important Update** This update added the bKash transaction charge.
 
 = 1.2.0 =
 **Important Update** This update added the appsero tracker to get the analytics and performance of the plugin.
