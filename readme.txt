@@ -22,6 +22,14 @@ Woocommerce payment method for bKash for easy checkout.
 1. After activate the plugin you need to go to Woocommerce settings for payments. Here you can see bKash as a payment method. Enable this and open settings for this payment method.
 2. Collect your USERNAME, PASSWORD, APP_KEY, APP_SECRET from bKash. Place this in here and you are able to collect your payment.
 
+= On Test Mode =
+
+You can use the information below for a test checkout. Default values that will pass with each request.
+
+`Wallet : 01770618575`
+`OTP : 123456`
+`PIN : 12121`
+
 ** NB: Please note that this plugin requires jQuery 3.3.1 . Otherwise bKash script does not work with WordPress default jQuery. So called the jQuery 3.3.1 in checkout only. **
 
 = Demo Video =
