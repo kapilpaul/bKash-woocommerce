@@ -24,7 +24,7 @@ Woocommerce payment method for bKash for easy checkout.
 2. Collect your <b><i>USERNAME, PASSWORD, APP_KEY, APP_SECRET</i></b> from bKash. Place this in here and you are able to collect your payment.
 
 
-##### On Test mood
+##### On Test Mode
 
 You can use the information below for a test checkout. Default values that will pass with each request.
 `Wallet : 01770618575`
