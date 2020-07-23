@@ -15,7 +15,7 @@ class WC_PGW_BKASH extends WC_Payment_Gateway {
 	 */
 	public function __construct() {
 		$this->id                 = 'bkash';
-		$this->icon               = false;
+		$this->icon               = apply_filters( 'woocommerce_gateway_icon', trailingslashit(WC_WP_BKASH_URL).'images/bkash-payment-icon.png' );;
 		$this->has_fields         = true;
 		$this->method_title       = __( 'bKash', 'bkash-wc' );
 		$this->method_description = __( 'Pay via bKash payment', 'bkash-wc' );
