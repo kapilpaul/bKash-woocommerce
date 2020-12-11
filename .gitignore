@@ -1,0 +1,14 @@
+node_modules
+npm-debug.log
+.DS_Store
+includes/.DS_Store
+.DS_Store
+.idea
+/includes/.DS_Store
+debug.log
+package-lock.json
+config.json
+
+# Composer
+/vendor/
+phpcs-report.txt
