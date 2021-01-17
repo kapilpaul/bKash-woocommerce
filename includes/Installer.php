@@ -1,70 +1,58 @@
 <?php
 
-/**
- * Fired during plugin activation
- *
- * @link       https://kapilpaul.me
- * @since      1.0.0
- *
- * @package    Bkash_Woocommerce
- * @subpackage Bkash_Woocommerce/includes
- */
+namespace DCoders\Bkash;
 
 /**
- * Fired during plugin activation.
+ * Class Installer
+ * @package DCoders\Bkash
  *
- * This class defines all code necessary to run during the plugin's activation.
+ * @since 2.0.0
  *
- * @since      1.0.0
- * @package    Bkash_Woocommerce
- * @subpackage Bkash_Woocommerce/includes
- * @author     Kapil Paul <kapilpaul0070@gmail.com>
+ * @author Kapil Paul
  */
-
-namespace Inc\Base;
-
-class BkashWoocommerceActivator {
-
+class Installer {
 	/**
-	 * Short Description. (use period)
+	 * Run the installer
 	 *
-	 * Long Description.
+	 * @since 2.0.0
 	 *
-	 * @since    1.0.0
+	 * @return void
 	 */
-	public static function do_install() {
-		if ( ! self::has_woocommerce() ) {
-			return;
-		}
-
-		self::add_version();
-		self::install();
-	}
-
-	/**
-	 * @return bool
-	 */
-	public static function has_woocommerce() {
-		return class_exists( 'WooCommerce' );
+	public function run() {
+		$this->add_version();
+		$this->create_tables();
 	}
 
 	/**
 	 * Add time and version on DB
+	 *
+	 * @since 2.0.0
+	 *
+	 * @return void
 	 */
-	public static function add_version() {
+	public function add_version() {
 		$installed = get_option( 'wcwpbkash_installed' );
 
 		if ( ! $installed ) {
 			update_option( 'wcwpbkash_installed', time() );
 		}
 
-		update_option( 'wcwpbkash_version', WC_WP_BKASH_VERSION );
+		update_option( 'wcwpbkash_version', BKASH_VERSION );
+
 	}
 
 	/**
-	 * Install table for bkash
+	 * Create necessary database tables
+	 *
+	 * @since 2.0.0
+	 *
+	 * @return void
 	 */
-	public static function install() {
+	public function create_tables() {
+		if ( ! function_exists( 'dbDelta' ) ) {
+			require_once ABSPATH . 'wp-admin/includes/upgrade.php';
+		}
+
 		global $wpdb;
 		$table_name = $wpdb->prefix . 'bkash_transactions';
 
@@ -81,8 +69,6 @@ class BkashWoocommerceActivator {
                   PRIMARY KEY (`id`)
                 ) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8;";
 
-		require_once ABSPATH . 'wp-admin/includes/upgrade.php';
 		dbDelta( $sql );
 	}
-
 }

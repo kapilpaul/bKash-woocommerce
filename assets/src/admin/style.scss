@@ -1,0 +1,43 @@
+$primary-color: #000;
+$bg: black;
+
+h1 {
+  color: $primary-color;
+  padding: 15px;
+}
+
+.dokan_admin_settings_area {
+  overflow: hidden;
+  position: relative;
+  display: flex;
+  border: 1px solid #c8d7e1;
+
+  .admin_settings_sections {
+    overflow: hidden;
+    flex: 1;
+    background: #f1f1f1;
+    border-right: 1px solid #c8d7e1;
+
+    ul.dokan_admin_settings {
+      margin: 0;
+
+      li {
+        background-color: #f1f1f1;
+        padding: 15px 12px;
+        font-size: 13px;
+        font-weight: 600;
+        margin-bottom: 0;
+        cursor: pointer;
+        border: none;
+        border-bottom: 1px solid #c8d7e1;
+        transition-property: none;
+        transition: none;
+      }
+    }
+  }
+
+  .admin_settings_fields {
+    flex: 3;
+    padding: 10px 20px;
+  }
+}

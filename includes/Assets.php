@@ -1,0 +1,208 @@
+<?php
+
+namespace DCoders\Bkash;
+
+/**
+ * Scripts and Styles Class
+ */
+class Assets {
+	/**
+	 * Assets constructor.
+	 *
+	 * @since 2.0.0
+	 *
+	 * @return void
+	 */
+	function __construct() {
+		add_action( 'init', [ $this, 'register_all_scripts' ], 10 );
+		add_action( 'admin_init', [ $this, 'register_all_scripts' ], 10 );
+
+		if ( is_admin() ) {
+			add_action( 'admin_enqueue_scripts', [ $this, 'enqueue_admin_scripts' ], 5 );
+		} else {
+			add_action( 'wp_enqueue_scripts', [ $this, 'enqueue_front_scripts' ], 5 );
+		}
+	}
+
+	/**
+	 * Enqueue admin scripts
+	 *
+	 * @param $hook
+	 *
+	 * @since 2.0.0
+	 *
+	 * @return void
+	 */
+	public function enqueue_admin_scripts( $hook ) {
+		wp_enqueue_script( 'dc-app-vendor' );
+		wp_localize_script( 'dc-app-vendor', 'dc_bkash_admin', $this->get_admin_localized_scripts() );
+	}
+
+	/**
+	 * Enqueue front scripts
+	 *
+	 * @since 2.0.0
+	 *
+	 * @return void
+	 */
+	public function enqueue_front_scripts() {
+
+	}
+
+	/**
+	 * Register our app scripts and styles
+	 *
+	 * @since 2.0.0
+	 *
+	 * @return void
+	 */
+	public function register_all_scripts() {
+		$this->register_scripts( $this->get_scripts() );
+		$this->register_styles( $this->get_styles() );
+	}
+
+	/**
+	 * Register scripts
+	 *
+	 * @param array $scripts
+	 *
+	 * @since 2.0.0
+	 *
+	 * @return void
+	 */
+	private function register_scripts( $scripts ) {
+		foreach ( $scripts as $handle => $script ) {
+			$deps      = isset( $script['deps'] ) ? $script['deps'] : false;
+			$in_footer = isset( $script['in_footer'] ) ? $script['in_footer'] : false;
+			$version   = isset( $script['version'] ) ? $script['version'] : BKASH_VERSION;
+
+			wp_register_script( $handle, $script['src'], $deps, $version, $in_footer );
+		}
+	}
+
+	/**
+	 * Register styles
+	 *
+	 * @param array $styles
+	 *
+	 * @since 2.0.0
+	 *
+	 * @return void
+	 */
+	public function register_styles( $styles ) {
+		foreach ( $styles as $handle => $style ) {
+			$deps = isset( $style['deps'] ) ? $style['deps'] : false;
+
+			wp_register_style( $handle, $style['src'], $deps, BKASH_VERSION );
+		}
+	}
+
+	/**
+	 * Get all registered scripts
+	 *
+	 * @since 2.0.0
+	 *
+	 * @return array
+	 */
+	public function get_scripts() {
+		$plugin_js_assets_path = BKASH_ASSETS . '/js/';
+
+		$dependencies = [
+			'wp-api-fetch',
+		];
+
+		// for local development
+		// when webpack "hot module replacement" is enabled, this
+		// constant needs to be turned "true" on "wp-config.php"
+		if ( defined( 'WP_LOCAL_DEV' ) && WP_LOCAL_DEV ) {
+			$plugin_js_assets_path = 'http://localhost:8080/';
+		}
+
+		$scripts = [
+			'dc-bkash'       => [
+				'src'       => $plugin_js_assets_path . 'dc-bkash.js',
+				'version'   => filemtime( BKASH_PATH . '/assets/js/dc-bkash.js' ),
+				'deps'      => [],
+				'in_footer' => true,
+			],
+			'dc-app-runtime' => [
+				'src'       => $plugin_js_assets_path . 'runtime.js',
+				'version'   => filemtime( BKASH_PATH . '/assets/js/runtime.js' ),
+				'deps'      => $dependencies,
+				'in_footer' => true,
+			],
+			'dc-app-vendor'  => [
+				'src'       => $plugin_js_assets_path . 'vendors.js',
+				'version'   => filemtime( BKASH_PATH . '/assets/js/vendors.js' ),
+				'deps'      => [ 'dc-app-runtime' ],
+				'in_footer' => true,
+			],
+			'dc-app-script'  => [
+				'src'       => $plugin_js_assets_path . 'app.js',
+				'version'   => filemtime( BKASH_PATH . '/assets/js/app.js' ),
+				'deps'      => [ 'dc-app-vendor' ],
+				'in_footer' => true,
+			],
+		];
+
+		return $scripts;
+	}
+
+	/**
+	 * Get registered styles
+	 *
+	 * @since 2.0.0
+	 *
+	 * @return array
+	 */
+	public function get_styles() {
+		$plugin_css_assets_path = BKASH_ASSETS . '/css/';
+
+		// for local development
+		// when webpack "hot module replacement" is enabled, this
+		// constant needs to be turned "true" on "wp-config.php"
+		if ( defined( 'WP_LOCAL_DEV' ) && WP_LOCAL_DEV ) {
+			$plugin_css_assets_path = 'http://localhost:8080/';
+		}
+
+		$styles = [
+			'dc-bkash'   => [
+				'src'     => $plugin_css_assets_path . 'dc-bkash.css',
+				'deps'    => [],
+				'version' => filemtime( BKASH_PATH . '/assets/css/dc-bkash.css' ),
+			],
+			'dc-app-css' => [
+				'src'     => $plugin_css_assets_path . 'app.css',
+				'deps'    => [ 'wp-components' ],
+				'version' => filemtime( BKASH_PATH . '/assets/css/app.css' ),
+			],
+		];
+
+		return $styles;
+	}
+
+	/**
+	 * Admin localized scripts
+	 *
+	 * @since 2.0.0
+	 *
+	 * @return array
+	 */
+	public function get_admin_localized_scripts() {
+		$localize_data = [
+			'ajaxurl'      => admin_url( 'admin-ajax.php' ),
+			'nonce'        => wp_create_nonce( 'dc_bkash_admin' ),
+			'rest'         => [
+				'root'    => esc_url_raw( get_rest_url() ),
+				'nonce'   => wp_create_nonce( 'wp_rest' ),
+				'version' => 'dc-bkash/v1',
+			],
+			'api'          => null,
+			'libs'         => [],
+			'current_time' => current_time( 'mysql' ),
+			'text_domain'  => BKASH_TEXT_DOMAIN,
+		];
+
+		return apply_filters( 'dc_bkash_admin_localize_script', $localize_data );
+	}
+}

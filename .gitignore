@@ -8,6 +8,8 @@ includes/.DS_Store
 debug.log
 package-lock.json
 config.json
+/dist
+.vscode/
 
 # Composer
 /vendor/
