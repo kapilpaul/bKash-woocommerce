@@ -11,7 +11,7 @@ function Posts() {
     setIsFetching(true);
 
     apiFetch({
-      path: "/wp/v2/posts",
+      path: '/wp/v2/posts', //dc-bkash/v1/settings
     })
       .then((resp) => {
         setIsFetching(false);

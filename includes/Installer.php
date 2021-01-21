@@ -38,7 +38,6 @@ class Installer {
 		}
 
 		update_option( 'wcwpbkash_version', BKASH_VERSION );
-
 	}
 
 	/**

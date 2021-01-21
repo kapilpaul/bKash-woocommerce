@@ -203,7 +203,7 @@ final class DCoders_Bkash {
 	 */
 	public function includes() {
 		if ( $this->is_request( 'admin' ) ) {
-			$this->container['admin']    = new DCoders\Bkash\Admin();
+			$this->container['admin'] = new DCoders\Bkash\Admin();
 		}
 
 		if ( $this->is_request( 'frontend' ) ) {
@@ -237,8 +237,10 @@ final class DCoders_Bkash {
 			// $this->container['ajax'] =  new DCoders\Bkash\Ajax();
 		}
 
-		$this->container['api']    = new DCoders\Bkash\Api();
-		$this->container['assets'] = new DCoders\Bkash\Assets();
+		$this->container['api']      = new DCoders\Bkash\Api();
+		$this->container['assets']   = new DCoders\Bkash\Assets();
+		$this->container['settings'] = new DCoders\Bkash\Admin\Settings();
+
 
 		$this->container = apply_filters( 'dc_bkash_get_class_container', $this->container );
 	}

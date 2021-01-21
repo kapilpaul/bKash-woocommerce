@@ -1,13 +1,10 @@
-import React from "react";
-import {
-  BrowserRouter as Router,
-  useLocation,
-} from "react-router-dom";
-import Settings from "../Pages/settings";
+import React from 'react';
+import { HashRouter as Router, Route, Switch } from 'react-router-dom';
+import Settings from '../Pages/settings';
 
 const routes = [
   {
-    path: "#/settings",
+    path: '/settings',
     component: Settings,
   },
 ];
@@ -18,30 +15,24 @@ const routes = [
 function Routerview() {
   return (
     <>
-      {routes.map((route, i) => (
-        <RenderRoute key={i} {...route} />
-      ))}
+      <Router>
+        <Switch>
+          {routes.map((route, i) => (
+            <RenderRoute key={i} {...route} />
+          ))}
+        </Switch>
+      </Router>
     </>
   );
 }
 
 /**
  * Render route component matching with path
- * 
- * @param {*} route 
+ *
+ * @param {*} route
  */
 function RenderRoute(route) {
-  let query = useQuery();
-
-  if (query.get("page") === "dc-bkash" && useLocation().hash === route.path) {
-    return <route.component />;
-  }
-
-  return "";
-}
-
-function useQuery() {
-  return new URLSearchParams(useLocation().search);
+  return <Route path={route.path} component={route.component} />;
 }
 
 export default Routerview;

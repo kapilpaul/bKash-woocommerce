@@ -79,7 +79,7 @@ class Menu {
 	 * @return void
 	 */
 	public function plugin_page() {
-		echo '<div class="wrap" id="hmr-app"></div>';
+		echo '<div id="hmr-app"></div>';
 	}
 
 	/**

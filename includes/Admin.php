@@ -31,7 +31,6 @@ class Admin {
 	 */
 	public function init_classes() {
 		new Admin\Menu();
-		new Admin\Settings();
 	}
 
 	/**

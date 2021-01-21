@@ -12,6 +12,11 @@ namespace DCoders\Bkash\Admin;
  */
 class Settings {
 	/**
+	 * Option key to hold the settings in database
+	 */
+	const OPTION_KEY = 'dc_bkash_settings';
+
+	/**
 	 * Settings constructor
 	 *
 	 * @since 2.0.0
@@ -19,7 +24,7 @@ class Settings {
 	 * @return void
 	 */
 	public function __construct() {
-		add_action( 'wp_ajax_dc_bkash_get_setting', [ $this, 'get_settings_data' ] );
+//		add_action( 'wp_ajax_dc_bkash_get_setting', [ $this, 'get_settings_data' ] );
 //		add_action( 'wp_ajax_dc_bkash_save_settings', [ $this, 'save_settings' ] );
 	}
 
@@ -33,38 +38,113 @@ class Settings {
 	public function get_settings_fields() {
 		$fields = [
 			'gateway'           => [
-				'test_mode'          => [
-					'title'   => __( 'Test Mode', BKASH_TEXT_DOMAIN ),
-					'type'    => 'select',
-					'options' => [ "on" => "ON", "off" => "OFF" ],
-					'default' => __( 'off', BKASH_TEXT_DOMAIN ),
-				],
-				'title'              => [
+				'title'          => [
 					'title'   => __( 'Title', BKASH_TEXT_DOMAIN ),
 					'type'    => 'text',
 					'default' => __( 'bKash Payment', BKASH_TEXT_DOMAIN ),
 				],
-				'username'           => [
-					'title' => __( 'User Name', BKASH_TEXT_DOMAIN ),
-					'type'  => 'text',
+				'test_mode'      => [
+					'title'   => __( 'Test Mode', BKASH_TEXT_DOMAIN ),
+					'type'    => 'select',
+					'options' => [
+						"on"  => __( "ON", BKASH_TEXT_DOMAIN ),
+						"off" => __( "OFF", BKASH_TEXT_DOMAIN ),
+					],
+					'default' => __( 'off', BKASH_TEXT_DOMAIN ),
 				],
-				'password'           => [
-					'title' => __( 'Password', BKASH_TEXT_DOMAIN ),
-					'type'  => 'password',
+				'test_mode_type' => [
+					'title'   => __( 'Test Mode Type', BKASH_TEXT_DOMAIN ),
+					'type'    => 'select',
+					'options' => [
+						"without_key" => "Without Key",
+						"with_key"    => "With Key",
+					],
+					'default' => __( 'with_key', BKASH_TEXT_DOMAIN ),
+					'show_if' => [
+						'key'       => 'test_mode',
+						'value'     => 'on',
+						'condition' => 'equal',
+					],
 				],
-				'app_key'            => [
-					'title' => __( 'App Key', BKASH_TEXT_DOMAIN ),
-					'type'  => 'text',
+				'username'       => [
+					'title'   => __( 'User Name', BKASH_TEXT_DOMAIN ),
+					'type'    => 'text',
+					'show_if' => [
+						'key'       => 'test_mode',
+						'value'     => 'off',
+						'condition' => 'equal',
+					],
 				],
-				'app_secret'         => [
-					'title' => __( 'App Secret', BKASH_TEXT_DOMAIN ),
-					'type'  => 'text',
+				'password'       => [
+					'title'   => __( 'Password', BKASH_TEXT_DOMAIN ),
+					'type'    => 'password',
+					'show_if' => [
+						'key'       => 'test_mode',
+						'value'     => 'off',
+						'condition' => 'equal',
+					],
 				],
+				'app_key'        => [
+					'title'   => __( 'App Key', BKASH_TEXT_DOMAIN ),
+					'type'    => 'text',
+					'show_if' => [
+						'key'       => 'test_mode',
+						'value'     => 'off',
+						'condition' => 'equal',
+					],
+				],
+				'app_secret'     => [
+					'title'   => __( 'App Secret', BKASH_TEXT_DOMAIN ),
+					'type'    => 'text',
+					'show_if' => [
+						'key'       => 'test_mode',
+						'value'     => 'off',
+						'condition' => 'equal',
+					],
+				],
+
+				'sandbox_username'   => [
+					'title'   => __( 'Sandbox User Name', BKASH_TEXT_DOMAIN ),
+					'type'    => 'text',
+					'show_if' => [
+						'key'       => 'test_mode_type',
+						'value'     => 'with_key',
+						'condition' => 'equal',
+					],
+				],
+				'sandbox_password'   => [
+					'title'   => __( 'Sandbox Password', BKASH_TEXT_DOMAIN ),
+					'type'    => 'password',
+					'show_if' => [
+						'key'       => 'test_mode_type',
+						'value'     => 'with_key',
+						'condition' => 'equal',
+					],
+				],
+				'sandbox_app_key'    => [
+					'title'   => __( 'Sandbox App Key', BKASH_TEXT_DOMAIN ),
+					'type'    => 'text',
+					'show_if' => [
+						'key'       => 'test_mode_type',
+						'value'     => 'with_key',
+						'condition' => 'equal',
+					],
+				],
+				'sandbox_app_secret' => [
+					'title'   => __( 'Sandbox App Secret', BKASH_TEXT_DOMAIN ),
+					'type'    => 'text',
+					'show_if' => [
+						'key'       => 'test_mode_type',
+						'value'     => 'with_key',
+						'condition' => 'equal',
+					],
+				],
+
 				'transaction_charge' => [
 					'title'   => __( 'Enable bKash Charge', BKASH_TEXT_DOMAIN ),
-					'type'    => 'checkbox',
-					'label'   => __( '&nbsp;', BKASH_TEXT_DOMAIN ),
-					'default' => 'no',
+					'type'    => 'select',
+					'options' => [ "on" => "ON", "off" => "OFF" ],
+					'default' => 'off',
 				],
 				'charge_type'        => [
 					'title'       => __( 'Charge Type', BKASH_TEXT_DOMAIN ),
@@ -90,7 +170,7 @@ class Settings {
 			'dokan_integration' => [],
 		];
 
-		return $fields;
+		return apply_filters( 'dc_bkash_settings_fields', $fields );
 	}
 
 	/**
@@ -112,7 +192,7 @@ class Settings {
 			],
 		];
 
-		return $sections;
+		return apply_filters( 'dc_bkash_settings_sections', $sections );
 	}
 
 	/**
@@ -141,13 +221,13 @@ class Settings {
 			'fields'   => [],
 		];
 
-		$fields = $this->get_settings_fields();
+		$fields = wp_parse_args( get_option( self::OPTION_KEY ), $this->get_settings_fields() );
 
 		foreach ( $this->get_settings_sections() as $key => $section ) {
-			$settings['fields'][ $section ] = isset( $fields[ $section ] ) ? $fields[ $section ] : [];
+			$settings['fields'][ $key ] = isset( $fields[ $key ] ) ? $fields[ $key ] : [];
 		}
 
-		return $settings;
+		return apply_filters( 'dc_bkash_get_settings', $settings );
 	}
 
 	/**

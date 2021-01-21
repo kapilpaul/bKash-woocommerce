@@ -201,6 +201,7 @@ class Assets {
 			'libs'         => [],
 			'current_time' => current_time( 'mysql' ),
 			'text_domain'  => BKASH_TEXT_DOMAIN,
+			'asset_url'    => BKASH_ASSETS,
 		];
 
 		return apply_filters( 'dc_bkash_admin_localize_script', $localize_data );
