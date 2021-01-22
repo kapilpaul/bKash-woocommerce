@@ -61,45 +61,55 @@ class Settings {
 					],
 					'default' => __( 'with_key', BKASH_TEXT_DOMAIN ),
 					'show_if' => [
-						'key'       => 'test_mode',
-						'value'     => 'on',
-						'condition' => 'equal',
+						[
+							'key'       => 'test_mode',
+							'value'     => 'on',
+							'condition' => 'equal',
+						],
 					],
 				],
 				'username'       => [
 					'title'   => __( 'User Name', BKASH_TEXT_DOMAIN ),
 					'type'    => 'text',
 					'show_if' => [
-						'key'       => 'test_mode',
-						'value'     => 'off',
-						'condition' => 'equal',
+						[
+							'key'       => 'test_mode',
+							'value'     => 'off',
+							'condition' => 'equal',
+						],
 					],
 				],
 				'password'       => [
 					'title'   => __( 'Password', BKASH_TEXT_DOMAIN ),
 					'type'    => 'password',
 					'show_if' => [
-						'key'       => 'test_mode',
-						'value'     => 'off',
-						'condition' => 'equal',
+						[
+							'key'       => 'test_mode',
+							'value'     => 'off',
+							'condition' => 'equal',
+						],
 					],
 				],
 				'app_key'        => [
 					'title'   => __( 'App Key', BKASH_TEXT_DOMAIN ),
 					'type'    => 'text',
 					'show_if' => [
-						'key'       => 'test_mode',
-						'value'     => 'off',
-						'condition' => 'equal',
+						[
+							'key'       => 'test_mode',
+							'value'     => 'off',
+							'condition' => 'equal',
+						],
 					],
 				],
 				'app_secret'     => [
 					'title'   => __( 'App Secret', BKASH_TEXT_DOMAIN ),
 					'type'    => 'text',
 					'show_if' => [
-						'key'       => 'test_mode',
-						'value'     => 'off',
-						'condition' => 'equal',
+						[
+							'key'       => 'test_mode',
+							'value'     => 'off',
+							'condition' => 'equal',
+						],
 					],
 				],
 
@@ -107,36 +117,64 @@ class Settings {
 					'title'   => __( 'Sandbox User Name', BKASH_TEXT_DOMAIN ),
 					'type'    => 'text',
 					'show_if' => [
-						'key'       => 'test_mode_type',
-						'value'     => 'with_key',
-						'condition' => 'equal',
+						[
+							'key'       => 'test_mode',
+							'value'     => 'on',
+							'condition' => 'equal',
+						],
+						[
+							'key'       => 'test_mode_type',
+							'value'     => 'with_key',
+							'condition' => 'equal',
+						],
 					],
 				],
 				'sandbox_password'   => [
 					'title'   => __( 'Sandbox Password', BKASH_TEXT_DOMAIN ),
 					'type'    => 'password',
 					'show_if' => [
-						'key'       => 'test_mode_type',
-						'value'     => 'with_key',
-						'condition' => 'equal',
+						[
+							'key'       => 'test_mode',
+							'value'     => 'on',
+							'condition' => 'equal',
+						],
+						[
+							'key'       => 'test_mode_type',
+							'value'     => 'with_key',
+							'condition' => 'equal',
+						],
 					],
 				],
 				'sandbox_app_key'    => [
 					'title'   => __( 'Sandbox App Key', BKASH_TEXT_DOMAIN ),
 					'type'    => 'text',
 					'show_if' => [
-						'key'       => 'test_mode_type',
-						'value'     => 'with_key',
-						'condition' => 'equal',
+						[
+							'key'       => 'test_mode',
+							'value'     => 'on',
+							'condition' => 'equal',
+						],
+						[
+							'key'       => 'test_mode_type',
+							'value'     => 'with_key',
+							'condition' => 'equal',
+						],
 					],
 				],
 				'sandbox_app_secret' => [
 					'title'   => __( 'Sandbox App Secret', BKASH_TEXT_DOMAIN ),
 					'type'    => 'text',
 					'show_if' => [
-						'key'       => 'test_mode_type',
-						'value'     => 'with_key',
-						'condition' => 'equal',
+						[
+							'key'       => 'test_mode',
+							'value'     => 'on',
+							'condition' => 'equal',
+						],
+						[
+							'key'       => 'test_mode_type',
+							'value'     => 'with_key',
+							'condition' => 'equal',
+						],
 					],
 				],
 
@@ -152,12 +190,26 @@ class Settings {
 					'options'     => [ "fixed" => "Fixed", "percentage" => "Percentage" ],
 					'default'     => 'percentage',
 					'description' => __( 'This option will only work when the bKash Charge is enabled', BKASH_TEXT_DOMAIN ),
+					'show_if' => [
+						[
+							'key'       => 'transaction_charge',
+							'value'     => 'on',
+							'condition' => 'equal',
+						],
+					],
 				],
 				'charge_amount'      => [
 					'title'       => __( 'Charge Amount', BKASH_TEXT_DOMAIN ),
 					'type'        => 'text',
 					'default'     => 2,
 					'description' => __( 'This option will only work when the bKash Charge is enabled', BKASH_TEXT_DOMAIN ),
+					'show_if' => [
+						[
+							'key'       => 'transaction_charge',
+							'value'     => 'on',
+							'condition' => 'equal',
+						],
+					],
 				],
 				'description'        => [
 					'title'       => __( 'Description', BKASH_TEXT_DOMAIN ),

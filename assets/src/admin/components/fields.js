@@ -18,7 +18,7 @@ function Fields({
    *
    * @param {*} type
    */
-  function renderByType(field) {
+  const renderByType = (field) => {
     let type = field.type;
 
     switch (type) {
@@ -82,26 +82,28 @@ function Fields({
       default:
         return '';
     }
-  }
+  };
 
   /**
    * decide wheather to show or hide this field
    */
-  function showThisField() {
-    let options = allSettings?.[section_id]?.[field.show_if.key];
-    let optionValue;
+  const showThisField = () => {
+    let options, optionValue;
+    let is_showing = false;
 
-    optionValue = options?.value ? options?.value : options?.default;
+    //get deceisions by checking the conditions
+    let decisions = field.show_if.map((item) => {
+      options = allSettings?.[section_id]?.[item.key];
+      optionValue = options?.value ? options?.value : options?.default;
 
-    switch (field?.show_if?.condition) {
-      case 'equal':
-        if (optionValue === field.show_if.value) {
-          return true;
-        }
-    }
+      return is_matched(item, optionValue);
+    });
 
-    return false;
-  }
+    //checking wheather all deceisions are true or not
+    return decisions.every((item) => {
+      return item === true;
+    });
+  };
 
   /** if show_if exists and do not match with the condition we are returning it */
   if (field?.show_if && !showThisField()) {
@@ -123,6 +125,23 @@ function Fields({
       )}
     </>
   );
+}
+
+/**
+ * if condition matched with the case and option value is same as item value
+ *
+ * @param {*} item
+ * @param {*} optionValue
+ */
+function is_matched(item, optionValue) {
+  switch (item?.condition) {
+    case 'equal':
+      if (optionValue === item.value) {
+        return true;
+      }
+  }
+
+  return false;
 }
 
 export default Fields;
