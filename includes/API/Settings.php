@@ -60,7 +60,7 @@ class Settings extends BkashRestController {
 	 * @return \WP_Error|\WP_REST_Response
 	 */
 	public function get_settings_data( $request ) {
-		$settings = dcoders_bkash()->settings->get_settings();
+		$settings = dc_bkash()->settings->get_settings();
 
 		return rest_ensure_response( $settings );
 	}

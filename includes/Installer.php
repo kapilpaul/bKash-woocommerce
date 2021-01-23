@@ -4,9 +4,9 @@ namespace DCoders\Bkash;
 
 /**
  * Class Installer
- * @package DCoders\Bkash
- *
  * @since 2.0.0
+ *
+ * @package DCoders\Bkash
  *
  * @author Kapil Paul
  */
@@ -34,10 +34,13 @@ class Installer {
 		$installed = get_option( 'wcwpbkash_installed' );
 
 		if ( ! $installed ) {
-			update_option( 'wcwpbkash_installed', time() );
+			update_option( 'dc_bkash_installed', time() );
+		} else if ( ! get_option( 'dc_bkash_installed' ) ) {
+			delete_option( 'wcwpbkash_installed' );
+			update_option( 'dc_bkash_installed', $installed );
 		}
 
-		update_option( 'wcwpbkash_version', BKASH_VERSION );
+		update_option( 'dc_bkash_version', BKASH_VERSION );
 	}
 
 	/**

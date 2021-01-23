@@ -86,6 +86,8 @@ final class DCoders_Bkash {
 		register_activation_hook( __FILE__, [ $this, 'activate' ] );
 		register_deactivation_hook( __FILE__, [ $this, 'deactivate' ] );
 
+//		$this->init_appsero_tracker();
+
 		add_action( 'plugins_loaded', [ $this, 'init_plugin' ] );
 	}
 
@@ -156,7 +158,7 @@ final class DCoders_Bkash {
 	}
 
 	/**
-	 * Load the plugin after all plugins are loaded\
+	 * Load the plugin after all plugins are loaded
 	 *
 	 * @since 2.0.0
 	 *
@@ -240,7 +242,7 @@ final class DCoders_Bkash {
 		$this->container['api']      = new DCoders\Bkash\Api();
 		$this->container['assets']   = new DCoders\Bkash\Assets();
 		$this->container['settings'] = new DCoders\Bkash\Admin\Settings();
-
+		$this->container['gateway']  = new DCoders\Bkash\Gateway\Manager();
 
 		$this->container = apply_filters( 'dc_bkash_get_class_container', $this->container );
 	}
@@ -286,6 +288,35 @@ final class DCoders_Bkash {
 		}
 	}
 
+	/**
+	 * Check woocommerce is exists or not
+	 *
+	 * @since 2.0.03
+	 *
+	 * @return bool
+	 */
+	public function has_woocommerce() {
+		return class_exists( 'WooCommerce' );
+	}
+
+	/**
+	 * Initialize Appsero Tracker
+	 *
+	 * @since 1.2.0
+	 *
+	 * @return  void
+	 */
+	public function init_appsero_tracker() {
+		if ( ! class_exists( 'Appsero\Client' ) ) {
+			require_once __DIR__ . '/appsero/src/Client.php';
+		}
+
+		$client = new Appsero\Client( 'f5998f6a-c466-4c4e-8627-0188f177e7f5', 'Payment Gateway bKash for WC', __FILE__ );
+
+		// Active insights
+		$client->insights()->init();
+	}
+
 } // DCoders_Bkash
 
 /**
@@ -295,11 +326,11 @@ final class DCoders_Bkash {
  *
  * @return \DCoders_Bkash|bool
  */
-function dcoders_bkash() {
+function dc_bkash() {
 	return DCoders_Bkash::init();
 }
 
 /**
  *  kick-off the plugin
  */
-dcoders_bkash();
+dc_bkash();

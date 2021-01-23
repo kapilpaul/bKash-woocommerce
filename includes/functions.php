@@ -10,6 +10,6 @@
  *
  * @return mixed
  */
-function dc_bkash_get_option( $option, $section ) {
-	return dcoders_bkash()->settings->get_option( $option, $section );
+function dc_bkash_get_option( $option, $section = 'gateway' ) {
+	return dc_bkash()->settings->get_option( $option, $section );
 }
