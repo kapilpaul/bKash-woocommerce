@@ -24,8 +24,7 @@ class Settings {
 	 * @return void
 	 */
 	public function __construct() {
-//		add_action( 'wp_ajax_dc_bkash_get_setting', [ $this, 'get_settings_data' ] );
-//		add_action( 'wp_ajax_dc_bkash_save_settings', [ $this, 'save_settings' ] );
+
 	}
 
 	/**
@@ -190,7 +189,7 @@ class Settings {
 					'options'     => [ "fixed" => "Fixed", "percentage" => "Percentage" ],
 					'default'     => 'percentage',
 					'description' => __( 'This option will only work when the bKash Charge is enabled', BKASH_TEXT_DOMAIN ),
-					'show_if' => [
+					'show_if'     => [
 						[
 							'key'       => 'transaction_charge',
 							'value'     => 'on',
@@ -203,7 +202,7 @@ class Settings {
 					'type'        => 'text',
 					'default'     => 2,
 					'description' => __( 'This option will only work when the bKash Charge is enabled', BKASH_TEXT_DOMAIN ),
-					'show_if' => [
+					'show_if'     => [
 						[
 							'key'       => 'transaction_charge',
 							'value'     => 'on',
@@ -248,19 +247,6 @@ class Settings {
 	}
 
 	/**
-	 * Send settings data requesting from ajax
-	 *
-	 * @since 2.0.0
-	 *
-	 * @return void
-	 */
-	public function get_settings_data() {
-		$this->check_permission();
-
-		wp_send_json_success( $this->get_settings() );
-	}
-
-	/**
 	 * Get all settings data
 	 *
 	 * @since 2.0.0
@@ -283,21 +269,29 @@ class Settings {
 	}
 
 	/**
-	 * Validate nonce and permission check
+	 * Get option value
+	 *
+	 * @param $option
+	 * @param $section
 	 *
 	 * @since 2.0.0
 	 *
-	 * @return void
+	 * @return bool|mixed|null
 	 */
-	private function check_permission() {
-		if ( ! current_user_can( 'manage_woocommerce' ) ) {
-			wp_send_json_error( __( 'You have no permission to get settings value', BKASH_TEXT_DOMAIN ) );
+	public function get_option( $option, $section ) {
+		$settings = $this->get_settings();
+
+		if ( empty( $settings ) ) {
+			return false;
 		}
 
-		$_post_data = wp_unslash( $_POST );
+		$settings = $settings['fields'];
+		$value    = null;
 
-		if ( ! isset( $_post_data['nonce'] ) || ! wp_verify_nonce( $_post_data['nonce'], 'dc_bkash_admin' ) ) {
-			wp_send_json_error( __( 'Invalid nonce', BKASH_TEXT_DOMAIN ) );
+		if ( isset( $settings[ $section ] ) && isset( $settings[ $section ][ $option ] ) ) {
+			$value = isset( $settings[ $section ][ $option ]['value'] ) ? $settings[ $section ][ $option ]['value'] : $settings[ $section ][ $option ]['default'];
 		}
+
+		return $value;
 	}
 }

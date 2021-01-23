@@ -17,6 +17,12 @@ function Settings() {
   const [currentTab, setCurrentTab] = useState('');
   const [isSubmitted, setIsSubmitted] = useState(false);
 
+  /**
+   * Handle the change of an input value
+   * @param {*} inputVal 
+   * @param {*} parent_id 
+   * @param {*} id 
+   */
   const handleChange = (inputVal, parent_id, id) => {
     setSettings({
       ...settings,
