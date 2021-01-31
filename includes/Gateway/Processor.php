@@ -115,7 +115,9 @@ class Processor {
 	 * @return bool|mixed
 	 */
 	public function get_token() {
-		if ( $token = get_transient( 'bkash_token' ) ) {
+		$token = get_transient( 'bkash_token' );
+
+		if ( $token ) {
 			return $token;
 		}
 
@@ -179,15 +181,7 @@ class Processor {
 
 		$body = wp_remote_retrieve_body( $response );
 
-//		if (
-//			200 !== wp_remote_retrieve_response_code( $response ) &&
-//			201 !== wp_remote_retrieve_response_code( $response ) &&
-//			204 !== wp_remote_retrieve_response_code( $response )
-//		) {
-//			return new \WP_Error( 'dc_bkash_request_error', $body );
-//		}
-
-		return json_decode( $response, true );
+		return json_decode( $body, true );
 	}
 
 	/**
@@ -232,57 +226,68 @@ class Processor {
 	}
 
 	/**
-	 * @param $invoice
 	 * @param $amount
+	 *
+	 * @param $invoice_id
 	 *
 	 * @return bool|mixed|string
 	 */
-	public function create_payment( $amount, $invoice ) {
+	public function create_payment( $amount, $invoice_id ) {
 		if ( ! $this->check_test_mode() && ! $this->get_token() ) {
 			return false;
 		}
 
-		$amount = self::get_final_amount( $amount );
+		$amount = $this->get_final_amount( $amount );
 
 		$payment_data = [
 			'amount'                => $amount,
 			'currency'              => 'BDT',
 			'intent'                => 'sale',
-			'merchantInvoiceNumber' => $invoice,
+			'merchantInvoiceNumber' => $invoice_id,
 		];
 
-		$response = self::make_request( self::paymentCreateUrl(), $payment_data, self::get_authorization_header() );
+		$response = $this->make_request( $this->payment_create_url(), $payment_data, $this->get_authorization_header() );
+
+		if ( is_wp_error( $response ) ) {
+			return $response;
+		}
 
 		if ( isset( $response['paymentID'] ) && $response['paymentID'] ) {
 			return $response;
 		}
 
-		return false;
+		return new \WP_Error( 'dc_bkash_create_payment_error', $response );
 	}
 
 	/**
+	 * Execute payment url
+	 *
 	 * @param $payment_id
 	 *
 	 * @return bool|mixed|string
 	 */
-	public function executePayment( $payment_id ) {
-		if ( ! self::check_test_mode() && ! self::get_token() ) {
+	public function execute_payment( $payment_id ) {
+		if ( ! $this->check_test_mode() && ! $this->get_token() ) {
 			return false;
 		}
 
 		$data = [];
 
-		if ( self::check_test_mode() ) {
+		if ( $this->check_test_mode() ) {
 			$data = [ 'paymentID' => $payment_id ];
 		}
 
-		$response = self::make_request( self::paymentExecuteUrl( $payment_id ), $data, $this->get_authorization_header() );
+		$response = $this->make_request( $this->payment_execute_url( $payment_id ), $data, $this->get_authorization_header() );
+
+		if ( is_wp_error( $response ) ) {
+			return $response;
+		}
 
 		if ( isset( $response['transactionStatus'] ) && $response['transactionStatus'] == 'Completed' ) {
 			return $response;
 		}
 
-		return false;
+		return new \WP_Error( 'dc_bkash_execute_payment_error', $response );
 	}
 
 	/**
@@ -294,7 +299,7 @@ class Processor {
 		if ( $token = $this->get_token() ) {
 			$headers = [
 				"Authorization" => "Bearer {$token}",
-				"X-App-Key"     => $this->get_pgw_option( 'app_key' ),
+				"X-App-Key"     => dc_bkash_get_option( 'app_key' ),
 				"Content-Type"  => 'application/json',
 			];
 
@@ -319,12 +324,12 @@ class Processor {
 
 			return false;
 		} catch ( \Exception $e ) {
-			return $e->getMessage();
+			return false;
 		}
 	}
 
 	/**
-	 * calculate final amount based on bKash charge option
+	 * Calculate final amount based on bKash charge option
 	 *
 	 * @param $amount
 	 *
@@ -333,9 +338,11 @@ class Processor {
 	 * @return float|int
 	 */
 	public function get_final_amount( $amount ) {
-		if ( $this->get_pgw_option( 'transaction_charge' ) == 'yes' ) {
-			$charge_type   = $this->get_pgw_option( 'charge_type' );
-			$charge_amount = (float) $this->get_pgw_option( 'charge_amount' );
+		$amount = apply_filters( 'dc_bkash_before_calculated_final_amount', $amount );
+
+		if ( dc_bkash_get_option( 'transaction_charge' ) == 'yes' ) {
+			$charge_type   = dc_bkash_get_option( 'charge_type' );
+			$charge_amount = (float) dc_bkash_get_option( 'charge_amount' );
 
 			if ( $charge_type == 'percentage' ) {
 				$amount = $amount + $amount * ( $charge_amount / 100 );
@@ -346,21 +353,22 @@ class Processor {
 
 		$amount = number_format( $amount, 2, '.', '' );
 
-		return $amount;
+		return apply_filters( 'dc_bkash_after_calculated_final_amount', $amount );
 	}
 
 	/**
-	 * Get payment gateway settings option
+	 * Get bkash script
 	 *
-	 * @param $key
-	 *
-	 * @since 1.3.0
+	 * @since 2.0.0
 	 *
 	 * @return string
 	 */
-	public function get_pgw_option( $key ) {
-		$self_class = $this->getSelfClass();
+	public function get_script() {
+		$env    = $this->check_test_mode() ? 'sandbox' : 'pay';
+		$suffix = $this->check_test_mode() ? '-sandbox' : 'pay';
 
-		return $self_class->get_option( $key );
+		$script = "https://scripts.{$env}.bka.sh/versions/1.2.0-beta/checkout/bKash-checkout{$suffix}.js";
+
+		return $script;
 	}
 }

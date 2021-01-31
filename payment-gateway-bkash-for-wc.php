@@ -236,7 +236,7 @@ final class DCoders_Bkash {
 	 */
 	public function init_classes() {
 		if ( $this->is_request( 'ajax' ) ) {
-			// $this->container['ajax'] =  new DCoders\Bkash\Ajax();
+			$this->container['ajax'] = new DCoders\Bkash\Ajax();
 		}
 
 		$this->container['api']      = new DCoders\Bkash\Api();

@@ -72,19 +72,25 @@ class Bkash extends \WC_Payment_Gateway {
 		$order = wc_get_order( $order_id );
 
 		//empty cart
-		WC()->cart->empty_cart();
+//		WC()->cart->empty_cart();
+		$create_payment_data = $this->create_payment_request( $order );
+
+		if ( is_wp_error( $create_payment_data ) ) {
+			$create_payment_data = false;
+		}
 
 		return [
-			'result'             => 'success',
-			'order_number'       => $order_id,
-			'amount'             => (float) $order->get_total(),
-			'checkout_order_pay' => $order->get_checkout_payment_url(),
-			'redirect'           => $this->get_return_url( $order ),
+			'result'              => 'success',
+			'order_number'        => $order_id,
+			'amount'              => (float) $order->get_total(),
+			'checkout_order_pay'  => $order->get_checkout_payment_url(),
+			'redirect'            => $this->get_return_url( $order ),
+			'create_payment_data' => $create_payment_data,
 		];
 	}
 
 	/**
-	 * include payment scripts
+	 * Include payment scripts
 	 *
 	 * @return void
 	 */
@@ -98,29 +104,52 @@ class Bkash extends \WC_Payment_Gateway {
 			return;
 		}
 
-		if ( $this->get_option( 'test_mode' ) == 'off' ) {
-			$script = "https://scripts.pay.bka.sh/versions/1.2.0-beta/checkout/bKash-checkout.js";
-		} else {
-			$script = "https://scripts.sandbox.bka.sh/versions/1.2.0-beta/checkout/bKash-checkout-sandbox.js";
-		}
+		wp_enqueue_style( 'dc-bkash' );
+		wp_enqueue_script( 'bkash-jquery' );
 
 		//loading this scripts only in checkout page
-		if ( is_checkout() || is_checkout_pay_page() ) {
-			wp_dequeue_script( 'jquery' );
-			wp_enqueue_script( 'bkash_jquery', 'https://code.jquery.com/jquery-3.3.1.min.js', [], '3.3.1', false );
-			wp_enqueue_script( 'bkash_checkout', $script, [], '1.2.0', true );
+		wp_enqueue_script( 'dc-bkash' );
+
+		$this->localize_scripts();
+	}
+
+	/**
+	 * Localize scripts and passing data
+	 *
+	 * @return void
+	 */
+	public function localize_scripts() {
+		global $woocommerce;
+
+		$bkash_script_url = dc_bkash()->gateway->processor()->get_script();
+
+		$data = [
+			'amount'     => $woocommerce->cart->cart_contents_total,
+			'nonce'      => wp_create_nonce( 'dc-bkash-nonce' ),
+			'ajax_url'   => admin_url( 'admin-ajax.php' ),
+			'script_url' => $bkash_script_url,
+		];
+
+		wp_localize_script( 'dc-bkash', 'dc_bkash', $data );
+	}
+
+	/**
+	 * Create bKash Payment request
+	 *
+	 * @param \WC_Order $order
+	 *
+	 * @since 2.0.0
+	 *
+	 * @return mixed
+	 */
+	public function create_payment_request( \WC_Order $order ) {
+		$processor = dc_bkash()->gateway->processor();
+		$response  = $processor->create_payment( (float) $order->get_total(), $order->get_id() );
+
+		if ( is_wp_error( $response ) ) {
+			return $response;
 		}
 
-		wp_register_script( 'wcb-checkout', plugins_url( 'js/bkash.js', dirname( __FILE__ ) ), [
-			'jquery',
-			'woocommerce',
-			'wc-country-select',
-			'wc-address-i18n',
-		], '3.9.1', true );
-		wp_enqueue_script( 'wcb-checkout' );
-
-		wp_enqueue_style( 'bkash_woocommerce_css', plugins_url( 'css/bkash-woocommerce.css', dirname( __FILE__ ) ), [], '1.0.0', false );
-
-		$this->localizeScripts();
+		return $response;
 	}
 }

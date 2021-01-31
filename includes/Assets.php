@@ -13,27 +13,24 @@ class Assets {
 	 *
 	 * @return void
 	 */
-	function __construct() {
-		add_action( 'init', [ $this, 'register_all_scripts' ], 10 );
-		add_action( 'admin_init', [ $this, 'register_all_scripts' ], 10 );
+	public function __construct() {
+		add_action( 'admin_init', [ $this, 'register_all_scripts' ] );
 
 		if ( is_admin() ) {
 			add_action( 'admin_enqueue_scripts', [ $this, 'enqueue_admin_scripts' ], 5 );
 		} else {
-			add_action( 'wp_enqueue_scripts', [ $this, 'enqueue_front_scripts' ], 5 );
+			add_action( 'wp_enqueue_scripts', [ $this, 'register_all_scripts' ], 5 );
 		}
 	}
 
 	/**
 	 * Enqueue admin scripts
 	 *
-	 * @param $hook
-	 *
 	 * @since 2.0.0
 	 *
 	 * @return void
 	 */
-	public function enqueue_admin_scripts( $hook ) {
+	public function enqueue_admin_scripts() {
 		wp_enqueue_script( 'dc-app-vendor' );
 		wp_localize_script( 'dc-app-vendor', 'dc_bkash_admin', $this->get_admin_localized_scripts() );
 	}
@@ -122,8 +119,11 @@ class Assets {
 			'dc-bkash'       => [
 				'src'       => $plugin_js_assets_path . 'dc-bkash.js',
 				'version'   => filemtime( BKASH_PATH . '/assets/js/dc-bkash.js' ),
-				'deps'      => [],
+				'deps'      => [ 'jquery' ],
 				'in_footer' => true,
+			],
+			'bkash-jquery' => [
+				'src'       => 'https://code.jquery.com/jquery-3.5.1.min.js',
 			],
 			'dc-app-runtime' => [
 				'src'       => $plugin_js_assets_path . 'runtime.js',
