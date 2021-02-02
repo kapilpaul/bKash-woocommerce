@@ -44,18 +44,18 @@ class Ajax {
 				$this->send_json_error( __( 'Wrong or invalid order ID', BKASH_TEXT_DOMAIN ) );
 			}
 
-			$processor = dc_bkash()->gateway->processor();
-			$response  = $processor->execute_payment( $payment_id );
+			$processor       = dc_bkash()->gateway->processor();
+			$execute_payment = $processor->execute_payment( $payment_id );
 
-			if ( is_wp_error( $response ) ) {
+			if ( is_wp_error( $execute_payment ) ) {
 				$this->send_json_error( __( 'Error in execute payment', BKASH_TEXT_DOMAIN ) );
 			}
 
-			if ( $response ) {
-				do_action( 'dc_bkash_execute_payment_success', $order, $response );
+			if ( $execute_payment ) {
+				do_action( 'dc_bkash_execute_payment_success', $order, $execute_payment );
 
-				$response['order_success_url'] = $order->get_checkout_order_received_url();
-				wp_send_json_success( $response );
+				$execute_payment['order_success_url'] = $order->get_checkout_order_received_url();
+				wp_send_json_success( $execute_payment );
 			}
 
 			$this->send_json_error( __( 'Something went wrong!', BKASH_TEXT_DOMAIN ) );

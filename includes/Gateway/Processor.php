@@ -340,11 +340,11 @@ class Processor {
 	public function get_final_amount( $amount ) {
 		$amount = apply_filters( 'dc_bkash_before_calculated_final_amount', $amount );
 
-		if ( dc_bkash_get_option( 'transaction_charge' ) == 'yes' ) {
+		if ( 'yes' === dc_bkash_get_option( 'transaction_charge' ) ) {
 			$charge_type   = dc_bkash_get_option( 'charge_type' );
 			$charge_amount = (float) dc_bkash_get_option( 'charge_amount' );
 
-			if ( $charge_type == 'percentage' ) {
+			if ( 'percentage' === $charge_type ) {
 				$amount = $amount + $amount * ( $charge_amount / 100 );
 			} else {
 				$amount = $amount + $charge_amount;
