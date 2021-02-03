@@ -2,6 +2,8 @@
 
 namespace DCoders\Bkash\Gateway;
 
+use PHPMailer\PHPMailer\Exception;
+
 /**
  * Bkash payment processor helper class
  *
@@ -39,6 +41,11 @@ class Processor {
 	public $payment_query_url;
 
 	/**
+	 * @var string
+	 */
+	protected $version = 'v1.2.0-beta';
+
+	/**
 	 * Processor constructor.
 	 *
 	 * @since 2.0.0
@@ -48,8 +55,8 @@ class Processor {
 	public function __construct() {
 		$env = $this->check_test_mode() ? 'sandbox' : 'pay';
 
-		$this->grant_token_url   = "https://checkout.$env.bka.sh/v1.2.0-beta/checkout/token/grant";
-		$this->payment_query_url = "https://direct.$env.bka.sh/v1.2.0-beta/checkout/payment/query/";
+		$this->grant_token_url   = "https://checkout.$env.bka.sh/{$this->version}/checkout/token/grant";
+		$this->payment_query_url = "https://direct.$env.bka.sh/{$this->version}/checkout/payment/query/";
 	}
 
 	/**
@@ -87,7 +94,7 @@ class Processor {
 	 */
 	public function payment_execute_url( $payment_id = '' ) {
 		$url = $this->get_payment_url( 'execute' );
-		$url = $this->check_test_mode() ? $url : $url . "/$payment_id";
+		$url = $this->check_test_mode() && $this->get_test_mode_type( 'without_key' ) ? $url : $url . "/$payment_id";
 
 		return $url;
 	}
@@ -100,28 +107,30 @@ class Processor {
 	 * @return string
 	 */
 	public function get_payment_url( $type ) {
-		if ( $this->check_test_mode() ) {
-			return "https://merchantserver.sandbox.bka.sh/api/checkout/v1.2.0-beta/payment/$type";
+		if ( $this->get_test_mode_type( 'without_key' ) ) {
+			return "https://merchantserver.sandbox.bka.sh/api/checkout/{$this->version}/payment/$type";
 		}
 
-		return "https://checkout.pay.bka.sh/v1.2.0-beta/checkout/payment/$type";
+		$server = $this->check_test_mode() ? 'sandbox' : 'pay';
+
+		return "https://checkout.{$server}.bka.sh/{$this->version}/checkout/payment/$type";
 	}
 
 	/**
-	 * Get Token
+	 * Get Token from bKash
 	 *
-	 * @@since 2.0.0
+	 * @since 2.0.0
 	 *
 	 * @return bool|mixed
 	 */
 	public function get_token() {
-		$token = get_transient( 'bkash_token' );
+		$token = get_transient( 'dc_bkash_token' );
 
 		if ( $token ) {
 			return $token;
 		}
 
-		$prefix = 'with_key' === dc_bkash_get_option( 'test_mode_type' ) ? 'sandbox_' : '';
+		$prefix = $this->get_test_mode_type( 'with_key' ) ? 'sandbox_' : '';
 
 		$user_name = dc_bkash_get_option( $prefix . 'username' );
 		$password  = dc_bkash_get_option( $prefix . 'password' );
@@ -139,14 +148,18 @@ class Processor {
 
 		$result = $this->make_request( $this->grant_token_url, $data, $headers );
 
+		if ( is_wp_error( $result ) ) {
+			return $result;
+		}
+
 		if ( isset( $result['id_token'] ) && isset( $result['token_type'] ) ) {
 			$token = $result['id_token'];
-			set_transient( 'bkash_token', $token, $result['expires_in'] );
+			set_transient( 'dc_bkash_token', $token, $result['expires_in'] );
 
 			return $result['id_token'];
 		}
 
-		return false;
+		return new \WP_Error( 'dc_bkash_create_token_error', $result );
 	}
 
 	/**
@@ -180,7 +193,7 @@ class Processor {
 		}
 
 		$body = wp_remote_retrieve_body( $response );
-
+		
 		return json_decode( $body, true );
 	}
 
@@ -226,6 +239,8 @@ class Processor {
 	}
 
 	/**
+	 * Create payment request in bKash
+	 *
 	 * @param $amount
 	 *
 	 * @param $invoice_id
@@ -233,30 +248,34 @@ class Processor {
 	 * @return bool|mixed|string
 	 */
 	public function create_payment( $amount, $invoice_id ) {
-		if ( ! $this->check_test_mode() && ! $this->get_token() ) {
-			return false;
+		try {
+			if ( ! $this->check_test_mode() && ! $this->get_token() ) {
+				return false;
+			}
+
+			$amount = $this->get_final_amount( $amount );
+
+			$payment_data = [
+				'amount'                => $amount,
+				'currency'              => 'BDT',
+				'intent'                => 'sale',
+				'merchantInvoiceNumber' => $invoice_id,
+			];
+
+			$response = $this->make_request( $this->payment_create_url(), $payment_data, $this->get_authorization_header() );
+
+			if ( is_wp_error( $response ) ) {
+				return $response;
+			}
+
+			if ( isset( $response['paymentID'] ) && $response['paymentID'] ) {
+				return $response;
+			}
+
+			return new \WP_Error( 'dc_bkash_create_payment_error', $response );
+		} catch ( Exception $e ) {
+			return new \WP_Error( 'dc_bkash_create_payment_error', $e );
 		}
-
-		$amount = $this->get_final_amount( $amount );
-
-		$payment_data = [
-			'amount'                => $amount,
-			'currency'              => 'BDT',
-			'intent'                => 'sale',
-			'merchantInvoiceNumber' => $invoice_id,
-		];
-
-		$response = $this->make_request( $this->payment_create_url(), $payment_data, $this->get_authorization_header() );
-
-		if ( is_wp_error( $response ) ) {
-			return $response;
-		}
-
-		if ( isset( $response['paymentID'] ) && $response['paymentID'] ) {
-			return $response;
-		}
-
-		return new \WP_Error( 'dc_bkash_create_payment_error', $response );
 	}
 
 	/**
@@ -273,11 +292,13 @@ class Processor {
 
 		$data = [];
 
-		if ( $this->check_test_mode() ) {
+		if ( $this->check_test_mode() && $this->get_test_mode_type( 'without_key' ) ) {
 			$data = [ 'paymentID' => $payment_id ];
 		}
 
 		$response = $this->make_request( $this->payment_execute_url( $payment_id ), $data, $this->get_authorization_header() );
+
+		error_log( print_r( $response, true ) );
 
 		if ( is_wp_error( $response ) ) {
 			return $response;
@@ -317,15 +338,11 @@ class Processor {
 	 * @return bool
 	 */
 	public function check_test_mode() {
-		try {
-			if ( dc_bkash_get_option( 'test_mode', 'gateway' ) === 'on' ) {
-				return true;
-			}
-
-			return false;
-		} catch ( \Exception $e ) {
-			return false;
+		if ( 'on' === dc_bkash_get_option( 'test_mode', 'gateway' ) ) {
+			return true;
 		}
+
+		return false;
 	}
 
 	/**
@@ -370,5 +387,28 @@ class Processor {
 		$script = "https://scripts.{$env}.bka.sh/versions/1.2.0-beta/checkout/bKash-checkout{$suffix}.js";
 
 		return $script;
+	}
+
+	/**
+	 * Get test mode type with key or not
+	 *
+	 * @param bool $key
+	 *
+	 * @since 2.0.0
+	 *
+	 * @return bool
+	 */
+	public function get_test_mode_type( $key ) {
+		if ( ! $this->check_test_mode() ) {
+			return false;
+		}
+
+		$test_mode_type = dc_bkash_get_option( 'test_mode_type' );
+
+		if ( $key === $test_mode_type ) {
+			return true;
+		}
+
+		return false;
 	}
 }

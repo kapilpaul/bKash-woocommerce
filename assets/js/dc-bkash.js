@@ -215,7 +215,9 @@
         createRequest: function () {
           if (!create_payment) {
             bKash.create().onError();
+            return;
           }
+
           payment_id = create_payment.paymentID;
           bKash.create().onSuccess(create_payment);
         },
