@@ -53,10 +53,11 @@ class Processor {
 	 * @return void
 	 */
 	public function __construct() {
-		$env = $this->check_test_mode() ? 'sandbox' : 'pay';
+		$env    = $this->check_test_mode() ? 'sandbox' : 'pay';
+		$server = $this->check_test_mode() ? 'checkout' : 'direct';
 
 		$this->grant_token_url   = "https://checkout.$env.bka.sh/{$this->version}/checkout/token/grant";
-		$this->payment_query_url = "https://direct.$env.bka.sh/{$this->version}/checkout/payment/query/";
+		$this->payment_query_url = "https://$server.$env.bka.sh/{$this->version}/checkout/payment/query/";
 	}
 
 	/**
@@ -117,52 +118,6 @@ class Processor {
 	}
 
 	/**
-	 * Get Token from bKash
-	 *
-	 * @since 2.0.0
-	 *
-	 * @return bool|mixed
-	 */
-	public function get_token() {
-		$token = get_transient( 'dc_bkash_token' );
-
-		if ( $token ) {
-			return $token;
-		}
-
-		$prefix = $this->get_test_mode_type( 'with_key' ) ? 'sandbox_' : '';
-
-		$user_name = dc_bkash_get_option( $prefix . 'username' );
-		$password  = dc_bkash_get_option( $prefix . 'password' );
-
-		$data = [
-			"app_key"    => dc_bkash_get_option( $prefix . 'app_key' ),
-			"app_secret" => dc_bkash_get_option( $prefix . 'app_secret' ),
-		];
-
-		$headers = [
-			"username"     => $user_name,
-			"password"     => $password,
-			"Content-Type" => "application/json",
-		];
-
-		$result = $this->make_request( $this->grant_token_url, $data, $headers );
-
-		if ( is_wp_error( $result ) ) {
-			return $result;
-		}
-
-		if ( isset( $result['id_token'] ) && isset( $result['token_type'] ) ) {
-			$token = $result['id_token'];
-			set_transient( 'dc_bkash_token', $token, $result['expires_in'] );
-
-			return $result['id_token'];
-		}
-
-		return new \WP_Error( 'dc_bkash_create_token_error', $result );
-	}
-
-	/**
 	 * Sending remote request
 	 *
 	 * @param $url
@@ -193,49 +148,8 @@ class Processor {
 		}
 
 		$body = wp_remote_retrieve_body( $response );
-		
+
 		return json_decode( $body, true );
-	}
-
-	/**
-	 * Verify payment on bKash end
-	 *
-	 * @param $payment_id
-	 * @param $order_total
-	 *
-	 * @return bool|mixed|string
-	 */
-	public function verify_payment( $payment_id, $order_total ) {
-		if ( $this->check_test_mode() ) {
-			return [
-				'amount'                => $order_total,
-				'paymentID'             => $payment_id,
-				'trxID'                 => $payment_id,
-				'transactionStatus'     => 'completed',
-				'merchantInvoiceNumber' => 'test-invoice-number',
-			];
-		}
-
-		$token = $this->get_token();
-
-		if ( ! $token ) {
-			return false;
-		}
-
-		$url      = $this->payment_query_url . $payment_id;
-		$response = wp_remote_get( $url, $this->get_authorization_header() );
-
-		if ( is_wp_error( $response ) ) {
-			return $response;
-		}
-
-		$result = json_decode( wp_remote_retrieve_body( $response ), true );
-
-		if ( isset( $result['errorCode'] ) && isset( $result['errorMessage'] ) ) {
-			return false;
-		}
-
-		return $result;
 	}
 
 	/**
@@ -298,17 +212,56 @@ class Processor {
 
 		$response = $this->make_request( $this->payment_execute_url( $payment_id ), $data, $this->get_authorization_header() );
 
-		error_log( print_r( $response, true ) );
+		if ( is_wp_error( $response ) ) {
+			return $response;
+		}
+
+		if ( isset( $response['transactionStatus'] ) && 'Completed' === $response['transactionStatus'] ) {
+			return $response;
+		}
+
+		return new \WP_Error( 'dc_bkash_execute_payment_error', $response );
+	}
+
+	/**
+	 * Verify payment on bKash end
+	 *
+	 * @param $payment_id
+	 * @param $order_total
+	 *
+	 * @return bool|mixed|string
+	 */
+	public function verify_payment( $payment_id, $order_total ) {
+		if ( $this->check_test_mode() && $this->get_test_mode_type( 'without_key' ) ) {
+			return [
+				'amount'                => $order_total,
+				'paymentID'             => $payment_id,
+				'trxID'                 => $payment_id,
+				'transactionStatus'     => 'Completed',
+				'merchantInvoiceNumber' => 'test-invoice-number',
+			];
+		}
+
+		$token = $this->get_token();
+
+		if ( ! $token || is_wp_error( $token ) ) {
+			return false;
+		}
+
+		$url      = $this->payment_query_url . $payment_id;
+		$response = wp_remote_get( $url, $this->get_authorization_header() );
 
 		if ( is_wp_error( $response ) ) {
 			return $response;
 		}
 
-		if ( isset( $response['transactionStatus'] ) && $response['transactionStatus'] == 'Completed' ) {
-			return $response;
+		$result = json_decode( wp_remote_retrieve_body( $response ), true );
+
+		if ( isset( $result['errorCode'] ) && isset( $result['errorMessage'] ) ) {
+			return new \WP_Error( 'dc_bkash_verify_payment_error', $result );
 		}
 
-		return new \WP_Error( 'dc_bkash_execute_payment_error', $response );
+		return $result;
 	}
 
 	/**
@@ -318,9 +271,11 @@ class Processor {
 	 */
 	public function get_authorization_header() {
 		if ( $token = $this->get_token() ) {
+			$prefix = $this->get_test_mode_type( 'with_key' ) ? 'sandbox_' : '';
+
 			$headers = [
 				"Authorization" => "Bearer {$token}",
-				"X-App-Key"     => dc_bkash_get_option( 'app_key' ),
+				"X-App-Key"     => dc_bkash_get_option( $prefix . 'app_key' ),
 				"Content-Type"  => 'application/json',
 			];
 
@@ -330,6 +285,52 @@ class Processor {
 		}
 
 		return [ 'headers' => [ "Content-Type" => 'application/json' ] ];
+	}
+
+	/**
+	 * Get Token from bKash
+	 *
+	 * @since 2.0.0
+	 *
+	 * @return bool|mixed
+	 */
+	public function get_token() {
+		$token = get_transient( 'dc_bkash_token' );
+
+		if ( $token ) {
+			return $token;
+		}
+
+		$prefix = $this->get_test_mode_type( 'with_key' ) ? 'sandbox_' : '';
+
+		$user_name = dc_bkash_get_option( $prefix . 'username' );
+		$password  = dc_bkash_get_option( $prefix . 'password' );
+
+		$data = [
+			"app_key"    => dc_bkash_get_option( $prefix . 'app_key' ),
+			"app_secret" => dc_bkash_get_option( $prefix . 'app_secret' ),
+		];
+
+		$headers = [
+			"username"     => $user_name,
+			"password"     => $password,
+			"Content-Type" => "application/json",
+		];
+
+		$result = $this->make_request( $this->grant_token_url, $data, $headers );
+
+		if ( is_wp_error( $result ) ) {
+			return $result;
+		}
+
+		if ( isset( $result['id_token'] ) && isset( $result['token_type'] ) ) {
+			$token = $result['id_token'];
+			set_transient( 'dc_bkash_token', $token, $result['expires_in'] );
+
+			return $result['id_token'];
+		}
+
+		return new \WP_Error( 'dc_bkash_create_token_error', $result );
 	}
 
 	/**

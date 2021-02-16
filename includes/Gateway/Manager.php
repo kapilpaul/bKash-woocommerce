@@ -73,11 +73,12 @@ class Manager {
 
 	/**
 	 * Store data in db after execute payment success
+	 * bKash do not verify the payment id every time
 	 *
 	 * @param $order
 	 * @param $execute_payment
 	 *
-	 * @return void
+	 * @return mixed
 	 */
 	public function after_execute_payment( $order, $execute_payment ) {
 		if ( ! $order instanceof \WC_Order ) {
@@ -87,6 +88,7 @@ class Manager {
 		try {
 			$payment_id        = sanitize_text_field( $execute_payment['paymentID'] );
 			$order_grand_total = (float) $order->get_total();
+			$verified          = 0;
 
 			$processor         = dc_bkash()->gateway->processor();
 			$order_grand_total = $processor->get_final_amount( $order_grand_total );
@@ -111,23 +113,30 @@ class Manager {
 			$payment_info = $processor->verify_payment( $payment_id, $order_grand_total );
 
 			if ( isset( $payment_info['transactionStatus'] ) && isset( $payment_info['trxID'] ) ) {
+				$verified = 1;
 			} else {
 				$payment_info = $execute_payment;
 			}
 
 			$insert_data = [
-				"order_number"       => $order->get_id(),
-				"payment_id"         => $payment_info['paymentID'],
-				"trx_id"             => $payment_info['trxID'],
-				"transaction_status" => $payment_info['transactionStatus'],
-				"invoice_number"     => $payment_info['merchantInvoiceNumber'],
-				"amount"             => $payment_info['amount'],
+				'order_number'        => $order->get_id(),
+				'payment_id'          => isset( $payment_info['paymentID'] ) ? $payment_info['paymentID'] : $payment_id,
+				'trx_id'              => isset( $payment_info['trxID'] ) ? $payment_info['trxID'] : '',
+				'transaction_status'  => isset( $payment_info['transactionStatus'] ) ? $payment_info['transactionStatus'] : '',
+				'invoice_number'      => isset( $payment_info['merchantInvoiceNumber'] ) ? $payment_info['merchantInvoiceNumber'] : '',
+				'amount'              => isset( $payment_info['amount'] ) ? floatval( $payment_info['amount'] ) : $order_grand_total,
+				'verification_status' => $verified,
 			];
 
 			dc_bkash_insert_transaction( $insert_data );
 
-		} catch ( \Exception $e ) {
+			/**
+			 * Fires after the execute payment insert
+			 */
+			do_action( 'dc_bkash_after_execute_payment', $order, $payment_info );
 
+		} catch ( \Exception $e ) {
+			error_log( 'dc_bkash after execute payment ' . print_r( $e->getMessage() ) );
 		}
 	}
 }

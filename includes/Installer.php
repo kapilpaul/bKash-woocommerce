@@ -31,16 +31,13 @@ class Installer {
 	 * @return void
 	 */
 	public function add_version() {
-		$installed = get_option( 'wcwpbkash_installed' );
+		$installed = get_option( 'dc_bkash_installed' );
 
 		if ( ! $installed ) {
 			update_option( 'dc_bkash_installed', time() );
-		} else if ( ! get_option( 'dc_bkash_installed' ) ) {
-			delete_option( 'wcwpbkash_installed' );
-			update_option( 'dc_bkash_installed', $installed );
 		}
 
-		update_option( 'dc_bkash_version', BKASH_VERSION );
+		update_option( dc_bkash()->get_db_version_key(), BKASH_VERSION );
 	}
 
 	/**
@@ -66,6 +63,7 @@ class Installer {
                   `invoice_number` varchar(255) DEFAULT NULL,
                   `order_number` varchar(15) DEFAULT NULL,
                   `amount` float NOT NULL DEFAULT '0',
+                  `verification_status` int(1) NOT NULL DEFAULT 0,
                   `created_at` timestamp NULL DEFAULT CURRENT_TIMESTAMP,
                   `updated_at` timestamp NULL DEFAULT CURRENT_TIMESTAMP,
                   PRIMARY KEY (`id`)

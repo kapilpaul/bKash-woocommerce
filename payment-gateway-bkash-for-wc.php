@@ -242,6 +242,7 @@ final class DCoders_Bkash {
 		$this->container['api']      = new DCoders\Bkash\Api();
 		$this->container['assets']   = new DCoders\Bkash\Assets();
 		$this->container['settings'] = new DCoders\Bkash\Admin\Settings();
+		$this->container['upgrades'] = new DCoders\Bkash\Upgrade\Manager();
 		$this->container['gateway']  = new DCoders\Bkash\Gateway\Manager();
 
 		$this->container = apply_filters( 'dc_bkash_get_class_container', $this->container );
@@ -250,11 +251,11 @@ final class DCoders_Bkash {
 	/**
 	 * Initialize plugin for localization
 	 *
+	 * @uses load_plugin_textdomain()
+	 *
 	 * @since 2.0.0
 	 *
 	 * @return void
-	 * @uses load_plugin_textdomain()
-	 *
 	 */
 	public function localization_setup() {
 		load_plugin_textdomain( BKASH_TEXT_DOMAIN, false, dirname( plugin_basename( __FILE__ ) ) . '/languages/' );
@@ -315,6 +316,22 @@ final class DCoders_Bkash {
 
 		// Active insights
 		$client->insights()->init();
+	}
+
+	/**
+	 * Get DB version key
+	 *
+	 * @since 2.0.0
+	 *
+	 * @return string
+	 */
+	public function get_db_version_key() {
+		//old version key
+		if ( get_option( 'wcwpbkash_version', null ) ) {
+			return 'wcwpbkash_version';
+		}
+
+		return 'dc_bkash_version';
 	}
 
 } // DCoders_Bkash

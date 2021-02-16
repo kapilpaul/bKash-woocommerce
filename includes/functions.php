@@ -28,13 +28,16 @@ function dc_bkash_insert_transaction( $data ) {
 
 	$table_name = $wpdb->prefix . 'bkash_transactions';
 
+	$data = apply_filters( 'dc_bkash_before_insert_transaction', $data );
+
 	$insert = $wpdb->insert( $table_name, [
-		"order_number"       => sanitize_text_field( $data['order_number'] ),
-		"payment_id"         => sanitize_text_field( $data['payment_id'] ),
-		"trx_id"             => sanitize_text_field( $data['trx_id'] ),
-		"transaction_status" => sanitize_text_field( $data['transaction_status'] ),
-		"invoice_number"     => sanitize_text_field( $data['invoice_number'] ),
-		"amount"             => sanitize_text_field( $data['amount'] ),
+		"order_number"        => sanitize_text_field( $data['order_number'] ),
+		"payment_id"          => sanitize_text_field( $data['payment_id'] ),
+		"trx_id"              => sanitize_text_field( $data['trx_id'] ),
+		"transaction_status"  => sanitize_text_field( $data['transaction_status'] ),
+		"invoice_number"      => sanitize_text_field( $data['invoice_number'] ),
+		"amount"              => sanitize_text_field( $data['amount'] ),
+		"verification_status" => sanitize_key( $data['verification_status'] ),
 	] );
 
 	if ( is_wp_error( $insert ) ) {
