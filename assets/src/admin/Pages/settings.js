@@ -3,6 +3,23 @@ import { __ } from '@wordpress/i18n';
 import { Spinner, Button } from '@wordpress/components';
 import apiFetch from '@wordpress/api-fetch';
 import Fields from '../components/fields';
+import { toast } from 'react-toastify';
+import '../styles/react-toastify.css';
+
+/**
+ * configure the toast
+ */
+toast.configure({
+  position: 'top-right',
+  autoClose: 5000,
+  closeOnClick: false,
+  pauseOnHover: false,
+  draggable: false,
+  closeButton: false,
+  style: {
+    top: '3em',
+  },
+});
 
 function Settings() {
   const [settings, setSettings] = useState({
@@ -19,9 +36,9 @@ function Settings() {
 
   /**
    * Handle the change of an input value
-   * @param {*} inputVal 
-   * @param {*} parent_id 
-   * @param {*} id 
+   * @param {*} inputVal
+   * @param {*} parent_id
+   * @param {*} id
    */
   const handleChange = (inputVal, parent_id, id) => {
     setSettings({
@@ -39,24 +56,28 @@ function Settings() {
     });
   };
 
+  /**
+   * Save the value
+   */
   const handleSubmit = () => {
     setIsSubmitted(true);
 
     apiFetch({
       path: '/dc-bkash/v1/settings',
       method: 'POST',
-      data: settings
+      data: settings,
     })
       .then((resp) => {
         setIsSubmitted(false);
         setSettings(resp);
         setSections(resp.sections);
+
+        toast.success(__('Saved Successfully!', dc_bkash_admin.text_domain));
       })
       .catch((err) => {
         setIsSubmitted(false);
-        console.log(err);
+        toast.error(err.data.status + ' : ' + err.message);
       });
-    
   };
 
   useEffect(() => {
@@ -72,21 +93,21 @@ function Settings() {
       })
       .catch((err) => {
         setIsFetching(false);
-        console.log(err);
+        toast.error(err.data.status + ' : ' + err.message);
       });
   }, []);
 
   if (isFetching) {
     return (
       <div>
-        <Spinner /> {__('Loading...')}
+        <Spinner /> {__('Loading...', dc_bkash_admin.text_domain)}
       </div>
     );
   }
 
   return (
     <div>
-      <h2>{__('Settings', window.dc_bkash_admin.text_domain)}</h2>
+      <h2>{__('Settings', dc_bkash_admin.text_domain)}</h2>
 
       <div className="dokan_admin_settings_area">
         <div className="admin_settings_sections">
@@ -138,7 +159,9 @@ function Settings() {
                   isPrimary={true}
                   onClick={() => handleSubmit()}
                 >
-                  {isSubmitted ? 'Saving' : 'Save'}
+                  {isSubmitted
+                    ? __('Saving', dc_bkash_admin.text_domain)
+                    : __('Save', dc_bkash_admin.text_domain)}
                 </Button>
               </div>
             );

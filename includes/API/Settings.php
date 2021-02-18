@@ -36,18 +36,33 @@ class Settings extends BkashRestController {
 				[
 					'methods'             => WP_REST_Server::READABLE,
 					'callback'            => [ $this, 'get_settings_data' ],
-					'permission_callback' => '__return_true', //[ $this, 'admin_permission_check' ],
+					'permission_callback' => [ $this, 'admin_permission_check' ],
 					'args'                => $this->get_collection_params(),
 				],
 				[
 					'methods'             => WP_REST_Server::EDITABLE,
 					'callback'            => [ $this, 'update_items' ],
 					'args'                => $this->get_endpoint_args_for_item_schema( WP_REST_Server::EDITABLE ),
-					'permission_callback' => '__return_true', //[ $this, 'admin_permissions_check' ],
+					'permission_callback' => [ $this, 'admin_permissions_check' ],
 				],
 				'schema' => [ $this, 'get_item_schema' ],
 			]
 		);
+	}
+
+	/**
+	 * Admin permission check
+	 *
+	 * @since 2.0.0
+	 *
+	 * @return bool
+	 */
+	public function admin_permission_check() {
+		if ( ! current_user_can( 'manage_woocommerce' ) ) {
+			return false;
+		}
+
+		return true;
 	}
 
 	/**
