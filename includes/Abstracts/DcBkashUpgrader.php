@@ -50,17 +50,6 @@ abstract class DcBkashUpgrader {
 		$base_class = $reflect->getShortName();
 		$version    = str_replace( [ 'V_', '_' ], [ '', '.' ], $base_class );
 
-		update_option( static::get_db_version_key(), $version );
-	}
-
-	/**
-	 * Get db versioning key
-	 *
-	 * @since 2.0.0
-	 *
-	 * @return string
-	 */
-	public static function get_db_version_key() {
-		return dc_bkash()->get_db_version_key();
+		update_option( dc_bkash()->get_db_version_key(), $version );
 	}
 }

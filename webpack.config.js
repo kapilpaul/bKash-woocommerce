@@ -4,6 +4,7 @@ const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 const config = {
   entry: {
     app: './assets/src/admin/index.js',
+    upgrade: './assets/src/upgrade/index.js',
   },
   output: {
     path: path.resolve(__dirname, './assets/js/'),
@@ -73,10 +74,11 @@ const config = {
   },
   plugins: [
     new MiniCssExtractPlugin({
-      filename: '../css/[name].css',
+      filename: '../css/[name].css', //for build
       // filename: '[name].css',
     }),
   ],
+  cache: false,
 };
 
 module.exports = (env, argv) => {

@@ -152,6 +152,7 @@ final class DCoders_Bkash {
 		define( 'BKASH_FILE', __FILE__ );
 		define( 'BKASH_PATH', dirname( BKASH_FILE ) );
 		define( 'BKASH_INCLUDES', BKASH_PATH . '/includes' );
+		define( 'BKASH_TEMPLATE_PATH', BKASH_PATH . '/templates/' );
 		define( 'BKASH_URL', plugins_url( '', BKASH_FILE ) );
 		define( 'BKASH_ASSETS', BKASH_URL . '/assets' );
 		define( 'BKASH_TEXT_DOMAIN', 'bkash-wc' );

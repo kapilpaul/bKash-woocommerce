@@ -143,6 +143,12 @@ class Assets {
 				'deps'      => [ 'dc-app-vendor' ],
 				'in_footer' => true,
 			],
+			'dc-upgrade-script'  => [
+				'src'       => $plugin_js_assets_path . 'upgrade.js',
+				'version'   => filemtime( BKASH_PATH . '/assets/js/upgrade.js' ),
+				'deps'      => [ 'dc-app-vendor' ],
+				'in_footer' => true,
+			],
 		];
 
 		return $scripts;
@@ -175,6 +181,11 @@ class Assets {
 				'src'     => $plugin_css_assets_path . 'app.css',
 				'deps'    => [ 'wp-components' ],
 				'version' => filemtime( BKASH_PATH . '/assets/css/app.css' ),
+			],
+			'dc-upgrade-css' => [
+				'src'     => $plugin_css_assets_path . 'upgrade.css',
+				'deps'    => [ 'wp-components' ],
+				'version' => filemtime( BKASH_PATH . '/assets/css/upgrade.css' ),
 			],
 		];
 

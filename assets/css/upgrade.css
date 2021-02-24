@@ -1,0 +1,21 @@
+#dc-bkash-upgrade-notice {
+  padding: 0px 10px 14px 0px; }
+
+.dc-bkash-notice-info {
+  border-left-color: #e2136e !important; }
+
+.text-bkash {
+  color: #e2136e; }
+
+.text-white, .components-button.bg-bkash:hover {
+  color: #fff; }
+
+.bg-bkash {
+  background-color: #e2136e !important;
+  border-width: 0 !important; }
+
+.components-button.bg-bkash.is-busy {
+  background-image: linear-gradient(-45deg, #fafafa 28%, #e2136e 0, #e2136e 72%, #fafafa 0);
+  outline: 0px solid transparent;
+  box-shadow: 0 0 0; }
+
