@@ -9,8 +9,6 @@ use DCoders\Bkash\Admin\Settings as AdminSettings;
  * Class Settings
  * @package DCoders\Bkash\Admin
  *
- * @package DCoders\Bkash\Admin
- *
  * @author Kapil Paul
  */
 class Settings extends BkashRestController {

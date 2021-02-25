@@ -14,7 +14,7 @@ function Header() {
  * get bkash logo for header
  */
 function getLogo() {
-  return window.dc_bkash_admin.asset_url + '/images/bkash_logo.png';  
+  return window.dc_bkash_admin.asset_url + '/images/bkash_logo.png';
 }
 
 export default Header;

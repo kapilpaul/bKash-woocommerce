@@ -21,15 +21,15 @@ class AdminNotice {
 			return;
 		}
 
-//        if ( ! dc_bkash()->upgrades->is_upgrade_required() ) {
-//            /**
-//             * Fires when upgrade is not required
-//             *
-//             * @since 3.0.0
-//             */
-//            do_action( 'dc_bkash_upgrade_is_not_required' );
-//            return;
-//        }
+        if ( ! dc_bkash()->upgrades->is_upgrade_required() ) {
+            /**
+             * Fires when upgrade is not required
+             *
+             * @since 3.0.0
+             */
+            do_action( 'dc_bkash_upgrade_is_not_required' );
+            return;
+        }
 
 		dc_bkash_get_template( 'admin/upgrade-notice' );
 		wp_enqueue_style( 'dc-upgrade-css' );

@@ -6,6 +6,14 @@ h1 {
   padding: 15px;
 }
 
+#wpbody-content {
+  padding-top: 70px;
+}
+
+.mobile #wpbody-content {
+  padding-top: 0px;
+}
+
 .bkash_header_container {
   background: #fff;
   overflow: hidden;
@@ -18,6 +26,9 @@ h1 {
   align-items: center;
   justify-content: flex-start;
   padding-right: 19px;
+  position: fixed;
+  top: 31px;
+  z-index: 999;
 
   .header_logo {
     padding-left: 20px;
@@ -27,6 +38,11 @@ h1 {
       width: 85px;
     }
   }
+}
+
+.mobile .bkash_header_container {
+  position: relative;
+  top: 31px;
 }
 
 .dokan_admin_settings_area {
@@ -83,8 +99,7 @@ h1 {
         padding-top: 10px;
       }
 
-      .single_settings_field{
-
+      .single_settings_field {
       }
     }
 

@@ -34,6 +34,8 @@ function Settings() {
   const [currentTab, setCurrentTab] = useState('');
   const [isSubmitted, setIsSubmitted] = useState(false);
 
+  var firstTimeKey;
+
   /**
    * Handle the change of an input value
    * @param {*} inputVal
@@ -90,6 +92,7 @@ function Settings() {
         setIsFetching(false);
         setSettings(resp);
         setSections(resp.sections);
+        setCurrentTab('gateway');
       })
       .catch((err) => {
         setIsFetching(false);
@@ -106,16 +109,15 @@ function Settings() {
   }
 
   return (
-    <div>
+    <div className="dokan_admin_settings_container">
       <h2>{__('Settings', dc_bkash_admin.text_domain)}</h2>
 
       <div className="dokan_admin_settings_area">
         <div className="admin_settings_sections">
           <ul className="dokan_admin_settings">
-            {Object.keys(sections).map((key) => {
+            {Object.keys(sections).map((key, i) => {
               return (
                 <li
-                  className="active"
                   key={key}
                   onClick={() => setCurrentTab(key)}
                   className={currentTab === key ? 'active' : ''}

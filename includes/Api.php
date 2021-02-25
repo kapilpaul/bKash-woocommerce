@@ -3,6 +3,7 @@
 namespace DCoders\Bkash;
 
 use DCoders\Bkash\API\Settings;
+use DCoders\Bkash\API\Upgrade;
 
 /**
  * API Class
@@ -27,6 +28,7 @@ class API {
 	function __construct() {
 		$this->classes = [
 			Settings::class,
+			Upgrade::class,
 		];
 
 		add_action( 'rest_api_init', [ $this, 'register_api' ] );

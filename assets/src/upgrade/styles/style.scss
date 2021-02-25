@@ -1,7 +1,25 @@
 $primary-color: #e2136e;
 
+#dc-bkash-upgrade-notice-container {
+  position: relative;
+}
+
 #dc-bkash-upgrade-notice {
   padding: 0px 10px 14px 0px;
+}
+
+#dc-bkash-upgrade-notice::before {
+  background-image: url('/assets/images/bkash_logo.png');
+  background-repeat: no-repeat;
+  background-position: right 2px;
+  opacity: 0.2;
+  position: absolute;
+  content: '';
+  right: 0;
+  top: 0;
+  z-index: 0;
+  width: 25%;
+  height: 100%;
 }
 
 .dc-bkash-notice-info {
@@ -22,17 +40,21 @@ $primary-color: #e2136e;
 }
 
 .components-button.bg-bkash:hover {
-  @extend .text-white
+  @extend .text-white;
 }
 
-.components-button.bg-bkash.is-busy {
-  background-image: linear-gradient(
-    -45deg,
-    #fafafa 28%,
-    $primary-color 0,
-    $primary-color 72%,
-    #fafafa 0
-  );
-  outline: 0px solid transparent;
-  box-shadow: 0 0 0;
+.components-button {
+  &.bg-bkash {
+    &.is-busy {
+      background-image: linear-gradient(
+        -45deg,
+        #fafafa 28%,
+        $primary-color 0,
+        $primary-color 72%,
+        #fafafa 0
+      );
+      outline: 0px solid transparent;
+      box-shadow: 0 0 0;
+    }
+  }
 }
