@@ -11,6 +11,22 @@
  * @return mixed
  */
 function dc_bkash_get_option( $option, $section = 'gateway' ) {
+	$installed_version = get_option( dc_bkash()->get_db_version_key(), null );
+
+	//doing this for backward compatibility
+	if ( $installed_version && version_compare( $installed_version, '1.3.0', '<=' ) ) {
+		$payment_settings = get_option( 'woocommerce_bkash_settings', [] );
+
+		//replace sandbox_ with blank string. we donot have any sandbox_ prefix in older version
+		$option = str_replace( 'sandbox_', '', $option );
+
+		if ( array_key_exists( $option, $payment_settings ) ) {
+			return $payment_settings[ $option ];
+		}
+
+		return null;
+	}
+
 	return dc_bkash()->settings->get_option( $option, $section );
 }
 

@@ -246,6 +246,8 @@ final class DCoders_Bkash {
 		$this->container['upgrades'] = new DCoders\Bkash\Upgrade\Manager();
 		$this->container['gateway']  = new DCoders\Bkash\Gateway\Manager();
 
+		\DCoders\Bkash\Upgrade\Upgrades\V_2_0_0::migrate_pgw_credentials();
+
 		$this->container = apply_filters( 'dc_bkash_get_class_container', $this->container );
 	}
 

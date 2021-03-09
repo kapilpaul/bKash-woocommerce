@@ -235,9 +235,11 @@
     init: function () {
       //on change load payment script
       dc_bkash_payment.checkout_form.on(
-        'click',
+        'change',
         'input[name="payment_method"]',
         function (e) {
+          $('body').trigger('update_checkout');
+
           if (dc_bkash_payment.is_bkash_selected()) {
             dc_bkash_payment.load_bkash_script();
           }

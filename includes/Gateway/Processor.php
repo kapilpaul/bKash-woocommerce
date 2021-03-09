@@ -156,18 +156,18 @@ class Processor {
 	 * Create payment request in bKash
 	 *
 	 * @param $amount
-	 *
 	 * @param $invoice_id
+	 * @param bool $calculate_final_amount
 	 *
 	 * @return bool|mixed|string
 	 */
-	public function create_payment( $amount, $invoice_id ) {
+	public function create_payment( $amount, $invoice_id, $calculate_final_amount = false ) {
 		try {
 			if ( ! $this->check_test_mode() && ! $this->get_token() ) {
 				return false;
 			}
 
-			$amount = $this->get_final_amount( $amount );
+			$amount = $calculate_final_amount ? $this->get_final_amount( $amount ) : $amount;
 
 			$payment_data = [
 				'amount'                => $amount,
@@ -358,20 +358,40 @@ class Processor {
 	public function get_final_amount( $amount ) {
 		$amount = apply_filters( 'dc_bkash_before_calculated_final_amount', $amount );
 
-		if ( 'yes' === dc_bkash_get_option( 'transaction_charge' ) ) {
-			$charge_type   = dc_bkash_get_option( 'charge_type' );
-			$charge_amount = (float) dc_bkash_get_option( 'charge_amount' );
-
-			if ( 'percentage' === $charge_type ) {
-				$amount = $amount + $amount * ( $charge_amount / 100 );
-			} else {
-				$amount = $amount + $charge_amount;
-			}
-		}
+		$amount = $amount + $this->get_transaction_charge_amount( $amount );
 
 		$amount = number_format( $amount, 2, '.', '' );
 
 		return apply_filters( 'dc_bkash_after_calculated_final_amount', $amount );
+	}
+
+	/**
+	 * Get transaction charge amount
+	 *
+	 * @param $total_amount
+	 *
+	 * @since 2.0.0
+	 *
+	 * @return mixed|void
+	 */
+	public function get_transaction_charge_amount( $total_amount ) {
+		$transaction_charge        = dc_bkash_get_option( 'transaction_charge' );
+		$transaction_charge_amount = 0;
+
+		if ( 'on' === $transaction_charge || 'yes' === $transaction_charge ) {
+			$charge_type   = dc_bkash_get_option( 'charge_type' );
+			$charge_amount = (float) dc_bkash_get_option( 'charge_amount' );
+
+			if ( 'percentage' === $charge_type ) {
+				$transaction_charge_amount = (float) $total_amount * ( $charge_amount / 100 );
+			} else {
+				$transaction_charge_amount = $charge_amount;
+			}
+		}
+
+		$transaction_charge_amount = number_format( $transaction_charge_amount, 2, '.', '' );
+
+		return apply_filters( 'dc_bkash_get_transaction_charge', $transaction_charge_amount );
 	}
 
 	/**

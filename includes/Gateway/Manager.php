@@ -26,8 +26,22 @@ class Manager {
 	 * @return void
 	 */
 	public function __construct() {
+		$this->setup_hooks();
+	}
+
+	/**
+	 * Setup Hooks
+	 *
+	 * @since 2.0.0
+	 *
+	 * @return void
+	 */
+	private function setup_hooks() {
 		add_filter( 'woocommerce_payment_gateways', [ $this, 'register_gateway' ] );
 		add_action( 'dc_bkash_execute_payment_success', [ $this, 'after_execute_payment' ], 10, 2 );
+		add_filter( 'woocommerce_calculated_total', [ $this, 'dc_bkash_calculate_total' ] );
+		add_action( 'woocommerce_cart_totals_before_order_total', [ $this, 'dc_bkash_display_transaction_charge' ] );
+		add_action( 'woocommerce_review_order_before_order_total', [ $this, 'dc_bkash_display_transaction_charge' ] );
 	}
 
 	/**
@@ -112,7 +126,9 @@ class Manager {
 
 			$payment_info = $processor->verify_payment( $payment_id, $order_grand_total );
 
-			if ( isset( $payment_info['transactionStatus'] ) && isset( $payment_info['trxID'] ) ) {
+			if ( ! $payment_info || is_wp_error( $payment_info ) ) {
+				$payment_info = $execute_payment;
+			} else if ( isset( $payment_info['transactionStatus'] ) && isset( $payment_info['trxID'] ) ) {
 				$verified = 1;
 			} else {
 				$payment_info = $execute_payment;
@@ -138,5 +154,54 @@ class Manager {
 		} catch ( \Exception $e ) {
 			error_log( 'dc_bkash after execute payment ' . print_r( $e->getMessage() ) );
 		}
+	}
+
+	/**
+	 * bKash calculate total if there is any transaction charge
+	 *
+	 * @param $total
+	 *
+	 * @since 2.0.0
+	 *
+	 * @return int
+	 */
+	public function dc_bkash_calculate_total( $total ) {
+		if ( is_admin() && ! defined( 'DOING_AJAX' ) ) {
+			return $total;
+		}
+
+		$payment_method = 'bkash';
+
+		$chosen_payment_method = WC()->session->get( 'chosen_payment_method' );
+
+		if ( $payment_method === $chosen_payment_method ) {
+			$processor = dc_bkash()->gateway->processor();
+
+			return $processor->get_final_amount( $total );
+		}
+
+		return $total;
+	}
+
+	/**
+	 * Display the transaction charge
+	 *
+	 * @since 2.0.0
+	 *
+	 * @return void
+	 */
+	public function dc_bkash_display_transaction_charge() {
+		$payment_method        = 'bkash';
+		$chosen_payment_method = WC()->session->get( 'chosen_payment_method' );
+
+		if ( $payment_method !== $chosen_payment_method ) {
+			return;
+		}
+
+		$processor = dc_bkash()->gateway->processor();
+
+		dc_bkash_get_template( 'frontend/transaction-charge', [
+			'charge_amount' => wc_price( $processor->get_transaction_charge_amount( WC()->cart->get_subtotal() ) ),
+		] );
 	}
 }
