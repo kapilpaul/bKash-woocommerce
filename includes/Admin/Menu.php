@@ -43,6 +43,8 @@ class Menu {
 			$submenu[ $parent_slug ][] = [ __( 'App', BKASH_TEXT_DOMAIN ), $capability, $this->get_submenu_url() ];
 
 			$submenu[ $parent_slug ][] = [ __( 'Settings', BKASH_TEXT_DOMAIN ), $capability, $this->get_submenu_url( 'settings' ) ];
+
+			$submenu[ $parent_slug ][] = [ __( 'Generate Doc', BKASH_TEXT_DOMAIN ), $capability, $this->get_submenu_url( 'generate-doc' ) ];
 		}
 
 		add_action( 'load-' . $hook, [ $this, 'init_hooks' ] );

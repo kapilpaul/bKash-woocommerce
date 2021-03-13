@@ -10,6 +10,15 @@ const config = {
     path: path.resolve(__dirname, './assets/js/'),
     filename: '[name].js',
   },
+  devServer: {
+    contentBase: path.join(__dirname, 'dist'),
+    headers: {
+      'Access-Control-Allow-Origin': '*',
+      'Access-Control-Allow-Methods': 'GET, POST, PUT, DELETE, PATCH, OPTIONS',
+      'Access-Control-Allow-Headers':
+        'X-Requested-With, content-type, Authorization',
+    },
+  },
   externals: {
     '@wordpress/api-fetch': ['wp', 'apiFetch'],
   },
@@ -50,15 +59,9 @@ const config = {
     alias: {
       'react-dom': '@hot-loader/react-dom',
     },
-  },
-  devServer: {
-    contentBase: './dist',
-    headers: {
-      'Access-Control-Allow-Origin': '*',
-      'Access-Control-Allow-Methods': 'GET, POST, PUT, DELETE, PATCH, OPTIONS',
-      'Access-Control-Allow-Headers':
-        'X-Requested-With, content-type, Authorization',
-    },
+    fallback: {
+      "path": require.resolve("path-browserify")
+    }
   },
   optimization: {
     runtimeChunk: 'single',
@@ -74,17 +77,17 @@ const config = {
   },
   plugins: [
     new MiniCssExtractPlugin({
-      filename: '../css/[name].css', //for build
-      // filename: '[name].css',
+      // filename: '../css/[name].css', //for build
+      filename: '[name].css',
     }),
   ],
-  cache: false,
+  cache: true,
 };
 
 module.exports = (env, argv) => {
   if (argv.hot) {
     // Cannot use 'contenthash' when hot reloading is enabled.
-    config.output.filename = '[name].[hash].js';
+    config.output.filename = '[name].js';
   }
 
   return config;

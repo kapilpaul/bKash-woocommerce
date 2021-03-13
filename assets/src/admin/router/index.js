@@ -1,11 +1,16 @@
 import React from 'react';
 import { HashRouter as Router, Route, Switch } from 'react-router-dom';
 import Settings from '../Pages/settings';
+import GenerateDoc from '../Pages/generatedoc';
 
 const routes = [
   {
     path: '/settings',
     component: Settings,
+  },
+  {
+    path: '/generate-doc',
+    component: GenerateDoc,
   },
 ];
 
