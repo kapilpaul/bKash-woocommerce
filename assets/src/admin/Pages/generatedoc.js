@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { __ } from '@wordpress/i18n';
 import { Spinner, Button } from '@wordpress/components';
-import apiFetch from '@wordpress/api-fetch';
+import DocDataContainer from './Doc/doc-container';
 
 function GenerateDoc() {
   const [isGenerating, setIsGenerating] = useState(false);
@@ -11,25 +11,8 @@ function GenerateDoc() {
       return false;
     }
 
-    return (
-      <div className='generator-container-area'>
-        <p>{ 
-          `API Title : Grant Token
-          API URL : https://checkout.sandbox.bka.sh/v1.2.0-beta/checkout/token/grant
-          Request Body :
-           headers:
-           {
-           username: testdemo,
-           password: test%#de23@msdao
-           },
-           body params:{
-           app_key: 5nej5keguopj928ekcj3dne8p,
-           app_secret: 1honf6u1c56mqcivtc9ffl960slp4v2756jle5925nbooa46ch62
-           }`
-        }</p>
-      </div>
-    );
-  }
+    return <DocDataContainer />;
+  };
 
   return (
     <div className="dokan_admin_settings_container">
@@ -74,11 +57,9 @@ function GenerateDoc() {
             ? __('Generating', dc_bkash_admin.text_domain)
             : __('Generate', dc_bkash_admin.text_domain)}
         </Button>
-      </div>{/* .generate_help_text_container */}
+      </div>
 
-
-      { GenerateDocContainer() }
-
+      {GenerateDocContainer()}
     </div>
   );
 }

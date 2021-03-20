@@ -9,9 +9,11 @@ use DCoders\Bkash\Admin\Settings as AdminSettings;
  * Class Settings
  * @package DCoders\Bkash\Admin
  *
+ * @since 2.0.0
+ *
  * @author Kapil Paul
  */
-class Settings extends BkashRestController {
+class Settings extends BkashBaseRestController {
 	/**
 	 * Initialize the class
 	 */

@@ -13,7 +13,7 @@ use WP_REST_Server;
  *
  * @author Kapil Paul
  */
-class Upgrade extends BkashRestController {
+class Upgrade extends BkashBaseRestController {
 	/**
 	 * Initialize the class
 	 */
@@ -44,14 +44,23 @@ class Upgrade extends BkashRestController {
 		);
 	}
 
+	/**
+	 * Apply updates.
+	 *
+	 * @param $request
+	 *
+	 * @since 2.0.0
+	 *
+	 * @return WP_Error|\WP_REST_Response
+	 */
 	public function apply_updates( $request ) {
 		try {
 			if ( dc_bkash()->upgrades->has_ongoing_process() ) {
-				throw new \Exception( 'There is an upgrading process going on.' );
+				throw new \Exception( __( 'There is an upgrading process going on.', BKASH_TEXT_DOMAIN ) );
 			}
 
 			if ( ! dc_bkash()->upgrades->is_upgrade_required() ) {
-				throw new \Exception( 'Update is not required' );
+				throw new \Exception( __( 'Update is not required', BKASH_TEXT_DOMAIN ) );
 			}
 
 			//doing the upgrading here

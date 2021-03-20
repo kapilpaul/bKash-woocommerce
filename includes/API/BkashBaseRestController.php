@@ -2,16 +2,18 @@
 
 namespace DCoders\Bkash\API;
 
+use WP_Http;
 use WP_REST_Controller;
 
 /**
- * Class BkashRestController
- *
- * @since 2.0.0
+ * Class BkashBaseRestController
  *
  * @author Kapil Paul
+ * @since 2.0.0
+ *
  */
-class BkashRestController extends WP_REST_Controller {
+class BkashBaseRestController extends WP_REST_Controller {
+
 	/**
 	 * @var string
 	 */
@@ -32,7 +34,15 @@ class BkashRestController extends WP_REST_Controller {
 	 * @return \WP_Error|bool
 	 */
 	public function admin_permissions_check( $request ) {
-		return current_user_can( 'manage_options' );
+		if ( ! current_user_can( 'manage_options' ) ) {
+			return new \WP_Error(
+				'dc_bkash_permission_error',
+				__( 'You have no permission to do that', BKASH_TEXT_DOMAIN ),
+				[ 'status' => WP_Http::BAD_REQUEST ]
+			);
+		}
+
+		return true;
 	}
 
 	/**

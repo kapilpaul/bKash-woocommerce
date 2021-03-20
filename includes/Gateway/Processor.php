@@ -8,11 +8,11 @@ use PHPMailer\PHPMailer\Exception;
  * Bkash payment processor helper class
  *
  * Class Processor
+ * @author Kapil Paul
  * @since 2.0.0
  *
  * @package DCoders\Bkash\Gateway
  *
- * @author Kapil Paul
  */
 class Processor {
 	/**
@@ -231,7 +231,7 @@ class Processor {
 	 *
 	 * @return bool|mixed|string
 	 */
-	public function verify_payment( $payment_id, $order_total ) {
+	public function verify_payment( $payment_id, $order_total = null ) {
 		if ( $this->check_test_mode() && $this->get_test_mode_type( 'without_key' ) ) {
 			return [
 				'amount'                => $order_total,
@@ -270,34 +270,46 @@ class Processor {
 	 * @return array
 	 */
 	public function get_authorization_header() {
-		if ( $token = $this->get_token() ) {
-			$prefix = $this->get_test_mode_type( 'with_key' ) ? 'sandbox_' : '';
+		try {
+			if ( $token = $this->get_token() ) {
+				$prefix = $this->get_test_mode_type( 'with_key' ) ? 'sandbox_' : '';
 
-			$headers = [
-				"Authorization" => "Bearer {$token}",
-				"X-App-Key"     => dc_bkash_get_option( $prefix . 'app_key' ),
-				"Content-Type"  => 'application/json',
-			];
+				$headers = [
+					"Authorization" => sprintf( 'Bearer %s', $token ),
+					"X-App-Key"     => dc_bkash_get_option( $prefix . 'app_key' ),
+					"Content-Type"  => 'application/json',
+				];
 
-			$args = [ 'headers' => $headers ];
+				$args = [ 'headers' => $headers ];
 
-			return $args;
+				return $args;
+			}
+
+			return [ 'headers' => [ "Content-Type" => 'application/json' ] ];
+		} catch ( \Exception $e ) {
+			return [ 'headers' => [ "Content-Type" => 'application/json' ] ];
 		}
-
-		return [ 'headers' => [ "Content-Type" => 'application/json' ] ];
 	}
 
 	/**
 	 * Get Token from bKash
 	 *
+	 * @param bool $token_data
+	 *
 	 * @since 2.0.0
 	 *
 	 * @return bool|mixed
 	 */
-	public function get_token() {
+	public function get_token( $token_data = false ) {
 		$token = get_transient( 'dc_bkash_token' );
 
 		if ( $token ) {
+			$token_response = get_transient( 'dc_bkash_token_data' );
+
+			if ( $token_data && $token_response ) {
+				return $token_response;
+			}
+
 			return $token;
 		}
 
@@ -326,6 +338,13 @@ class Processor {
 		if ( isset( $result['id_token'] ) && isset( $result['token_type'] ) ) {
 			$token = $result['id_token'];
 			set_transient( 'dc_bkash_token', $token, $result['expires_in'] );
+
+			// Setting full response data in transient
+			set_transient( 'dc_bkash_token_data', $result, $result['expires_in'] );
+
+			if ( $token_data ) {
+				return $result;
+			}
 
 			return $result['id_token'];
 		}
@@ -431,5 +450,28 @@ class Processor {
 		}
 
 		return false;
+	}
+
+	/**
+	 * Get Credential from settings
+	 *
+	 * @since 2.0.0
+	 *
+	 * @return array
+	 */
+	public function get_credentials() {
+		$prefix = $this->get_test_mode_type( 'with_key' ) ? 'sandbox_' : '';
+
+		$user_name  = dc_bkash_get_option( $prefix . 'username' );
+		$password   = dc_bkash_get_option( $prefix . 'password' );
+		$app_key    = dc_bkash_get_option( $prefix . 'app_key' );
+		$app_secret = dc_bkash_get_option( $prefix . 'app_secret' );
+
+		return [
+			'user_name'  => $user_name,
+			'password'   => $password,
+			'app_key'    => $app_key,
+			'app_secret' => $app_secret,
+		];
 	}
 }

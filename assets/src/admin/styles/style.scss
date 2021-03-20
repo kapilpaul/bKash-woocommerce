@@ -160,6 +160,20 @@ h1 {
 .generator-container-area {
   margin-top: 20px;
   background: $white;
-  padding: 20px;
+  padding: 40px;
   border-radius: 5px;
+  overflow: hidden;
+}
+
+.grant-token-container {
+  overflow: hidden;
+}
+
+pre {
+  white-space: pre-wrap;
+}
+
+.strong {
+  display: block;
+  font-weight: 600;
 }
