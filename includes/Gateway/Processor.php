@@ -422,9 +422,9 @@ class Processor {
 	 */
 	public function get_script() {
 		$env    = $this->check_test_mode() ? 'sandbox' : 'pay';
-		$suffix = $this->check_test_mode() ? '-sandbox' : 'pay';
+		$suffix = $this->check_test_mode() ? '-sandbox' : '';
 
-		$script = "https://scripts.{$env}.bka.sh/versions/1.2.0-beta/checkout/bKash-checkout{$suffix}.js";
+		$script = sprintf( 'https://scripts.%s.bka.sh/versions/1.2.0-beta/checkout/bKash-checkout%s.js', $env, $suffix );
 
 		return $script;
 	}

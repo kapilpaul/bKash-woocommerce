@@ -123,13 +123,13 @@
         dc_bkash_payment.create_bkash_loader();
 
         loader.style.display = 'block';
+        window.$ = $.noConflict(true);
 
         //fetching script
         $.getScript(dc_bkash.script_url, function () {
           loader.style.display = 'none';
           dc_bkash_payment.create_bkash_button();
           script_loaded = true;
-          window.$ = $.noConflict(true);
         });
       }
     },
@@ -147,31 +147,6 @@
       bkashBtn.setAttribute('disabled', 'disabled');
       bkashBtn.style.display = 'none';
       document.body.appendChild(bkashBtn);
-    },
-    create_bkash_request: function (order_number) {
-      let create_payment_data = {
-        order_number: order_number,
-        action: 'dc-edd-bkash-create-payment-request',
-        _ajax_nonce: edd_bkash.nonce,
-      };
-
-      $.ajax({
-        url: edd_bkash.ajaxurl,
-        method: 'POST',
-        data: create_payment_data,
-        success: function (data) {
-          if (data.success && data.data.paymentID != null) {
-            data = data.data;
-            payment_id = data.paymentID;
-            bKash.create().onSuccess(data);
-          } else {
-            bKash.create().onError();
-          }
-        },
-        error: function (errorMessage) {
-          bKash.create().onError();
-        },
-      });
     },
     execute_bkash_request: function (order_number, payment_id) {
       let execute_payment_data = {
@@ -233,6 +208,10 @@
       $('#bKash_button').click();
     },
     init: function () {
+      if (dc_bkash_payment.is_bkash_selected()) {
+        dc_bkash_payment.load_bkash_script();
+      }
+
       //on change load payment script
       dc_bkash_payment.checkout_form.on(
         'change',
@@ -247,8 +226,6 @@
       );
 
       dc_bkash_payment.checkout_form.on('click', '#place_order', function (e) {
-        e.preventDefault();
-
         if (dc_bkash_payment.is_bkash_selected()) {
           dc_bkash_payment.do_submit();
         }

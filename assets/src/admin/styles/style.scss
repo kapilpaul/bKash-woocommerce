@@ -177,3 +177,7 @@ pre {
   display: block;
   font-weight: 600;
 }
+
+.Toastify__toast-container--bottom-right {
+  top: inherit !important;
+}

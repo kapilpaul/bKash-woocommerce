@@ -157,9 +157,9 @@ class Payment extends BkashBaseRestController {
 	 */
 	public function create_payment( $request ) {
 		$bkash_processor = Processor::get_instance();
-		$amount          = rand( 10, 2000 );
+		$amount          = rand( 10, 100 );
 		$invoice_id      = sprintf( 'TBP%s', str_pad( rand( 10, 999 ), 5, "0", STR_PAD_LEFT ) );
-		$create_payment  = $bkash_processor->create_payment( $amount, $invoice_id );
+		$create_payment  = $bkash_processor->create_payment( (float) $amount, $invoice_id );
 
 		if ( is_wp_error( $create_payment ) ) {
 			return new WP_Error(

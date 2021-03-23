@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { __ } from '@wordpress/i18n';
 import { Spinner, Button } from '@wordpress/components';
 import DocDataContainer from './Doc/doc-container';
+import dcBkash from '../utils/bkash';
 
 function GenerateDoc() {
   const [isGenerating, setIsGenerating] = useState(false);
@@ -13,6 +14,13 @@ function GenerateDoc() {
 
     return <DocDataContainer />;
   };
+
+  useEffect(() => {
+    //initialize bkash scripts
+    if (typeof bKash === 'undefined') {
+      dcBkash.init();
+    }
+  }, []);
 
   return (
     <div className="dokan_admin_settings_container">
@@ -35,7 +43,7 @@ function GenerateDoc() {
 
         <div className="sandbox_number_details">
           <p>
-            <span>bKash Number</span> : 00000000000
+            <span>bKash Number</span> : 01770618575
           </p>
           <p>
             <span>OTP</span> : 123456

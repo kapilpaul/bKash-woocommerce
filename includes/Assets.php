@@ -116,34 +116,31 @@ class Assets {
 		}
 
 		$scripts = [
-			'dc-bkash'       => [
+			'dc-bkash'          => [
 				'src'       => $plugin_js_assets_path . 'dc-bkash.js',
 				'version'   => filemtime( BKASH_PATH . '/assets/js/dc-bkash.js' ),
 				'deps'      => [ 'jquery' ],
 				'in_footer' => true,
 			],
-			'bkash-jquery' => [
-				'src'       => 'https://code.jquery.com/jquery-3.5.1.min.js',
-			],
-			'dc-app-runtime' => [
+			'dc-app-runtime'    => [
 				'src'       => $plugin_js_assets_path . 'runtime.js',
 				'version'   => filemtime( BKASH_PATH . '/assets/js/runtime.js' ),
 				'deps'      => $dependencies,
 				'in_footer' => true,
 			],
-			'dc-app-vendor'  => [
+			'dc-app-vendor'     => [
 				'src'       => $plugin_js_assets_path . 'vendors.js',
 				'version'   => filemtime( BKASH_PATH . '/assets/js/vendors.js' ),
 				'deps'      => [ 'dc-app-runtime' ],
 				'in_footer' => true,
 			],
-			'dc-app-script'  => [
+			'dc-app-script'     => [
 				'src'       => $plugin_js_assets_path . 'app.js',
 				'version'   => filemtime( BKASH_PATH . '/assets/js/app.js' ),
 				'deps'      => [ 'dc-app-vendor' ],
 				'in_footer' => true,
 			],
-			'dc-upgrade-script'  => [
+			'dc-upgrade-script' => [
 				'src'       => $plugin_js_assets_path . 'upgrade.js',
 				'version'   => filemtime( BKASH_PATH . '/assets/js/upgrade.js' ),
 				'deps'      => [ 'dc-app-vendor' ],
@@ -172,12 +169,12 @@ class Assets {
 		}
 
 		$styles = [
-			'dc-bkash'   => [
+			'dc-bkash'       => [
 				'src'     => $plugin_css_assets_path . 'dc-bkash.css',
 				'deps'    => [],
 				'version' => filemtime( BKASH_PATH . '/assets/css/dc-bkash.css' ),
 			],
-			'dc-app-css' => [
+			'dc-app-css'     => [
 				'src'     => $plugin_css_assets_path . 'app.css',
 				'deps'    => [ 'wp-components' ],
 				'version' => filemtime( BKASH_PATH . '/assets/css/app.css' ),
@@ -200,6 +197,8 @@ class Assets {
 	 * @return array
 	 */
 	public function get_admin_localized_scripts() {
+		$bkash_script_url = dc_bkash()->gateway->processor()->get_script();
+
 		$localize_data = [
 			'ajaxurl'      => admin_url( 'admin-ajax.php' ),
 			'nonce'        => wp_create_nonce( 'dc_bkash_admin' ),
@@ -213,6 +212,7 @@ class Assets {
 			'current_time' => current_time( 'mysql' ),
 			'text_domain'  => BKASH_TEXT_DOMAIN,
 			'asset_url'    => BKASH_ASSETS,
+			'script_url'   => $bkash_script_url,
 		];
 
 		return apply_filters( 'dc_bkash_admin_localize_script', $localize_data );

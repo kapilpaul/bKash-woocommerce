@@ -92,6 +92,10 @@ class Settings extends BkashBaseRestController {
 
 		update_option( AdminSettings::OPTION_KEY, $fields, false );
 
+		// Delete dependency transients.
+		delete_transient( 'dc_bkash_token' );
+		delete_transient( 'dc_bkash_token_data' );
+
 		return $this->get_settings_data( $request );
 	}
 
