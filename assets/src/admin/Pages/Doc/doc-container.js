@@ -7,7 +7,7 @@ import { toast } from 'react-toastify';
 import '../../styles/react-toastify.css';
 
 function DocDataContainer() {
-  const [paymentID, setPaymentID, getPaymentID] = useState('');
+  const [paymentID, setPaymentID] = useState('');
   const [amount, setAmount] = useState('');
   const [createPaymentData, setCreatePaymentData] = useState({});
   const [validatePin, setValidatePin] = useState(false);
