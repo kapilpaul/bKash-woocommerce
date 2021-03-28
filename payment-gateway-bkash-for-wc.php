@@ -8,7 +8,7 @@ Author: Kapil Paul
 Author URI: https://kapilpaul.me
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
-Text Domain: bkash-wc
+Text Domain: dc-bkash
 Domain Path: /languages
 */
 
@@ -155,7 +155,7 @@ final class DCoders_Bkash {
 		define( 'BKASH_TEMPLATE_PATH', BKASH_PATH . '/templates/' );
 		define( 'BKASH_URL', plugins_url( '', BKASH_FILE ) );
 		define( 'BKASH_ASSETS', BKASH_URL . '/assets' );
-		define( 'BKASH_TEXT_DOMAIN', 'bkash-wc' );
+		define( 'BKASH_TEXT_DOMAIN', 'dc-bkash' );
 	}
 
 	/**
@@ -261,7 +261,7 @@ final class DCoders_Bkash {
 	 * @return void
 	 */
 	public function localization_setup() {
-		load_plugin_textdomain( BKASH_TEXT_DOMAIN, false, dirname( plugin_basename( __FILE__ ) ) . '/languages/' );
+		load_plugin_textdomain( 'dc-bkash', false, dirname( plugin_basename( __FILE__ ) ) . '/languages/' );
 	}
 
 	/**

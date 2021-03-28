@@ -24,20 +24,20 @@ function GenerateDoc() {
 
   return (
     <div className="dokan_admin_settings_container">
-      <h2>{__('Generate Doc', dc_bkash_admin.text_domain)}</h2>
+      <h2>{__('Generate Doc', 'dc-bkash')}</h2>
 
       <div className="generate_help_text_container">
         <h4>
           {__(
             'You may generate API Request/Response doc from here.',
-            dc_bkash_admin.text_domain
+            'dc-bkash'
           )}
         </h4>
 
         <p>
           {__(
             'In case, if you need sandbox mobile number and OTP then you may use the below number.',
-            dc_bkash_admin.text_domain
+            'dc-bkash'
           )}
         </p>
 
@@ -62,8 +62,8 @@ function GenerateDoc() {
           onClick={() => setIsGenerating(true)}
         >
           {isGenerating
-            ? __('Generating', dc_bkash_admin.text_domain)
-            : __('Generate', dc_bkash_admin.text_domain)}
+            ? __('Generating', 'dc-bkash')
+            : __('Generate', 'dc-bkash')}
         </Button>
       </div>
 

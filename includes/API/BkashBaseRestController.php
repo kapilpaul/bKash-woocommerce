@@ -37,7 +37,7 @@ class BkashBaseRestController extends WP_REST_Controller {
 		if ( ! current_user_can( 'manage_options' ) ) {
 			return new \WP_Error(
 				'dc_bkash_permission_error',
-				__( 'You have no permission to do that', BKASH_TEXT_DOMAIN ),
+				__( 'You have no permission to do that', 'dc-bkash' ),
 				[ 'status' => WP_Http::BAD_REQUEST ]
 			);
 		}

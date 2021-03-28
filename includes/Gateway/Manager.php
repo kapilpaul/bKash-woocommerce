@@ -109,7 +109,7 @@ class Manager {
 
 			if ( $execute_payment['amount'] === $order_grand_total ) {
 				$order->add_order_note(
-					sprintf( __( 'bKash payment completed. Transaction ID #%s! Amount: %s', BKASH_TEXT_DOMAIN ),
+					sprintf( __( 'bKash payment completed. Transaction ID #%s! Amount: %s', 'dc-bkash' ),
 						$execute_payment['trxID'],
 						$order_grand_total
 					)
@@ -120,7 +120,7 @@ class Manager {
 			} else {
 				$order->update_status(
 					'on-hold',
-					__( "Partial payment.Transaction ID #{$execute_payment['trxID']}! Amount: {$execute_payment['amount']}", BKASH_TEXT_DOMAIN )
+					__( "Partial payment.Transaction ID #{$execute_payment['trxID']}! Amount: {$execute_payment['amount']}", 'dc-bkash' )
 				);
 			}
 

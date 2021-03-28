@@ -28,11 +28,11 @@ class Ajax {
 	public function execute_payment_request() {
 		try {
 			if ( ! wp_verify_nonce( $_POST['_nonce'], 'dc-bkash-nonce' ) ) {
-				$this->send_json_error( __( 'Something went wrong here!', BKASH_TEXT_DOMAIN ) );
+				$this->send_json_error( __( 'Something went wrong here!', 'dc-bkash' ) );
 			}
 
 			if ( ! $this->validate_fields( $_POST ) ) {
-				$this->send_json_error( __( 'Empty value is not allowed', BKASH_TEXT_DOMAIN ) );
+				$this->send_json_error( __( 'Empty value is not allowed', 'dc-bkash' ) );
 			}
 
 			$payment_id   = ( isset( $_POST['payment_id'] ) ) ? sanitize_text_field( $_POST['payment_id'] ) : '';
@@ -41,7 +41,7 @@ class Ajax {
 			$order = wc_get_order( $order_number );
 
 			if ( ! is_object( $order ) ) {
-				$this->send_json_error( __( 'Wrong or invalid order ID', BKASH_TEXT_DOMAIN ) );
+				$this->send_json_error( __( 'Wrong or invalid order ID', 'dc-bkash' ) );
 			}
 
 			$processor       = dc_bkash()->gateway->processor();
@@ -58,7 +58,7 @@ class Ajax {
 				wp_send_json_success( $execute_payment );
 			}
 
-			$this->send_json_error( __( 'Something went wrong!', BKASH_TEXT_DOMAIN ) );
+			$this->send_json_error( __( 'Something went wrong!', 'dc-bkash' ) );
 
 		} catch ( \Exception $e ) {
 			$this->send_json_error( $e->getMessage() );
@@ -73,7 +73,7 @@ class Ajax {
 	 * @return void
 	 */
 	public function send_json_error( $text ) {
-		wp_send_json_error( __( $text, BKASH_TEXT_DOMAIN ) );
+		wp_send_json_error( __( $text, 'dc-bkash' ) );
 		wp_die();
 	}
 

@@ -81,7 +81,7 @@ class Payment extends BkashBaseRestController {
 		if ( is_wp_error( $token ) ) {
 			return new WP_Error(
 				'dc_bkash_rest_api_payment_get_token_error',
-				__( $token->get_error_message(), BKASH_TEXT_DOMAIN ),
+				__( $token->get_error_message(), 'dc-bkash' ),
 				[ 'status' => WP_Http::BAD_REQUEST ]
 			);
 		}
@@ -100,7 +100,7 @@ class Payment extends BkashBaseRestController {
 		];
 
 		$response = [
-			'title'          => __( 'Grant Token', BKASH_TEXT_DOMAIN ),
+			'title'          => __( 'Grant Token', 'dc-bkash' ),
 			'data'           => $token,
 			'request_params' => $request_params,
 			'request_url'    => $bkash_processor->grant_token_url,
@@ -129,7 +129,7 @@ class Payment extends BkashBaseRestController {
 		if ( is_wp_error( $create_payment ) ) {
 			return new WP_Error(
 				'dc_bkash_rest_api_payment_create_payment_error',
-				__( $create_payment->get_error_message(), BKASH_TEXT_DOMAIN ),
+				__( $create_payment->get_error_message(), 'dc-bkash' ),
 				[ 'status' => WP_Http::BAD_REQUEST ]
 			);
 		}
@@ -173,7 +173,7 @@ class Payment extends BkashBaseRestController {
 		if ( is_wp_error( $execute_payment ) ) {
 			return new WP_Error(
 				'dc_bkash_rest_api_payment_execute_payment_error',
-				__( $execute_payment->get_error_message(), BKASH_TEXT_DOMAIN ),
+				__( $execute_payment->get_error_message(), 'dc-bkash' ),
 				[ 'status' => WP_Http::BAD_REQUEST ]
 			);
 		}
@@ -183,7 +183,7 @@ class Payment extends BkashBaseRestController {
 		];
 
 		$response = [
-			'title'          => __( 'Execute Payment', BKASH_TEXT_DOMAIN ),
+			'title'          => __( 'Execute Payment', 'dc-bkash' ),
 			'data'           => $execute_payment,
 			'request_params' => $request_params,
 			'request_url'    => $bkash_processor->payment_execute_url( $payment_id ),
@@ -211,7 +211,7 @@ class Payment extends BkashBaseRestController {
 		if ( is_wp_error( $verify_payment ) ) {
 			return new WP_Error(
 				'dc_bkash_rest_api_payment_verify_payment_error',
-				__( $verify_payment->get_error_message(), BKASH_TEXT_DOMAIN ),
+				__( $verify_payment->get_error_message(), 'dc-bkash' ),
 				[ 'status' => WP_Http::BAD_REQUEST ]
 			);
 		}
@@ -221,7 +221,7 @@ class Payment extends BkashBaseRestController {
 		];
 
 		$response = [
-			'title'          => __( 'Query Payment', BKASH_TEXT_DOMAIN ),
+			'title'          => __( 'Query Payment', 'dc-bkash' ),
 			'data'           => $verify_payment,
 			'request_params' => $request_params,
 			'request_url'    => $bkash_processor->payment_query_url . $payment_id,
@@ -252,7 +252,7 @@ class Payment extends BkashBaseRestController {
 
 		if ( is_wp_error( $search_transaction ) ) {
 			$response = [
-				'title'          => __( 'Search Transaction Details', BKASH_TEXT_DOMAIN ),
+				'title'          => __( 'Search Transaction Details', 'dc-bkash' ),
 				'data'           => $search_transaction->get_error_message( 'dc_bkash_search_payment_error' ),
 				'request_params' => $request_params,
 				'request_url'    => $bkash_processor->payment_search_url . $payment_id,
@@ -262,7 +262,7 @@ class Payment extends BkashBaseRestController {
 		}
 
 		$response = [
-			'title'          => __( 'Search Transaction Details', BKASH_TEXT_DOMAIN ),
+			'title'          => __( 'Search Transaction Details', 'dc-bkash' ),
 			'data'           => $search_transaction,
 			'request_params' => $request_params,
 			'request_url'    => $bkash_processor->payment_search_url . $payment_id,
@@ -288,7 +288,7 @@ class Payment extends BkashBaseRestController {
 			[
 				'args'   => [
 					'id' => [
-						'description' => __( 'Unique identifier for the payment.', BKASH_TEXT_DOMAIN ),
+						'description' => __( 'Unique identifier for the payment.', 'dc-bkash' ),
 						'type'        => 'string',
 					],
 				],

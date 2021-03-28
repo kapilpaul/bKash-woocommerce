@@ -38,27 +38,27 @@ class Settings {
 		$fields = [
 			'gateway'           => [
 				'title'          => [
-					'title'   => __( 'Title', BKASH_TEXT_DOMAIN ),
+					'title'   => __( 'Title', 'dc-bkash' ),
 					'type'    => 'text',
-					'default' => __( 'bKash Payment', BKASH_TEXT_DOMAIN ),
+					'default' => __( 'bKash Payment', 'dc-bkash' ),
 				],
 				'test_mode'      => [
-					'title'   => __( 'Test Mode', BKASH_TEXT_DOMAIN ),
+					'title'   => __( 'Test Mode', 'dc-bkash' ),
 					'type'    => 'select',
 					'options' => [
-						"on"  => __( "ON", BKASH_TEXT_DOMAIN ),
-						"off" => __( "OFF", BKASH_TEXT_DOMAIN ),
+						"on"  => __( "ON", 'dc-bkash' ),
+						"off" => __( "OFF", 'dc-bkash' ),
 					],
-					'default' => __( 'off', BKASH_TEXT_DOMAIN ),
+					'default' => __( 'off', 'dc-bkash' ),
 				],
 				'test_mode_type' => [
-					'title'   => __( 'Test Mode Type', BKASH_TEXT_DOMAIN ),
+					'title'   => __( 'Test Mode Type', 'dc-bkash' ),
 					'type'    => 'select',
 					'options' => [
 						"without_key" => "Without Key",
 						"with_key"    => "With Key",
 					],
-					'default' => __( 'with_key', BKASH_TEXT_DOMAIN ),
+					'default' => __( 'with_key', 'dc-bkash' ),
 					'show_if' => [
 						[
 							'key'       => 'test_mode',
@@ -68,7 +68,7 @@ class Settings {
 					],
 				],
 				'username'       => [
-					'title'   => __( 'User Name', BKASH_TEXT_DOMAIN ),
+					'title'   => __( 'User Name', 'dc-bkash' ),
 					'type'    => 'text',
 					'show_if' => [
 						[
@@ -79,7 +79,7 @@ class Settings {
 					],
 				],
 				'password'       => [
-					'title'   => __( 'Password', BKASH_TEXT_DOMAIN ),
+					'title'   => __( 'Password', 'dc-bkash' ),
 					'type'    => 'password',
 					'show_if' => [
 						[
@@ -90,7 +90,7 @@ class Settings {
 					],
 				],
 				'app_key'        => [
-					'title'   => __( 'App Key', BKASH_TEXT_DOMAIN ),
+					'title'   => __( 'App Key', 'dc-bkash' ),
 					'type'    => 'text',
 					'show_if' => [
 						[
@@ -101,7 +101,7 @@ class Settings {
 					],
 				],
 				'app_secret'     => [
-					'title'   => __( 'App Secret', BKASH_TEXT_DOMAIN ),
+					'title'   => __( 'App Secret', 'dc-bkash' ),
 					'type'    => 'text',
 					'show_if' => [
 						[
@@ -113,7 +113,7 @@ class Settings {
 				],
 
 				'sandbox_username'   => [
-					'title'   => __( 'Sandbox User Name', BKASH_TEXT_DOMAIN ),
+					'title'   => __( 'Sandbox User Name', 'dc-bkash' ),
 					'type'    => 'text',
 					'show_if' => [
 						[
@@ -129,7 +129,7 @@ class Settings {
 					],
 				],
 				'sandbox_password'   => [
-					'title'   => __( 'Sandbox Password', BKASH_TEXT_DOMAIN ),
+					'title'   => __( 'Sandbox Password', 'dc-bkash' ),
 					'type'    => 'password',
 					'show_if' => [
 						[
@@ -145,7 +145,7 @@ class Settings {
 					],
 				],
 				'sandbox_app_key'    => [
-					'title'   => __( 'Sandbox App Key', BKASH_TEXT_DOMAIN ),
+					'title'   => __( 'Sandbox App Key', 'dc-bkash' ),
 					'type'    => 'text',
 					'show_if' => [
 						[
@@ -161,7 +161,7 @@ class Settings {
 					],
 				],
 				'sandbox_app_secret' => [
-					'title'   => __( 'Sandbox App Secret', BKASH_TEXT_DOMAIN ),
+					'title'   => __( 'Sandbox App Secret', 'dc-bkash' ),
 					'type'    => 'text',
 					'show_if' => [
 						[
@@ -178,17 +178,17 @@ class Settings {
 				],
 
 				'transaction_charge' => [
-					'title'   => __( 'Enable bKash Charge', BKASH_TEXT_DOMAIN ),
+					'title'   => __( 'Enable bKash Charge', 'dc-bkash' ),
 					'type'    => 'select',
 					'options' => [ "on" => "ON", "off" => "OFF" ],
 					'default' => 'off',
 				],
 				'charge_type'        => [
-					'title'       => __( 'Charge Type', BKASH_TEXT_DOMAIN ),
+					'title'       => __( 'Charge Type', 'dc-bkash' ),
 					'type'        => 'select',
 					'options'     => [ "fixed" => "Fixed", "percentage" => "Percentage" ],
 					'default'     => 'percentage',
-					'description' => __( 'This option will only work when the bKash Charge is enabled', BKASH_TEXT_DOMAIN ),
+					'description' => __( 'This option will only work when the bKash Charge is enabled', 'dc-bkash' ),
 					'show_if'     => [
 						[
 							'key'       => 'transaction_charge',
@@ -198,10 +198,10 @@ class Settings {
 					],
 				],
 				'charge_amount'      => [
-					'title'       => __( 'Charge Amount', BKASH_TEXT_DOMAIN ),
+					'title'       => __( 'Charge Amount', 'dc-bkash' ),
 					'type'        => 'text',
 					'default'     => 2,
-					'description' => __( 'This option will only work when the bKash Charge is enabled', BKASH_TEXT_DOMAIN ),
+					'description' => __( 'This option will only work when the bKash Charge is enabled', 'dc-bkash' ),
 					'show_if'     => [
 						[
 							'key'       => 'transaction_charge',
@@ -211,10 +211,10 @@ class Settings {
 					],
 				],
 				'description'        => [
-					'title'       => __( 'Description', BKASH_TEXT_DOMAIN ),
+					'title'       => __( 'Description', 'dc-bkash' ),
 					'type'        => 'textarea',
-					'description' => __( 'Payment method description that the customer will see on your checkout.', BKASH_TEXT_DOMAIN ),
-					'default'     => __( 'Pay via bKash', BKASH_TEXT_DOMAIN ),
+					'description' => __( 'Payment method description that the customer will see on your checkout.', 'dc-bkash' ),
+					'default'     => __( 'Pay via bKash', 'dc-bkash' ),
 					'desc_tip'    => true,
 				],
 			],

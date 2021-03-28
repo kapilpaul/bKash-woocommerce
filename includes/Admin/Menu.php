@@ -37,14 +37,14 @@ class Menu {
 		$parent_slug = 'dc-bkash';
 		$capability  = 'manage_options';
 
-		$hook = add_menu_page( __( 'bKash', BKASH_TEXT_DOMAIN ), __( 'bKash', BKASH_TEXT_DOMAIN ), $capability, $parent_slug, [ $this, 'plugin_page' ], BKASH_ASSETS . '/images/bkash.png' );
+		$hook = add_menu_page( __( 'bKash', 'dc-bkash' ), __( 'bKash', 'dc-bkash' ), $capability, $parent_slug, [ $this, 'plugin_page' ], BKASH_ASSETS . '/images/bkash.png' );
 
 		if ( current_user_can( $capability ) ) {
-			$submenu[ $parent_slug ][] = [ __( 'App', BKASH_TEXT_DOMAIN ), $capability, $this->get_submenu_url() ];
+			$submenu[ $parent_slug ][] = [ __( 'App', 'dc-bkash' ), $capability, $this->get_submenu_url() ];
 
-			$submenu[ $parent_slug ][] = [ __( 'Settings', BKASH_TEXT_DOMAIN ), $capability, $this->get_submenu_url( 'settings' ) ];
+			$submenu[ $parent_slug ][] = [ __( 'Settings', 'dc-bkash' ), $capability, $this->get_submenu_url( 'settings' ) ];
 
-			$submenu[ $parent_slug ][] = [ __( 'Generate Doc', BKASH_TEXT_DOMAIN ), $capability, $this->get_submenu_url( 'generate-doc' ) ];
+			$submenu[ $parent_slug ][] = [ __( 'Generate Doc', 'dc-bkash' ), $capability, $this->get_submenu_url( 'generate-doc' ) ];
 		}
 
 		add_action( 'load-' . $hook, [ $this, 'init_hooks' ] );

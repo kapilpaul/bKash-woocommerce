@@ -74,7 +74,7 @@ function Settings() {
         setSettings(resp);
         setSections(resp.sections);
 
-        toast.success(__('Saved Successfully!', dc_bkash_admin.text_domain));
+        toast.success(__('Saved Successfully!', 'dc-bkash'));
       })
       .catch((err) => {
         setIsSubmitted(false);
@@ -103,14 +103,14 @@ function Settings() {
   if (isFetching) {
     return (
       <div>
-        <Spinner /> {__('Loading...', dc_bkash_admin.text_domain)}
+        <Spinner /> {__('Loading...', 'dc-bkash')}
       </div>
     );
   }
 
   return (
     <div className="dokan_admin_settings_container">
-      <h2>{__('Settings', dc_bkash_admin.text_domain)}</h2>
+      <h2>{__('Settings', 'dc-bkash')}</h2>
 
       <div className="dokan_admin_settings_area">
         <div className="admin_settings_sections">
@@ -162,8 +162,8 @@ function Settings() {
                   onClick={() => handleSubmit()}
                 >
                   {isSubmitted
-                    ? __('Saving', dc_bkash_admin.text_domain)
-                    : __('Save', dc_bkash_admin.text_domain)}
+                    ? __('Saving', 'dc-bkash')
+                    : __('Save', 'dc-bkash')}
                 </Button>
               </div>
             );

@@ -36,7 +36,7 @@ function Upgrades() {
     })
       .then((resp) => {
         setIsSubmitted(false);
-        // toast.success(__('Saved Successfully!', dc_bkash_admin.text_domain));
+        // toast.success(__('Saved Successfully!', 'dc-bkash'));
       })
       .catch((err) => {
         setIsSubmitted(false);
@@ -51,7 +51,7 @@ function Upgrades() {
           <div id="dc-bkash-upgrade-notice-title">
             <p>
               <strong>
-                {__('bKash Data Update Required', dc_bkash_admin.text_domain)}
+                {__('bKash Data Update Required', 'dc-bkash')}
               </strong>
             </p>
           </div>
@@ -59,7 +59,7 @@ function Upgrades() {
             <p>
               {__(
                 'We need to update your install to the latest version',
-                dc_bkash_admin.text_domain
+                'dc-bkash'
               )}
             </p>
           </div>
@@ -72,8 +72,8 @@ function Upgrades() {
             disabled={isSubmitted}
           >
             {isSubmitted
-              ? __('Updating', dc_bkash_admin.text_domain)
-              : __('Update', dc_bkash_admin.text_domain)}
+              ? __('Updating', 'dc-bkash')
+              : __('Update', 'dc-bkash')}
           </Button>
         </div>
       </div>

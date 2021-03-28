@@ -215,7 +215,7 @@ class Assets {
 			'api'          => null,
 			'libs'         => [],
 			'current_time' => current_time( 'mysql' ),
-			'text_domain'  => BKASH_TEXT_DOMAIN,
+			'text_domain'  => 'dc-bkash',
 			'asset_url'    => BKASH_ASSETS,
 			'script_url'   => $bkash_script_url,
 		];

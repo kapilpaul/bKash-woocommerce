@@ -39,10 +39,10 @@ class Bkash extends \WC_Payment_Gateway {
 		$this->id                 = 'bkash';
 		$this->icon               = false;
 		$this->has_fields         = true;
-		$this->method_title       = __( 'bKash', BKASH_TEXT_DOMAIN );
-		$this->method_description = __( 'Pay via bKash payment', BKASH_TEXT_DOMAIN );
+		$this->method_title       = __( 'bKash', 'dc-bkash' );
+		$this->method_description = __( 'Pay via bKash payment', 'dc-bkash' );
 		$title                    = dc_bkash_get_option( 'title', 'gateway' );
-		$this->title              = empty( $title ) ? __( 'bKash', BKASH_TEXT_DOMAIN ) : $title;
+		$this->title              = empty( $title ) ? __( 'bKash', 'dc-bkash' ) : $title;
 		$this->description        = dc_bkash_get_option( 'description', 'gateway' );
 	}
 

@@ -11,7 +11,7 @@
     "build:dev": "webpack --mode development",
     "build": "webpack --mode production",
     "start": "webpack serve --hot --mode development --disable-host-check",
-    "make-pot": "wp i18n make-pot --exclude='dist,node_modules,vendors' . languages/bkash-wc.pot"
+    "make-pot": "wp i18n make-pot --exclude='dist,node_modules,vendors' . languages/dc-bkash.pot"
   },
   "dependencies": {
     "@wordpress/api-fetch": "^3.21.1",

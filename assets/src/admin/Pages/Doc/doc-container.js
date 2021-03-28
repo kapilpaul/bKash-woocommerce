@@ -147,7 +147,7 @@ function DocDataContainer() {
 
   /**
    * After execute pin limit exceed
-   * @param {*} success 
+   * @param {*} success
    */
   const executeExceedPinLimit = (success) => {
     if (success) {
@@ -158,22 +158,22 @@ function DocDataContainer() {
 
   /**
    * Render the data of exceed pin limit
-   * 
-   * @returns 
+   *
+   * @returns
    */
   const renderExceedPinLimit = () => {
     if (exceedPinLimit) {
       return (
         <div>
-          <p className="strong">{__('Case #2', dc_bkash_admin.text_domain)}</p>
-          <p className="strong">{__('Invoice Number: ', dc_bkash_admin.text_domain)} {createPaymentData.merchantInvoiceNumber}</p>
+          <p className="strong">{__('Case #2', 'dc-bkash')}</p>
+          <p className="strong">{__('Invoice Number: ', 'dc-bkash')} {createPaymentData.merchantInvoiceNumber}</p>
           <p className="strong">
-            {__('Time of Transaction: ', dc_bkash_admin.text_domain)}
+            {__('Time of Transaction: ', 'dc-bkash')}
             {beautifyJson(createPaymentData.createTime)}
           </p>
 
           <p className="strong">
-            {__('Screenshot', dc_bkash_admin.text_domain)}
+            {__('Screenshot', 'dc-bkash')}
           </p>
 
           <img className="img-full" src={DuplicateSS} alt="error-screenshot" />
@@ -192,17 +192,17 @@ function DocDataContainer() {
       return (
         <div>
           <h3>
-            {__('Error Message Implimentation', dc_bkash_admin.text_domain)}
+            {__('Error Message Implimentation', 'dc-bkash')}
           </h3>
-          <p className="strong">{__('Case #1', dc_bkash_admin.text_domain)}</p>
-          <p className="strong">{__('Invoice Number: ', dc_bkash_admin.text_domain)} {duplicateTransactionData.merchantInvoiceNumber}</p>
+          <p className="strong">{__('Case #1', 'dc-bkash')}</p>
+          <p className="strong">{__('Invoice Number: ', 'dc-bkash')} {duplicateTransactionData.merchantInvoiceNumber}</p>
           <p className="strong">
-            {__('Time of Transaction: ', dc_bkash_admin.text_domain)}
+            {__('Time of Transaction: ', 'dc-bkash')}
             {beautifyJson(duplicateTransactionData.createTime)}
           </p>
 
           <p className="strong">
-            {__('Screenshot', dc_bkash_admin.text_domain)}
+            {__('Screenshot', 'dc-bkash')}
           </p>
 
           <img className="img-full" src={DuplicateSS} alt="error-screenshot" />

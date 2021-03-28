@@ -29,11 +29,11 @@ function ApiResponse({path, callback = false}) {
   return (
     <div className="grant-token-container">
       <p className="strong">
-        {__('API Title: ', dc_bkash_admin.text_domain)}
+        {__('API Title: ', 'dc-bkash')}
         {apiTitle}
       </p>
       <p className="strong">
-        {__('API URL: ', dc_bkash_admin.text_domain)}
+        {__('API URL: ', 'dc-bkash')}
         <a href={requestUrl} target="_blank">
           {requestUrl}
         </a>

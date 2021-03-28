@@ -53,7 +53,7 @@ const dcBkash = {
    * @param {*} create_payment
    */
   initBkash(order_number, amount, create_payment = false, callback = false, onClose = false) {
-    let toastID = toast.info(__('bKash Processing...', dc_bkash_admin.text_domain), {
+    let toastID = toast.info(__('bKash Processing...', 'dc-bkash'), {
       position: 'bottom-right',
       autoClose: false,
       closeOnClick: false,
@@ -83,7 +83,7 @@ const dcBkash = {
       executeRequestOnAuthorization: () => {
         if (callback && !onClose) {
           bKash.execute().onError();
-          toast.dismiss(toastID); 
+          toast.dismiss(toastID);
           return callback(true);
         }
 
@@ -92,7 +92,7 @@ const dcBkash = {
       },
       onClose: () => {
         bKash.create().onError();
-        toast.dismiss(toastID); 
+        toast.dismiss(toastID);
 
         this.showAlert( __('Opps...'), __('Payment Cancelled!') );
 
@@ -112,9 +112,9 @@ const dcBkash = {
 
   /**
    * Show alert for payment error
-   * 
-   * @param {*} title 
-   * @param {*} text 
+   *
+   * @param {*} title
+   * @param {*} text
    */
   showAlert(title, text) {
     Swal.fire({

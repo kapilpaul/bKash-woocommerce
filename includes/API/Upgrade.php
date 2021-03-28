@@ -56,11 +56,11 @@ class Upgrade extends BkashBaseRestController {
 	public function apply_updates( $request ) {
 		try {
 			if ( dc_bkash()->upgrades->has_ongoing_process() ) {
-				throw new \Exception( __( 'There is an upgrading process going on.', BKASH_TEXT_DOMAIN ) );
+				throw new \Exception( __( 'There is an upgrading process going on.', 'dc-bkash' ) );
 			}
 
 			if ( ! dc_bkash()->upgrades->is_upgrade_required() ) {
-				throw new \Exception( __( 'Update is not required', BKASH_TEXT_DOMAIN ) );
+				throw new \Exception( __( 'Update is not required', 'dc-bkash' ) );
 			}
 
 			//doing the upgrading here
@@ -70,7 +70,7 @@ class Upgrade extends BkashBaseRestController {
 		} catch ( \Exception $e ) {
 			return new WP_Error(
 				'dc_bkash_upgradable_error',
-				__( $e->getMessage(), BKASH_TEXT_DOMAIN ),
+				__( $e->getMessage(), 'dc-bkash' ),
 				[ 'status' => WP_Http::BAD_REQUEST ]
 			);
 		}
@@ -87,7 +87,7 @@ class Upgrade extends BkashBaseRestController {
 		if ( ! current_user_can( 'update_plugins' ) ) {
 			return new \WP_Error(
 				'dc_bkash_upgradable_error',
-				__( 'You have no permission to do that', BKASH_TEXT_DOMAIN ),
+				__( 'You have no permission to do that', 'dc-bkash' ),
 				[ 'status' => WP_Http::BAD_REQUEST ]
 			);
 		}
