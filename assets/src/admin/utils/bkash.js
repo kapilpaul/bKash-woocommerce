@@ -1,6 +1,7 @@
 import $ from 'jquery';
 import { __ } from '@wordpress/i18n';
 import { toast } from 'react-toastify';
+import Swal from 'sweetalert2'
 import '../styles/react-toastify.css';
 
 /**
@@ -51,8 +52,8 @@ const dcBkash = {
    * @param {*} amount
    * @param {*} create_payment
    */
-  initBkash(order_number, amount, create_payment = false, callback = false) {
-    let toastID = toast.warn(__('bKash Processing...', dc_bkash_admin.text_domain), {
+  initBkash(order_number, amount, create_payment = false, callback = false, onClose = false) {
+    let toastID = toast.info(__('bKash Processing...', dc_bkash_admin.text_domain), {
       position: 'bottom-right',
       autoClose: false,
       closeOnClick: false,
@@ -71,27 +72,33 @@ const dcBkash = {
     bKash.init({
       paymentMode: 'checkout',
       paymentRequest: payment_request,
-      createRequest: function () {
+      createRequest: () => {
         if (!create_payment) {
           bKash.create().onError();
           return;
         }
 
         bKash.create().onSuccess(create_payment);
-        toast.dismiss(toastID); 
       },
-      executeRequestOnAuthorization: function () {
-        if (callback) {
+      executeRequestOnAuthorization: () => {
+        if (callback && !onClose) {
           bKash.execute().onError();
           toast.dismiss(toastID); 
           return callback(true);
         }
 
+        toast.dismiss();
         bKash.execute().onError();
       },
-      onClose: function () {
+      onClose: () => {
         bKash.create().onError();
         toast.dismiss(toastID); 
+
+        this.showAlert( __('Opps...'), __('Payment Cancelled!') );
+
+        if ( onClose && callback ) {
+          return callback(true, create_payment);
+        }
       },
     });
 
@@ -102,6 +109,22 @@ const dcBkash = {
     $('#bKash_button').removeAttr('disabled');
     $('#bKash_button').click();
   },
+
+  /**
+   * Show alert for payment error
+   * 
+   * @param {*} title 
+   * @param {*} text 
+   */
+  showAlert(title, text) {
+    Swal.fire({
+      icon: 'error',
+      title: title,
+      text: text,
+      confirmButtonText: 'OK',
+    }).then((result) => {
+    });
+  }
 };
 
 export default dcBkash;

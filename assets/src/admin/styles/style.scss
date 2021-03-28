@@ -173,11 +173,15 @@ pre {
   white-space: pre-wrap;
 }
 
+.img-full {
+  max-width: 100%;
+}
+
 .strong {
   display: block;
   font-weight: 600;
 }
 
-.Toastify__toast-container--bottom-right {
+.Toastify__toast-container--bottom-right,  .Toastify__toast-container--bottom-center{
   top: inherit !important;
 }

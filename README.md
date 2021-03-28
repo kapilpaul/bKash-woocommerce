@@ -48,6 +48,109 @@ You can use the information below for a test checkout. Default values that will 
 
     -- Yes. Follow the installation process and you are good to go.
     
+## File Structure
+
+```
+├── README.md
+├── assets
+│   ├── css
+│   │   ├── app.css
+│   │   ├── dc-bkash.css
+│   │   └── upgrade.css
+│   ├── images
+│   │   ├── bkash.png
+│   │   └── bkash_logo.png
+│   ├── js
+│   │   ├── app.css
+│   │   ├── app.js
+│   │   ├── dc-bkash.js
+│   │   ├── runtime.js
+│   │   ├── upgrade.css
+│   │   ├── upgrade.js
+│   │   ├── vendors.js
+│   │   └── vendors.js.LICENSE.txt
+│   └── src
+│       ├── admin
+│       │   ├── App.js
+│       │   ├── Pages
+│       │   │   ├── Doc
+│       │   │   │   └── doc-container.js
+│       │   │   ├── generatedoc.js
+│       │   │   └── settings.js
+│       │   ├── components
+│       │   │   ├── Header.js
+│       │   │   ├── Posts.js
+│       │   │   ├── bKash
+│       │   │   │   └── api-response.js
+│       │   │   └── fields.js
+│       │   ├── images
+│       │   │   └── duplicate.png
+│       │   ├── index.js
+│       │   ├── router
+│       │   │   └── index.js
+│       │   ├── styles
+│       │   │   ├── react-toastify.css
+│       │   │   └── style.scss
+│       │   └── utils
+│       │       ├── admin-menu-fix.js
+│       │       ├── bkash.js
+│       │       └── helper.js
+│       └── upgrade
+│           ├── App.js
+│           ├── Pages
+│           │   └── Upgrades.js
+│           ├── index.js
+│           └── styles
+│               └── style.scss
+├── composer.json
+├── composer.lock
+├── includes
+│   ├── API
+│   │   ├── BkashBaseRestController.php
+│   │   ├── Payment.php
+│   │   ├── Settings.php
+│   │   └── Upgrade.php
+│   ├── Abstracts
+│   │   └── DcBkashUpgrader.php
+│   ├── Admin
+│   │   ├── Menu.php
+│   │   └── Settings.php
+│   ├── Admin.php
+│   ├── Ajax.php
+│   ├── Api.php
+│   ├── Assets.php
+│   ├── Frontend
+│   │   └── Shortcode.php
+│   ├── Frontend.php
+│   ├── Gateway
+│   │   ├── Bkash.php
+│   │   ├── Manager.php
+│   │   └── Processor.php
+│   ├── Installer.php
+│   ├── Traits
+│   │   └── Form_Error.php
+│   ├── Upgrade
+│   │   ├── AdminNotice.php
+│   │   ├── Manager.php
+│   │   ├── Upgrades
+│   │   │   └── V_2_0_0.php
+│   │   └── Upgrades.php
+│   └── functions.php
+├── index.php
+├── package-lock.json
+├── package.json
+├── payment-gateway-bkash-for-wc.php
+├── postcss.config.js
+├── readme.txt
+├── templates
+│   ├── admin
+│   │   └── upgrade-notice.php
+│   └── frontend
+│       └── transaction-charge.php
+└── webpack.config.js
+```
+
+
 ## Privacy Policy
 Payment Gateway bKash for WC uses [Appsero](https://appsero.com) SDK to collect some telemetry data upon user's confirmation. This helps us to troubleshoot problems faster & make product improvements.
     

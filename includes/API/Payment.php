@@ -145,7 +145,7 @@ class Payment extends BkashBaseRestController {
 		];
 
 		$response = [
-			'title'          => __( 'Create Payment', BKASH_TEXT_DOMAIN ),
+			'title'          => __( 'Create Payment', 'bkash-wc' ),
 			'data'           => $create_payment,
 			'request_params' => $request_params,
 			'request_url'    => $bkash_processor->payment_create_url(),
