@@ -59,45 +59,9 @@ class Payment extends BkashBaseRestController {
 			]
 		);
 
-		register_rest_route(
-			$this->get_namespace(),
-			sprintf( '/%s/execute-payment/(?P<id>[a-zA-Z0-9-]+)', $this->rest_base ),
-			[
-				'args'   => [
-					'id' => [
-						'description' => __( 'Unique identifier for the payment.', BKASH_TEXT_DOMAIN ),
-						'type'        => 'string',
-					],
-				],
-				[
-					'methods'             => WP_REST_Server::READABLE,
-					'callback'            => [ $this, 'execute_payment' ],
-					'permission_callback' => [ $this, 'admin_permissions_check' ],
-					'args'                => $this->get_collection_params(),
-				],
-				'schema' => [ $this, 'get_item_schema' ],
-			]
-		);
-
-		register_rest_route(
-			$this->get_namespace(),
-			sprintf( '/%s/verify-payment/(?P<id>[a-zA-Z0-9-]+)', $this->rest_base ),
-			[
-				'args'   => [
-					'id' => [
-						'description' => __( 'Unique identifier for the payment.', BKASH_TEXT_DOMAIN ),
-						'type'        => 'string',
-					],
-				],
-				[
-					'methods'             => WP_REST_Server::READABLE,
-					'callback'            => [ $this, 'query_payment' ],
-					'permission_callback' => [ $this, 'admin_permissions_check' ],
-					'args'                => $this->get_collection_params(),
-				],
-				'schema' => [ $this, 'get_item_schema' ],
-			]
-		);
+		$this->register_single_route( 'execute-payment/(?P<id>[a-zA-Z0-9-]+)', [ $this, 'execute_payment' ] );
+		$this->register_single_route( 'query-payment/(?P<id>[a-zA-Z0-9-]+)', [ $this, 'query_payment' ] );
+		$this->register_single_route( 'search-payment/(?P<id>[a-zA-Z0-9-]+)', [ $this, 'search_payment' ] );
 	}
 
 	/**
@@ -156,8 +120,9 @@ class Payment extends BkashBaseRestController {
 	 * @return WP_Error|\WP_REST_Response
 	 */
 	public function create_payment( $request ) {
+		$get_amount = $request->get_param( 'amount' );
 		$bkash_processor = Processor::get_instance();
-		$amount          = rand( 10, 100 );
+		$amount          = $get_amount ? $get_amount : rand( 10, 100 );
 		$invoice_id      = sprintf( 'TBP%s', str_pad( rand( 10, 999 ), 5, "0", STR_PAD_LEFT ) );
 		$create_payment  = $bkash_processor->create_payment( (float) $amount, $invoice_id );
 
@@ -263,5 +228,78 @@ class Payment extends BkashBaseRestController {
 		];
 
 		return rest_ensure_response( $response );
+	}
+
+	/**
+	 * Search Transaction details
+	 * returning with search payment data and request header
+	 *
+	 * @param $request
+	 *
+	 * @since 2.0.0
+	 *
+	 * @return WP_Error|\WP_REST_Response
+	 */
+	public function search_payment( $request ) {
+		$payment_id = $request->get_param( 'id' );
+
+		$bkash_processor    = Processor::get_instance();
+		$search_transaction = $bkash_processor->search_transaction( $payment_id );
+
+		$request_params = [
+			'headers' => $bkash_processor->get_authorization_header()['headers'],
+		];
+
+		if ( is_wp_error( $search_transaction ) ) {
+			$response = [
+				'title'          => __( 'Search Transaction Details', BKASH_TEXT_DOMAIN ),
+				'data'           => $search_transaction->get_error_message( 'dc_bkash_search_payment_error' ),
+				'request_params' => $request_params,
+				'request_url'    => $bkash_processor->payment_search_url . $payment_id,
+			];
+
+			return rest_ensure_response( $response );
+		}
+
+		$response = [
+			'title'          => __( 'Search Transaction Details', BKASH_TEXT_DOMAIN ),
+			'data'           => $search_transaction,
+			'request_params' => $request_params,
+			'request_url'    => $bkash_processor->payment_search_url . $payment_id,
+		];
+
+		return rest_ensure_response( $response );
+	}
+
+	/**
+	 * Registering single route which will have a id as a argument
+	 *
+	 * @param $path
+	 * @param array $callback_method
+	 *
+	 * @since 2.0.0
+	 *
+	 * @return void
+	 */
+	private function register_single_route( $path, array $callback_method ) {
+		register_rest_route(
+			$this->get_namespace(),
+			sprintf( '/%s/%s', $this->rest_base, $path ),
+			[
+				'args'   => [
+					'id' => [
+						'description' => __( 'Unique identifier for the payment.', BKASH_TEXT_DOMAIN ),
+						'type'        => 'string',
+					],
+				],
+				[
+					'methods'             => WP_REST_Server::READABLE,
+					'callback'            => $callback_method,
+					'permission_callback' => [ $this, 'admin_permissions_check' ],
+					'args'                => $this->get_collection_params(),
+				],
+				'schema' => [ $this, 'get_item_schema' ],
+			]
+		);
 	}
 }

@@ -166,10 +166,13 @@
             window.location.href = data.order_success_url;
           } else {
             bKash.execute().onError(); //run clean up code
+            dc_bkash_payment.show_alert( 'Payment Failed!', response.data.errorMessage );
           }
         },
         error: function () {
           bKash.execute().onError(); // Run clean up code
+
+          dc_bkash_payment.show_alert( 'Payment Failed!', 'Something went wrong!' );
         },
       });
     },
@@ -201,11 +204,28 @@
         },
         onClose: function () {
           loader.style.display = 'none';
+
+          dc_bkash_payment.show_alert( 'Opps...', 'Payment Cancelled!' );
         },
+      });
+
+      bKash.reconfigure({
+        paymentRequest: payment_request
       });
 
       $('#bKash_button').removeAttr('disabled');
       $('#bKash_button').click();
+    },
+    show_alert: function(title, text) {
+      Swal.fire({
+        icon: 'error',
+        title: title,
+        text: text,
+        confirmButtonText: 'OK',
+      }).then((result) => {
+        loader.style.display = 'none';
+        $(dc_bkash_payment.checkout_form).removeClass('processing').unblock();
+      });
     },
     init: function () {
       if (dc_bkash_payment.is_bkash_selected()) {

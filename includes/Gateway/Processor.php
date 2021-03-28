@@ -41,6 +41,15 @@ class Processor {
 	public $payment_query_url;
 
 	/**
+	 * Holds payment search url
+	 *
+	 * @since 2.0.0
+	 *
+	 * @var string
+	 */
+	public $payment_search_url;
+
+	/**
 	 * @var string
 	 */
 	protected $version = 'v1.2.0-beta';
@@ -56,8 +65,11 @@ class Processor {
 		$env    = $this->check_test_mode() ? 'sandbox' : 'pay';
 		$server = $this->check_test_mode() ? 'checkout' : 'direct';
 
-		$this->grant_token_url   = "https://checkout.$env.bka.sh/{$this->version}/checkout/token/grant";
-		$this->payment_query_url = "https://$server.$env.bka.sh/{$this->version}/checkout/payment/query/";
+		$this->grant_token_url = "https://checkout.$env.bka.sh/{$this->version}/checkout/token/grant";
+
+		$payment_query_base       = "https://$server.$env.bka.sh/{$this->version}/checkout/payment/";
+		$this->payment_query_url  = sprintf( '%squery/', $payment_query_base );
+		$this->payment_search_url = sprintf( '%ssearch/', $payment_query_base );
 	}
 
 	/**
@@ -248,7 +260,7 @@ class Processor {
 			return false;
 		}
 
-		$url      = $this->payment_query_url . $payment_id;
+		$url      = esc_url_raw( $this->payment_query_url . $payment_id );
 		$response = wp_remote_get( $url, $this->get_authorization_header() );
 
 		if ( is_wp_error( $response ) ) {
@@ -259,6 +271,42 @@ class Processor {
 
 		if ( isset( $result['errorCode'] ) && isset( $result['errorMessage'] ) ) {
 			return new \WP_Error( 'dc_bkash_verify_payment_error', $result );
+		}
+
+		return $result;
+	}
+
+	/**
+	 * Search payment on bKash end
+	 *
+	 * @param $payment_id
+	 *
+	 * @since 2.0.0
+	 *
+	 * @return mixed|\WP_Error
+	 */
+	public function search_transaction( $payment_id ) {
+		if ( $this->check_test_mode() && $this->get_test_mode_type( 'without_key' ) ) {
+			return false;
+		}
+
+		$token = $this->get_token();
+
+		if ( ! $token || is_wp_error( $token ) ) {
+			return false;
+		}
+
+		$url      = esc_url_raw( $this->payment_search_url . $payment_id );
+		$response = wp_remote_get( $url, $this->get_authorization_header() );
+
+		if ( is_wp_error( $response ) ) {
+			return $response;
+		}
+
+		$result = json_decode( wp_remote_retrieve_body( $response ), true );
+
+		if ( isset( $result['errorCode'] ) && isset( $result['errorMessage'] ) ) {
+			return new \WP_Error( 'dc_bkash_search_payment_error', $result );
 		}
 
 		return $result;
@@ -280,7 +328,10 @@ class Processor {
 					"Content-Type"  => 'application/json',
 				];
 
-				$args = [ 'headers' => $headers ];
+				$args = [
+					'headers' => $headers,
+					'timeout' => apply_filters( 'dc_bkash_remote_timeout', 30 ),
+				];
 
 				return $args;
 			}

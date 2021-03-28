@@ -122,6 +122,11 @@ class Assets {
 				'deps'      => [ 'jquery' ],
 				'in_footer' => true,
 			],
+			'sweetalert'        => [
+				'src'       => '//cdn.jsdelivr.net/npm/sweetalert2@10',
+				'deps'      => [ 'jquery' ],
+				'in_footer' => true,
+			],
 			'dc-app-runtime'    => [
 				'src'       => $plugin_js_assets_path . 'runtime.js',
 				'version'   => filemtime( BKASH_PATH . '/assets/js/runtime.js' ),

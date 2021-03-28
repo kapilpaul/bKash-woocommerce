@@ -36,7 +36,7 @@ function GenerateDoc() {
 
         <p>
           {__(
-            'In case, if you need sandbox mobile number and OTP then you may use the follow number.',
+            'In case, if you need sandbox mobile number and OTP then you may use the below number.',
             dc_bkash_admin.text_domain
           )}
         </p>

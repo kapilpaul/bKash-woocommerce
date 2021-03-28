@@ -107,6 +107,7 @@ class Bkash extends \WC_Payment_Gateway {
 		wp_enqueue_style( 'dc-bkash' );
 
 		//loading this scripts only in checkout page.
+		wp_enqueue_script( 'sweetalert' );
 		wp_enqueue_script( 'dc-bkash' );
 
 		$this->localize_scripts();

@@ -48,7 +48,7 @@ class Ajax {
 			$execute_payment = $processor->execute_payment( $payment_id );
 
 			if ( is_wp_error( $execute_payment ) ) {
-				$this->send_json_error( __( 'Error in execute payment', BKASH_TEXT_DOMAIN ) );
+				$this->send_json_error( $execute_payment->get_error_message() );
 			}
 
 			if ( $execute_payment ) {

@@ -86,11 +86,17 @@ const dcBkash = {
           toast.dismiss(toastID); 
           return callback(true);
         }
+
+        bKash.execute().onError();
       },
       onClose: function () {
         bKash.create().onError();
         toast.dismiss(toastID); 
       },
+    });
+
+    bKash.reconfigure({
+      paymentRequest: payment_request
     });
 
     $('#bKash_button').removeAttr('disabled');
