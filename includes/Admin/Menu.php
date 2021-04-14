@@ -40,7 +40,7 @@ class Menu {
 		$hook = add_menu_page( __( 'bKash', 'dc-bkash' ), __( 'bKash', 'dc-bkash' ), $capability, $parent_slug, [ $this, 'plugin_page' ], BKASH_ASSETS . '/images/bkash.png' );
 
 		if ( current_user_can( $capability ) ) {
-			$submenu[ $parent_slug ][] = [ __( 'App', 'dc-bkash' ), $capability, $this->get_submenu_url() ];
+			$submenu[ $parent_slug ][] = [ __( 'Transactions', 'dc-bkash' ), $capability, $this->get_submenu_url() ];
 
 			$submenu[ $parent_slug ][] = [ __( 'Settings', 'dc-bkash' ), $capability, $this->get_submenu_url( 'settings' ) ];
 

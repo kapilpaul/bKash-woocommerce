@@ -2,8 +2,14 @@ import React from 'react';
 import { HashRouter as Router, Route, Switch } from 'react-router-dom';
 import Settings from '../Pages/settings';
 import GenerateDoc from '../Pages/generatedoc';
+import Transactions from '../Pages/transactions';
 
 const routes = [
+  {
+    path: '/',
+    component: Transactions,
+    exact: true,
+  },
   {
     path: '/settings',
     component: Settings,
@@ -37,6 +43,10 @@ function Routerview() {
  * @param {*} route
  */
 function RenderRoute(route) {
+  if ( route.exact ) {
+    return <Route path={route.path} exact component={route.component} />;  
+  }
+
   return <Route path={route.path} component={route.component} />;
 }
 

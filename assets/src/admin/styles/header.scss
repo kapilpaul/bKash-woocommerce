@@ -1,0 +1,30 @@
+.bkash_header_container {
+    background: #fff;
+    overflow: hidden;
+    font-size: 20px;
+    width: 100%;
+    display: flex;
+    margin: 0 0 35px -19px;
+    box-shadow: 0 0 5px 0 rgba(0, 0, 0, 0.1);
+    line-height: 8px;
+    align-items: center;
+    justify-content: flex-start;
+    padding-right: 19px;
+    position: fixed;
+    top: 31px;
+    z-index: 999;
+  
+    .header_logo {
+      padding-left: 20px;
+  
+      img {
+        padding: 12px 0;
+        width: 85px;
+      }
+    }
+  }
+  
+  .mobile .bkash_header_container {
+    position: relative;
+    top: 31px;
+  }

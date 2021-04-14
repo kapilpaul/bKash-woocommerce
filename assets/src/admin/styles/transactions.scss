@@ -1,0 +1,18 @@
+.all-transactions {
+    .transactions {
+        width: 100%;
+        border: 1px solid $border-color;
+        border-radius: 5px;
+        border-collapse: collapse;
+        background: $white;
+        text-align: center;
+
+        thead {
+            border: 1px solid $border-color;
+        }
+
+        tr {
+            padding: 10px;
+        }
+    }
+}

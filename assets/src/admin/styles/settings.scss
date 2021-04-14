@@ -1,0 +1,78 @@
+.dokan_admin_settings_area {
+    overflow: hidden;
+    position: relative;
+    display: flex;
+    border: 1px solid #c8d7e1;
+  
+    .admin_settings_sections {
+      overflow: hidden;
+      flex: 1;
+      background: #f1f1f1;
+  
+      ul.dokan_admin_settings {
+        margin: 0;
+  
+        li {
+          background-color: #f1f1f1;
+          padding: 15px 12px;
+          font-size: 13px;
+          font-weight: 600;
+          margin-bottom: 0;
+          cursor: pointer;
+          border: none;
+          border-bottom: 1px solid #c8d7e1;
+          transition-property: none;
+          transition: none;
+          border-right: 1px solid #c8d7e1;
+        }
+  
+        li.active {
+          background-color: #fff !important;
+          border-right: 1px solid #fff;
+        }
+      }
+    }
+  
+    .admin_settings_fields {
+      flex: 3;
+      padding: 10px 20px;
+      background-color: #fff;
+      padding-bottom: 75px;
+  
+      .single_settings_container {
+        padding: 0 15px;
+  
+        .section_title {
+          font-size: 17px;
+          margin-top: 0;
+          color: #e1156e;
+          font-weight: 600;
+          border-bottom: 1px solid #e1156e;
+          padding-bottom: 5px;
+          padding-top: 10px;
+        }
+      }
+  
+      p.label {
+        font-size: 14px;
+        margin-bottom: 5px;
+      }
+  
+      p.help-text {
+        color: #333333a6;
+        font-style: italic;
+        margin-top: 5px;
+      }
+    }
+  
+    .widefat {
+      border-color: #ddd;
+      padding: 6px 10px;
+      font-size: 13px;
+      max-width: 100%;
+    }
+  
+    .dc_bkash_save_btn {
+      margin-top: 20px;
+    }
+  }

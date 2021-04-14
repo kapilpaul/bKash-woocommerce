@@ -1,0 +1,40 @@
+.generate_help_text_container {
+    background: $white;
+    padding: 20px;
+    border-radius: 5px;
+  
+    h4 {
+      margin-top: 0;
+    }
+  
+    .sandbox_number_details {
+      p {
+        color: #ff0000;
+        font-style: italic;
+  
+        span {
+          font-weight: 700;
+          color: $primary-color;
+        }
+      }
+    }
+  }
+  
+  .generator-container-area {
+    margin-top: 20px;
+    background: $white;
+    padding: 40px;
+    border-radius: 5px;
+    overflow: hidden;
+  
+    h2 {
+      text-align: center;
+      font-size: 25px;
+      text-decoration: underline;
+    }
+  }
+  
+  .grant-token-container {
+    overflow: hidden;
+  }
+  

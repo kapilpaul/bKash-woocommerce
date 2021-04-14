@@ -9,7 +9,7 @@ import { beautifyJson } from '../../utils/helper';
 import DuplicateSS from '../../images/duplicate.png';
 import ExceedPinSS from '../../images/exceed-pin.png';
 
-function DocDataContainer() {
+function DocDataContainer({afterComplete}) {
   const [paymentID, setPaymentID] = useState('');
   const [amount, setAmount] = useState('');
   const [createPaymentData, setCreatePaymentData] = useState({});
@@ -114,7 +114,7 @@ function DocDataContainer() {
   };
 
   /**
-   * Initialixe verification limit exceed
+   * Initialize verification limit exceed
    */
   const initVerificationLimitExceed = () => {
     let duplicateTransactionPath = '/dc-bkash/v1/payment/create-payment';
@@ -163,20 +163,21 @@ function DocDataContainer() {
    */
   const renderExceedPinLimit = () => {
     if (exceedPinLimit) {
+    
       return (
         <div>
           <p className="strong">{__('Case #2', 'dc-bkash')}</p>
           <p className="strong">{__('Invoice Number: ', 'dc-bkash')} {createPaymentData.merchantInvoiceNumber}</p>
           <p className="strong">
             {__('Time of Transaction: ', 'dc-bkash')}
-            {beautifyJson(createPaymentData.createTime)}
+            {createPaymentData.createTime}
           </p>
 
           <p className="strong">
             {__('Screenshot', 'dc-bkash')}
           </p>
 
-          <img className="img-full" src={DuplicateSS} alt="error-screenshot" />
+          <img className="img-full" src={ExceedPinSS} alt="error-screenshot" />
         </div>
       );
     }
@@ -198,7 +199,7 @@ function DocDataContainer() {
           <p className="strong">{__('Invoice Number: ', 'dc-bkash')} {duplicateTransactionData.merchantInvoiceNumber}</p>
           <p className="strong">
             {__('Time of Transaction: ', 'dc-bkash')}
-            {beautifyJson(duplicateTransactionData.createTime)}
+            {duplicateTransactionData.createTime}
           </p>
 
           <p className="strong">
@@ -232,7 +233,8 @@ function DocDataContainer() {
   };
 
   return (
-    <div className="generator-container-area">
+    <div className="generator-container-area" id="doc-details">
+      <h2>{__('API Request/Response', 'dc-bkash')}</h2>
       <ApiResponse path="/dc-bkash/v1/payment/get-token" />
 
       <ApiResponse

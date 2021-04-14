@@ -279,6 +279,7 @@ class Settings {
 	 * @return bool|mixed|null
 	 */
 	public function get_option( $option, $section ) {
+
 		$settings = $this->get_settings();
 
 		if ( empty( $settings ) ) {

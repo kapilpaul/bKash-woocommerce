@@ -65,6 +65,19 @@ function GenerateDoc() {
             ? __('Generating', 'dc-bkash')
             : __('Generate', 'dc-bkash')}
         </Button>
+
+        <Button
+          type="submit"
+          className="dc_bkash_save_btn"
+          isPrimary={true}
+          disabled={!isGenerating}
+          onClick={() => {
+            setIsGenerating(false);
+            window.print();
+          }}
+        >
+          {__('Download', 'dc-bkash')}
+        </Button>
       </div>
 
       {GenerateDocContainer()}

@@ -1,0 +1,30 @@
+@media print {
+
+    @page { 
+      margin: 50px 0;
+    }
+  
+    @page:first-child { 
+      margin: 50px 0;
+      margin-top: -50px;
+    }
+  
+    .bkash_header_container,
+    .dokan_admin_settings_container>h2,
+    .generate_help_text_container,
+    #adminmenuwrap,
+    #wpadminbar,
+    #adminmenuback,
+    #wpfooter {
+      display: none !important;
+    }
+  
+    #wpcontent,
+    #wpfooter {
+      margin-left: 0;
+    }
+  
+    #wpbody-content {
+      padding-top: 0;
+    }
+  }

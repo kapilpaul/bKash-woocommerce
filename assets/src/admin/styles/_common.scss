@@ -1,0 +1,37 @@
+h1 {
+  color: $primary-color;
+  padding: 15px;
+}
+
+#wpbody-content {
+  padding-top: 70px;
+}
+
+.mobile #wpbody-content {
+  padding-top: 0px;
+}
+
+pre {
+  white-space: pre-wrap;
+}
+
+.img-full {
+  max-width: 100%;
+}
+
+.strong {
+  display: block;
+  font-weight: 600;
+}
+
+.Toastify__toast-container--bottom-right,
+.Toastify__toast-container--bottom-center {
+  top: inherit !important;
+}
+
+.dc_bkash_save_btn {
+  width: 120px;
+  text-align: center;
+  display: inline-block;
+  margin-right: 15px;
+}
