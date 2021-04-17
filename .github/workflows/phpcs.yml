@@ -1,2 +1,2 @@
-- name: PHPCS Code Review
-  uses: rtCamp/action-phpcs-code-review@v2.0.3
+name: PHPCS Code Review
+uses: rtCamp/action-phpcs-code-review@v2.0.3
