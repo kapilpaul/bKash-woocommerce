@@ -9,78 +9,32 @@ function Transactions() {
       <h2>{__('Transactions', 'dc-bkash')}</h2>
 
       <div className="all-transactions">
-        <table className="transactions">
+        <table className="table table-bordered border-primary transactions">
           <thead>
             <tr>
-              <th>First Name</th>
-              <th>Last Name</th>
-              <th>Job Title</th>
-              <th>Twitter</th>
+              <th scope="col">#</th>
+              <th scope="col">First</th>
+              <th scope="col">Last</th>
+              <th scope="col">Handle</th>
             </tr>
           </thead>
-
           <tbody>
             <tr>
-              <td>hello</td>
-              <td>hello</td>
-              <td>hello</td>
-              <td>hello</td>
+              <th scope="row">1</th>
+              <td>Mark</td>
+              <td>Otto</td>
+              <td>@mdo</td>
             </tr>
-
-
             <tr>
-              <td>hello</td>
-              <td>hello</td>
-              <td>hello</td>
-              <td>hello</td>
+              <th scope="row">2</th>
+              <td>Jacob</td>
+              <td>Thornton</td>
+              <td>@fat</td>
             </tr>
-
-
             <tr>
-              <td>hello</td>
-              <td>hello</td>
-              <td>hello</td>
-              <td>hello</td>
-            </tr>
-
-
-            <tr>
-              <td>hello</td>
-              <td>hello</td>
-              <td>hello</td>
-              <td>hello</td>
-            </tr>
-
-
-            <tr>
-              <td>hello</td>
-              <td>hello</td>
-              <td>hello</td>
-              <td>hello</td>
-            </tr>
-
-
-            <tr>
-              <td>hello</td>
-              <td>hello</td>
-              <td>hello</td>
-              <td>hello</td>
-            </tr>
-
-
-            <tr>
-              <td>hello</td>
-              <td>hello</td>
-              <td>hello</td>
-              <td>hello</td>
-            </tr>
-
-
-            <tr>
-              <td>hello</td>
-              <td>hello</td>
-              <td>hello</td>
-              <td>hello</td>
+              <th scope="row">3</th>
+              <td colSpan="2">Larry the Bird</td>
+              <td>@twitter</td>
             </tr>
           </tbody>
         </table>
