@@ -1,15 +1,26 @@
 <?php
+/**
+ * Class Manager
+ *
+ * @since 2.0.0
+ *
+ * @author Kapil
+ *
+ * @package DCoders\Bkash\Upgrade
+ */
 
 namespace DCoders\Bkash\Upgrade;
 
 /**
  * Class Manager
- * @package DCoders\Bkash\Upgrade
- *
- * @author Kapil
  */
 class Manager {
 
+	/**
+	 * Upgrading DB key.
+	 *
+	 * @var string
+	 */
 	private $is_upgrading_db_key = 'dc_bkash_is_upgrading';
 
 	/**
@@ -69,7 +80,8 @@ class Manager {
 		$upgrades = apply_filters( 'dc_bkash_upgrade_upgrades', Upgrades::get_upgrades() );
 
 		uksort(
-			$upgrades, function ( $a, $b ) {
+			$upgrades,
+			function ( $a, $b ) {
 				return version_compare( $b, $a, '<' );
 			}
 		);

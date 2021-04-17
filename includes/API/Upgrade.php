@@ -1,4 +1,13 @@
 <?php
+/**
+ * Class Upgrade
+ *
+ * @since 2.0.0
+ *
+ * @author Kapil Paul
+ *
+ * @package DCoders\Bkash\API
+ */
 
 namespace DCoders\Bkash\API;
 
@@ -9,11 +18,9 @@ use WP_REST_Server;
 
 /**
  * Class Upgrade
- * @package DCoders\Bkash\API
- *
- * @author Kapil Paul
  */
 class Upgrade extends BkashBaseRestController {
+
 	/**
 	 * Initialize the class
 	 */
@@ -47,11 +54,12 @@ class Upgrade extends BkashBaseRestController {
 	/**
 	 * Apply updates.
 	 *
-	 * @param $request
+	 * @param object $request Request Object.
 	 *
 	 * @since 2.0.0
 	 *
 	 * @return WP_Error|\WP_REST_Response
+	 * @throws \Exception Error throwing.
 	 */
 	public function apply_updates( $request ) {
 		try {
@@ -63,14 +71,14 @@ class Upgrade extends BkashBaseRestController {
 				throw new \Exception( __( 'Update is not required', 'dc-bkash' ) );
 			}
 
-			//doing the upgrading here
+			// Doing the upgrading here.
 			dc_bkash()->upgrades->do_upgrade();
 
 			return rest_ensure_response( [ 'message' => 'success' ] );
 		} catch ( \Exception $e ) {
 			return new WP_Error(
 				'dc_bkash_upgradable_error',
-				__( $e->getMessage(), 'dc-bkash' ),
+				__( $e->getMessage(), 'dc-bkash' ), //phpcs:ignore
 				[ 'status' => WP_Http::BAD_REQUEST ]
 			);
 		}

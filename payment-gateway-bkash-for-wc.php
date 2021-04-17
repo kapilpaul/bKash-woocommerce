@@ -1,16 +1,18 @@
 <?php
-/*
-Plugin Name: Payment Gateway bKash for WC
-Plugin URI: https://wordpress.org/plugins/woo-payment-bkash/
-Description: An eCommerce payment method that helps you sell anything. Beautifully.
-Version: 2.0.0
-Author: Kapil Paul
-Author URI: https://kapilpaul.me
-License: GPLv2 or later
-License URI: https://www.gnu.org/licenses/gpl-2.0.html
-Text Domain: dc-bkash
-Domain Path: /languages
-*/
+/**
+ * Plugin Name: Payment Gateway bKash for WC
+ * Plugin URI: https://wordpress.org/plugins/woo-payment-bkash/
+ * Description: An eCommerce payment method that helps you sell anything. Beautifully.
+ * Version: 2.0.0
+ * Author: Kapil Paul
+ * Author URI: https://kapilpaul.me
+ * License: GPLv2 or later
+ * License URI: https://www.gnu.org/licenses/gpl-2.0.html
+ * Text Domain: dc-bkash
+ * Domain Path: /languages
+ *
+ * @package Dc-Bkash
+ */
 
 /**
  * Copyright (c) 2021 Kapil Paul (email: kapilpaul007@gmail.com). All rights reserved.
@@ -38,7 +40,7 @@ Domain Path: /languages
  * **********************************************************************
  */
 
-// don't call the file directly
+// don't call the file directly.
 if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
@@ -55,19 +57,19 @@ require_once __DIR__ . '/vendor/autoload.php';
  * @author Kapil Paul
  */
 final class DCoders_Bkash {
+
 	/**
-	 * Plugin version
+	 * Plugin version.
 	 *
 	 * @var string
 	 */
-	const version = '2.0.0';
+	const VERSION = '2.0.0';
 
 	/**
-	 * Holds various class instances
+	 * Holds various class instances.
 	 *
 	 * @since 2.0.0
 	 * @var array
-	 *
 	 */
 	private $container = [];
 
@@ -86,7 +88,8 @@ final class DCoders_Bkash {
 		register_activation_hook( __FILE__, [ $this, 'activate' ] );
 		register_deactivation_hook( __FILE__, [ $this, 'deactivate' ] );
 
-//		$this->init_appsero_tracker();
+		//phpcs:ignore
+		// $this->init_appsero_tracker();
 
 		add_action( 'plugins_loaded', [ $this, 'init_plugin' ] );
 	}
@@ -113,7 +116,7 @@ final class DCoders_Bkash {
 	/**
 	 * Magic getter to bypass referencing plugin.
 	 *
-	 * @param $prop
+	 * @param mixed $prop Properties to find.
 	 *
 	 * @since 2.0.0
 	 *
@@ -130,7 +133,7 @@ final class DCoders_Bkash {
 	/**
 	 * Magic isset to bypass referencing plugin.
 	 *
-	 * @param $prop
+	 * @param mixed $prop Properties to find.
 	 *
 	 * @since 2.0.0
 	 *
@@ -148,7 +151,7 @@ final class DCoders_Bkash {
 	 * @return void
 	 */
 	public function define_constants() {
-		define( 'BKASH_VERSION', self::version );
+		define( 'BKASH_VERSION', self::VERSION );
 		define( 'BKASH_FILE', __FILE__ );
 		define( 'BKASH_PATH', dirname( BKASH_FILE ) );
 		define( 'BKASH_INCLUDES', BKASH_PATH . '/includes' );
@@ -224,7 +227,7 @@ final class DCoders_Bkash {
 	public function init_hooks() {
 		add_action( 'init', [ $this, 'init_classes' ] );
 
-		// Localize our plugin
+		// Localize our plugin.
 		add_action( 'init', [ $this, 'localization_setup' ] );
 	}
 
@@ -275,19 +278,19 @@ final class DCoders_Bkash {
 	 */
 	private function is_request( $type ) {
 		switch ( $type ) {
-			case 'admin' :
+			case 'admin':
 				return is_admin();
 
-			case 'ajax' :
+			case 'ajax':
 				return defined( 'DOING_AJAX' );
 
-			case 'rest' :
+			case 'rest':
 				return defined( 'REST_REQUEST' );
 
-			case 'cron' :
+			case 'cron':
 				return defined( 'DOING_CRON' );
 
-			case 'frontend' :
+			case 'frontend':
 				return ( ! is_admin() || defined( 'DOING_AJAX' ) ) && ! defined( 'DOING_CRON' );
 		}
 	}
@@ -317,7 +320,7 @@ final class DCoders_Bkash {
 
 		$client = new Appsero\Client( 'f5998f6a-c466-4c4e-8627-0188f177e7f5', 'Payment Gateway bKash for WC', __FILE__ );
 
-		// Active insights
+		// Active insights.
 		$client->insights()->init();
 	}
 
@@ -329,7 +332,7 @@ final class DCoders_Bkash {
 	 * @return string
 	 */
 	public function get_db_version_key() {
-		//old version key
+		// old version key.
 		if ( get_option( 'wcwpbkash_version', null ) ) {
 			return 'wcwpbkash_version';
 		}
@@ -351,6 +354,6 @@ function dc_bkash() {
 }
 
 /**
- *  kick-off the plugin
+ * Kick-off the plugin.
  */
 dc_bkash();

@@ -1,4 +1,13 @@
 <?php
+/**
+ * Class V_2_0_0
+ *
+ * @since 2.0.0
+ *
+ * @author Kapil Paul
+ *
+ * @package DCoders\Bkash\Upgrade\Upgrades
+ */
 
 namespace DCoders\Bkash\Upgrade\Upgrades;
 
@@ -6,9 +15,6 @@ use DCoders\Bkash\Abstracts\DcBkashUpgrader;
 
 /**
  * Class V_2_0_0
- * @package DCoders\Bkash\Upgrade\Upgrades
- *
- * @author Kapil
  */
 class V_2_0_0 extends DcBkashUpgrader {
 	/**
@@ -23,15 +29,17 @@ class V_2_0_0 extends DcBkashUpgrader {
 
 		$table_name = $wpdb->prefix . 'bkash_transactions';
 
+		// @codingStandardsIgnoreStart
 		$wpdb->query(
 			"ALTER TABLE `{$table_name}`
             ADD COLUMN `verification_status` INT(1) DEFAULT 0 AFTER `amount`"
 		);
+		// @codingStandardsIgnoreEnd
 	}
 
 	/**
-	 * Update installed and version values in option table
-	 * Updating the key here
+	 * Update installed and version values in option table.
+	 * Updating the key here.
 	 *
 	 * @since 2.0.0
 	 *
@@ -61,7 +69,7 @@ class V_2_0_0 extends DcBkashUpgrader {
 	public static function migrate_pgw_credentials() {
 		$old_data = get_option( 'woocommerce_bkash_settings', [] );
 
-		//if there is no old data found for bKash then return
+		// If there is no old data found for bKash then return.
 		if ( ! $old_data ) {
 			return;
 		}

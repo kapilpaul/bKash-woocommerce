@@ -1,4 +1,13 @@
 <?php
+/**
+ * Class Settings
+ *
+ * @since 2.0.0
+ *
+ * @author Kapil Paul
+ *
+ * @package DCoders\Bkash\Admin
+ */
 
 namespace DCoders\Bkash\API;
 
@@ -7,11 +16,6 @@ use DCoders\Bkash\Admin\Settings as AdminSettings;
 
 /**
  * Class Settings
- * @package DCoders\Bkash\Admin
- *
- * @since 2.0.0
- *
- * @author Kapil Paul
  */
 class Settings extends BkashBaseRestController {
 	/**
@@ -66,9 +70,9 @@ class Settings extends BkashBaseRestController {
 	}
 
 	/**
-	 * Get settings data
+	 * Get settings data.
 	 *
-	 * @param $request
+	 * @param object $request Request Object.
 	 *
 	 * @since 2.0.0
 	 *
@@ -81,9 +85,9 @@ class Settings extends BkashBaseRestController {
 	}
 
 	/**
-	 * Update items
+	 * Update items.
 	 *
-	 * @param $request
+	 * @param object $request Request Object.
 	 *
 	 * @return \WP_Error|\WP_REST_Response
 	 */

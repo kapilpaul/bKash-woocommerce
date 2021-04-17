@@ -1,13 +1,18 @@
 <?php
-
-namespace DCoders\Bkash;
-
 /**
  * The admin class
  *
  * @since 2.0.0
  *
  * @author Kapil Paul
+ *
+ * @package DCoders\Bkash
+ */
+
+namespace DCoders\Bkash;
+
+/**
+ * Class Admin
  */
 class Admin {
 	/**

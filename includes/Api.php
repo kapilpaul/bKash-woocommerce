@@ -1,4 +1,13 @@
 <?php
+/**
+ * API Class
+ *
+ * @since 2.0.0
+ *
+ * @author Kapil Paul
+ *
+ * @package DCoders\Bkash
+ */
 
 namespace DCoders\Bkash;
 
@@ -7,14 +16,13 @@ use DCoders\Bkash\API\Settings;
 use DCoders\Bkash\API\Upgrade;
 
 /**
- * API Class
- *
- * @since 2.0.0
- *
- * @author Kapil Paul
+ * Class API
  */
 class API {
+
 	/**
+	 * Holds the api classes.
+	 *
 	 * @var array
 	 */
 	private $classes;
@@ -26,7 +34,7 @@ class API {
 	 *
 	 * @return void
 	 */
-	function __construct() {
+	public function __construct() {
 		$this->classes = [
 			Settings::class,
 			Upgrade::class,

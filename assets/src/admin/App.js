@@ -12,7 +12,7 @@ function App() {
         <Routerview />
       </div>
     </>
-  );
+  )
 }
 
 export default hot(App);

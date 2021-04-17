@@ -1,5 +1,13 @@
 <?php
-
+/**
+ * Class Payment
+ *
+ * @since 2.0.0
+ *
+ * @author Kapil Paul
+ *
+ * @package DCoders\Bkash\API
+ */
 
 namespace DCoders\Bkash\API;
 
@@ -10,11 +18,6 @@ use WP_REST_Server;
 
 /**
  * Class Payment
- * @author Kapil Paul
- * @since 2.0.0
- *
- * @package DCoders\Bkash\API
- *
  */
 class Payment extends BkashBaseRestController {
 	/**
@@ -65,10 +68,10 @@ class Payment extends BkashBaseRestController {
 	}
 
 	/**
-	 * Get token for bKash Payment gateway
-	 * returning with token data and request header
+	 * Get token for bKash Payment gateway.
+	 * returning with token data and request header.
 	 *
-	 * @param $request
+	 * @param object $request Request Object.
 	 *
 	 * @since 2.0.0
 	 *
@@ -81,7 +84,7 @@ class Payment extends BkashBaseRestController {
 		if ( is_wp_error( $token ) ) {
 			return new WP_Error(
 				'dc_bkash_rest_api_payment_get_token_error',
-				__( $token->get_error_message(), 'dc-bkash' ),
+				__( $token->get_error_message(), 'dc-bkash' ), //phpcs:ignore
 				[ 'status' => WP_Http::BAD_REQUEST ]
 			);
 		}
@@ -110,26 +113,26 @@ class Payment extends BkashBaseRestController {
 	}
 
 	/**
-	 * Create Payment data
-	 * returning with payment data and request header
+	 * Create Payment data.
+	 * Returning with payment data and request header.
 	 *
-	 * @param $request
+	 * @param object $request Request Object.
 	 *
 	 * @since 2.0.0
 	 *
 	 * @return WP_Error|\WP_REST_Response
 	 */
 	public function create_payment( $request ) {
-		$get_amount = $request->get_param( 'amount' );
+		$get_amount      = $request->get_param( 'amount' );
 		$bkash_processor = Processor::get_instance();
-		$amount          = $get_amount ? $get_amount : rand( 10, 100 );
-		$invoice_id      = sprintf( 'TBP%s', str_pad( rand( 10, 999 ), 5, "0", STR_PAD_LEFT ) );
+		$amount          = $get_amount ? $get_amount : wp_rand( 10, 100 );
+		$invoice_id      = sprintf( 'TBP%s', str_pad( wp_rand( 10, 999 ), 5, 0, STR_PAD_LEFT ) );
 		$create_payment  = $bkash_processor->create_payment( (float) $amount, $invoice_id );
 
 		if ( is_wp_error( $create_payment ) ) {
 			return new WP_Error(
 				'dc_bkash_rest_api_payment_create_payment_error',
-				__( $create_payment->get_error_message(), 'dc-bkash' ),
+				__( $create_payment->get_error_message(), 'dc-bkash' ), //phpcs:ignore
 				[ 'status' => WP_Http::BAD_REQUEST ]
 			);
 		}
@@ -155,10 +158,10 @@ class Payment extends BkashBaseRestController {
 	}
 
 	/**
-	 * Execute Payment data
-	 * returning with execute payment data and request header
+	 * Execute Payment data.
+	 * Returning with execute payment data and request header.
 	 *
-	 * @param $request
+	 * @param object $request Request Object.
 	 *
 	 * @since 2.0.0
 	 *
@@ -173,7 +176,7 @@ class Payment extends BkashBaseRestController {
 		if ( is_wp_error( $execute_payment ) ) {
 			return new WP_Error(
 				'dc_bkash_rest_api_payment_execute_payment_error',
-				__( $execute_payment->get_error_message(), 'dc-bkash' ),
+				__( $execute_payment->get_error_message(), 'dc-bkash' ), //phpcs:ignore
 				[ 'status' => WP_Http::BAD_REQUEST ]
 			);
 		}
@@ -196,7 +199,7 @@ class Payment extends BkashBaseRestController {
 	 * Verify Payment data
 	 * returning with verify payment data and request header
 	 *
-	 * @param $request
+	 * @param object $request Request Object.
 	 *
 	 * @since 2.0.0
 	 *
@@ -211,7 +214,7 @@ class Payment extends BkashBaseRestController {
 		if ( is_wp_error( $verify_payment ) ) {
 			return new WP_Error(
 				'dc_bkash_rest_api_payment_verify_payment_error',
-				__( $verify_payment->get_error_message(), 'dc-bkash' ),
+				__( $verify_payment->get_error_message(), 'dc-bkash' ), //phpcs:ignore
 				[ 'status' => WP_Http::BAD_REQUEST ]
 			);
 		}
@@ -234,7 +237,7 @@ class Payment extends BkashBaseRestController {
 	 * Search Transaction details
 	 * returning with search payment data and request header
 	 *
-	 * @param $request
+	 * @param object $request Request Object.
 	 *
 	 * @since 2.0.0
 	 *
@@ -272,10 +275,10 @@ class Payment extends BkashBaseRestController {
 	}
 
 	/**
-	 * Registering single route which will have a id as a argument
+	 * Registering single route which will have a id as a argument.
 	 *
-	 * @param $path
-	 * @param array $callback_method
+	 * @param string $path           Route Path.
+	 * @param array  $callback_method Callback function to serve.
 	 *
 	 * @since 2.0.0
 	 *

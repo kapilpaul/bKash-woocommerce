@@ -1,14 +1,18 @@
 <?php
-
-namespace DCoders\Bkash\Admin;
-
 /**
  * Class Settings
+ *
  * @since 2.0.0
  *
  * @package DCoders\Bkash\Admin
  *
  * @author Kapil Paul
+ */
+
+namespace DCoders\Bkash\Admin;
+
+/**
+ * Class Settings
  */
 class Settings {
 	/**
@@ -37,26 +41,26 @@ class Settings {
 	public function get_settings_fields() {
 		$fields = [
 			'gateway'           => [
-				'title'          => [
+				'title'              => [
 					'title'   => __( 'Title', 'dc-bkash' ),
 					'type'    => 'text',
 					'default' => __( 'bKash Payment', 'dc-bkash' ),
 				],
-				'test_mode'      => [
+				'test_mode'          => [
 					'title'   => __( 'Test Mode', 'dc-bkash' ),
 					'type'    => 'select',
 					'options' => [
-						"on"  => __( "ON", 'dc-bkash' ),
-						"off" => __( "OFF", 'dc-bkash' ),
+						'on'  => __( 'ON', 'dc-bkash' ),
+						'off' => __( 'OFF', 'dc-bkash' ),
 					],
 					'default' => __( 'off', 'dc-bkash' ),
 				],
-				'test_mode_type' => [
+				'test_mode_type'     => [
 					'title'   => __( 'Test Mode Type', 'dc-bkash' ),
 					'type'    => 'select',
 					'options' => [
-						"without_key" => "Without Key",
-						"with_key"    => "With Key",
+						'without_key' => 'Without Key',
+						'with_key'    => 'With Key',
 					],
 					'default' => __( 'with_key', 'dc-bkash' ),
 					'show_if' => [
@@ -67,7 +71,7 @@ class Settings {
 						],
 					],
 				],
-				'username'       => [
+				'username'           => [
 					'title'   => __( 'User Name', 'dc-bkash' ),
 					'type'    => 'text',
 					'show_if' => [
@@ -78,7 +82,7 @@ class Settings {
 						],
 					],
 				],
-				'password'       => [
+				'password'           => [
 					'title'   => __( 'Password', 'dc-bkash' ),
 					'type'    => 'password',
 					'show_if' => [
@@ -89,7 +93,7 @@ class Settings {
 						],
 					],
 				],
-				'app_key'        => [
+				'app_key'            => [
 					'title'   => __( 'App Key', 'dc-bkash' ),
 					'type'    => 'text',
 					'show_if' => [
@@ -100,7 +104,7 @@ class Settings {
 						],
 					],
 				],
-				'app_secret'     => [
+				'app_secret'         => [
 					'title'   => __( 'App Secret', 'dc-bkash' ),
 					'type'    => 'text',
 					'show_if' => [
@@ -180,13 +184,19 @@ class Settings {
 				'transaction_charge' => [
 					'title'   => __( 'Enable bKash Charge', 'dc-bkash' ),
 					'type'    => 'select',
-					'options' => [ "on" => "ON", "off" => "OFF" ],
+					'options' => [
+						'on'  => 'ON',
+						'off' => 'OFF',
+					],
 					'default' => 'off',
 				],
 				'charge_type'        => [
 					'title'       => __( 'Charge Type', 'dc-bkash' ),
 					'type'        => 'select',
-					'options'     => [ "fixed" => "Fixed", "percentage" => "Percentage" ],
+					'options'     => [
+						'fixed'      => 'Fixed',
+						'percentage' => 'Percentage',
+					],
 					'default'     => 'percentage',
 					'description' => __( 'This option will only work when the bKash Charge is enabled', 'dc-bkash' ),
 					'show_if'     => [
@@ -271,8 +281,8 @@ class Settings {
 	/**
 	 * Get option value
 	 *
-	 * @param $option
-	 * @param $section
+	 * @param string $option Setting Option.
+	 * @param string $section Setting Section.
 	 *
 	 * @since 2.0.0
 	 *

@@ -1,18 +1,23 @@
 <?php
+/**
+ * Class Bkash
+ *
+ * @since 2.0.0
+ *
+ * @author Kapil Paul
+ *
+ * @package DCoders\Bkash\Gateway
+ */
 
 namespace DCoders\Bkash\Gateway;
 
 /**
  * Class Bkash
- * @since 2.0.0
- *
- * @package DCoders\Bkash\Gateway
- *
- * @author Kapil Paul
  */
 class Bkash extends \WC_Payment_Gateway {
+
 	/**
-	 * Initialize the gateway
+	 * Initialize the gateway/
 	 * Bkash constructor.
 	 *
 	 * @since 1.0.0
@@ -24,6 +29,8 @@ class Bkash extends \WC_Payment_Gateway {
 		$this->init_settings();
 
 		add_action( 'woocommerce_update_options_payment_gateways_' . $this->id, [ $this, 'process_admin_options' ] );
+
+		//phpcs:ignore
 //		add_action( 'woocommerce_thankyou_' . $this->id, array( $this, 'thank_you_page' ) );
 		add_action( 'wp_enqueue_scripts', [ $this, 'payment_scripts' ] );
 	}
@@ -58,21 +65,29 @@ class Bkash extends \WC_Payment_Gateway {
 
 		$bkash_settings_url = admin_url( 'admin.php?page=dc-bkash#/settings' );
 
-		echo "<p>You will get {$this->method_title} setting options in <a href='{$bkash_settings_url}'>here</a>.</p>";
+		printf(
+		/* translators: %1$d: page number %2$d: max page number */
+			esc_html__( '%1$sYou will get %2$s setting options in %3$s here %4$s.%5$s', 'dc-bkash' ),
+			'<p>',
+			esc_html( $this->method_title ),
+			wp_kses_post( sprintf( '<a href="%s">', $bkash_settings_url ) ),
+			'</a>',
+			'</p>'
+		);
 	}
 
 	/**
 	 * Process the gateway integration
 	 *
-	 * @param int $order_id
+	 * @param int $order_id Order ID.
 	 *
 	 * @return array
 	 */
 	public function process_payment( $order_id ) {
 		$order = wc_get_order( $order_id );
 
-		//empty cart
-//		WC()->cart->empty_cart();
+		// Empty cart.
+		WC()->cart->empty_cart();
 		$create_payment_data = $this->create_payment_request( $order );
 
 		if ( is_wp_error( $create_payment_data ) ) {
@@ -95,18 +110,19 @@ class Bkash extends \WC_Payment_Gateway {
 	 * @return void
 	 */
 	public function payment_scripts() {
+		//phpcs:ignore
 		if ( ! is_cart() && ! is_checkout() && ! isset( $_GET['pay_for_order'] ) ) {
 			return;
 		}
 
-		// if our payment gateway is disabled
+		// if our payment gateway is disabled.
 		if ( 'no' === $this->enabled ) {
 			return;
 		}
 
 		wp_enqueue_style( 'dc-bkash' );
 
-		//loading this scripts only in checkout page.
+		// Loading this scripts only in checkout page.
 		wp_enqueue_script( 'sweetalert' );
 		wp_enqueue_script( 'dc-bkash' );
 
@@ -136,7 +152,7 @@ class Bkash extends \WC_Payment_Gateway {
 	/**
 	 * Create bKash Payment request
 	 *
-	 * @param \WC_Order $order
+	 * @param \WC_Order $order Order Object.
 	 *
 	 * @since 2.0.0
 	 *

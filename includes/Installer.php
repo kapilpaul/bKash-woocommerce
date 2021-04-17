@@ -1,16 +1,21 @@
 <?php
+/**
+ * Class Installer
+ *
+ * @since 2.0.0
+ *
+ * @author Kapil Paul
+ *
+ * @package DCoders\Bkash
+ */
 
 namespace DCoders\Bkash;
 
 /**
  * Class Installer
- * @since 2.0.0
- *
- * @package DCoders\Bkash
- *
- * @author Kapil Paul
  */
 class Installer {
+
 	/**
 	 * Run the installer
 	 *

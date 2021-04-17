@@ -1,18 +1,24 @@
 <?php
+/**
+ * Class Manager.
+ *
+ * @since 2.0.0
+ *
+ * @author Kapil Paul
+ *
+ * @package DCoders\Bkash
+ */
 
 namespace DCoders\Bkash\Gateway;
 
 /**
  * Class Manager
- * @since 2.0.0
- *
- * @package DCoders\Bkash
- *
- * @author Kapil Paul
  */
 class Manager {
 	/**
 	 * Hold instance of bKash
+	 *
+	 * @var Object
 	 *
 	 * @since 2.0.0
 	 */
@@ -64,7 +70,7 @@ class Manager {
 	/**
 	 * Register WooCommerce Payment Gateway
 	 *
-	 * @param array $gateways
+	 * @param array $gateways All Gateways.
 	 *
 	 * @return array
 	 */
@@ -86,11 +92,11 @@ class Manager {
 	}
 
 	/**
-	 * Store data in db after execute payment success
-	 * bKash do not verify the payment id every time
+	 * Store data in db after execute payment success.
+	 * bKash do not verify the payment id every time.
 	 *
-	 * @param $order
-	 * @param $execute_payment
+	 * @param int|\WC_Order $order           Order ID or order Object.
+	 * @param array         $execute_payment Execute Payment data.
 	 *
 	 * @return mixed
 	 */
@@ -109,7 +115,9 @@ class Manager {
 
 			if ( $execute_payment['amount'] === $order_grand_total ) {
 				$order->add_order_note(
-					sprintf( __( 'bKash payment completed. Transaction ID #%s! Amount: %s', 'dc-bkash' ),
+					sprintf(
+						/* translators: %1$s: Transaction ID, %2$s: Grand Total. */
+						__( 'bKash payment completed. Transaction ID #%1$s! Amount: %2$s', 'dc-bkash' ),
 						$execute_payment['trxID'],
 						$order_grand_total
 					)
@@ -120,7 +128,12 @@ class Manager {
 			} else {
 				$order->update_status(
 					'on-hold',
-					__( "Partial payment.Transaction ID #{$execute_payment['trxID']}! Amount: {$execute_payment['amount']}", 'dc-bkash' )
+					sprintf(
+						/* translators: %1$s: Transaction ID, %2$s: Payment Amount. */
+						__( 'Partial payment. Transaction ID #%1$s! Amount: %2$s', 'dc-bkash' ),
+						$execute_payment['trxID'],
+						$execute_payment['amount']
+					)
 				);
 			}
 
@@ -128,7 +141,7 @@ class Manager {
 
 			if ( ! $payment_info || is_wp_error( $payment_info ) ) {
 				$payment_info = $execute_payment;
-			} else if ( isset( $payment_info['transactionStatus'] ) && isset( $payment_info['trxID'] ) ) {
+			} elseif ( isset( $payment_info['transactionStatus'] ) && isset( $payment_info['trxID'] ) ) {
 				$verified = 1;
 			} else {
 				$payment_info = $execute_payment;
@@ -152,14 +165,14 @@ class Manager {
 			do_action( 'dc_bkash_after_execute_payment', $order, $payment_info );
 
 		} catch ( \Exception $e ) {
-			error_log( 'dc_bkash after execute payment ' . print_r( $e->getMessage() ) );
+			error_log( 'dc_bkash after execute payment ' . print_r( $e->getMessage() ) ); //phpcs:ignore
 		}
 	}
 
 	/**
-	 * bKash calculate total if there is any transaction charge
+	 * Bkash calculate total if there is any transaction charge.
 	 *
-	 * @param $total
+	 * @param float $total Total amount.
 	 *
 	 * @since 2.0.0
 	 *
@@ -184,7 +197,7 @@ class Manager {
 	}
 
 	/**
-	 * Display the transaction charge
+	 * Display the transaction charge.
 	 *
 	 * @since 2.0.0
 	 *
@@ -200,8 +213,11 @@ class Manager {
 
 		$processor = dc_bkash()->gateway->processor();
 
-		dc_bkash_get_template( 'frontend/transaction-charge', [
-			'charge_amount' => wc_price( $processor->get_transaction_charge_amount( WC()->cart->get_subtotal() ) ),
-		] );
+		dc_bkash_get_template(
+			'frontend/transaction-charge',
+			[
+				'charge_amount' => wc_price( $processor->get_transaction_charge_amount( WC()->cart->get_subtotal() ) ),
+			]
+		);
 	}
 }

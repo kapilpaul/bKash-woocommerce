@@ -1,4 +1,9 @@
 <?php
+/**
+ * DC Bkash Upgrader abstract class.
+ *
+ * @package DCoders\Bkash\Abstracts
+ */
 
 namespace DCoders\Bkash\Abstracts;
 
@@ -6,6 +11,7 @@ use ReflectionClass;
 
 /**
  * Class DcBkashUpgrader
+ *
  * @package DCoders\Bkash\Abstracts
  *
  * @author Kapil Paul
@@ -43,7 +49,7 @@ abstract class DcBkashUpgrader {
 	 * @since 2.0.0
 	 *
 	 * @return void
-	 * @throws \ReflectionException
+	 * @throws \ReflectionException Throw Reflection Exception.
 	 */
 	public static function update_db_version() {
 		$reflect    = new ReflectionClass( static::class );

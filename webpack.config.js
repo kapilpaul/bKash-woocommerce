@@ -15,8 +15,7 @@ const config = {
     headers: {
       'Access-Control-Allow-Origin': '*',
       'Access-Control-Allow-Methods': 'GET, POST, PUT, DELETE, PATCH, OPTIONS',
-      'Access-Control-Allow-Headers':
-        'X-Requested-With, content-type, Authorization',
+      'Access-Control-Allow-Headers': 'X-Requested-With, content-type, Authorization',
     },
   },
   externals: {
@@ -35,7 +34,12 @@ const config = {
       },
       {
         test: /\.scss$/,
-        use: [MiniCssExtractPlugin.loader, 'css-loader', 'sass-loader'],
+        use: [
+          MiniCssExtractPlugin.loader,
+          'css-loader',
+          'postcss-loader',
+          'sass-loader',
+        ],
       },
       {
         test: /\.svg$/,
@@ -60,8 +64,8 @@ const config = {
       'react-dom': '@hot-loader/react-dom',
     },
     fallback: {
-      "path": require.resolve("path-browserify")
-    }
+      path: require.resolve('path-browserify'),
+    },
   },
   optimization: {
     runtimeChunk: 'single',

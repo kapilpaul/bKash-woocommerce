@@ -1,2 +1,8 @@
 <?php
-//silence is golden
+/**
+ * Index File.
+ *
+ * @package Dc-bKash
+ */
+
+// silence is golden.

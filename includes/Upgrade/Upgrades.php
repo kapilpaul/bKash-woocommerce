@@ -1,11 +1,23 @@
 <?php
+/**
+ * Class Upgrades
+ *
+ * @since 2.0.0
+ *
+ * @author Kapil Paul
+ *
+ * @package DCoders\Bkash\Upgrade
+ */
 
 namespace DCoders\Bkash\Upgrade;
 
+/**
+ * Class Upgrades
+ */
 class Upgrades {
 
 	/**
-	 * bKash upgraders
+	 * Bkash upgraders.
 	 *
 	 * @since 2.0.0
 	 *
@@ -30,7 +42,7 @@ class Upgrades {
 	/**
 	 * Checks if upgrade is required or not
 	 *
-	 * @param bool $is_required
+	 * @param bool $is_required Is required.
 	 *
 	 * @since 2.0.0
 	 *
@@ -65,7 +77,7 @@ class Upgrades {
 	/**
 	 * Get upgrades
 	 *
-	 * @param array $upgrades
+	 * @param array $upgrades Upgrades array data.
 	 *
 	 * @since 2.0.0
 	 *

@@ -1,0 +1,37 @@
+# This file is for unifying the coding style for different editors and IDEs
+# editorconfig.org
+#
+# Indent Brace Style:
+# https://en.wikipedia.org/wiki/Indent_style#Placement_of_braces
+
+root = true
+
+[*]
+end_of_line = lf
+charset = utf-8
+trim_trailing_whitespace = true
+insert_final_newline = true
+
+[**.js]
+indent_style = space
+indent_size = 2
+spaces_around_brackets = both
+indent_brace_style = K&R
+
+[**.css]
+indent_style = tab
+indent_size = 4
+
+[**.scss]
+indent_style = tab
+indent_size = 4
+
+[**.php]
+indent_style = tab
+indent_size = 4
+spaces_around_brackets = both
+indent_brace_style = K&R
+
+[**.html]
+indent_style = tab
+indent_size = 4

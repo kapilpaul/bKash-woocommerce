@@ -7,8 +7,8 @@
 function menuFix(slug) {
     var $ = jQuery;
 
-    let menuRoot = $('#toplevel_page_' + slug);
-    let currentUrl = window.location.href;
+    let menuRoot    = $('#toplevel_page_' + slug);
+    let currentUrl  = window.location.href;
     let currentPath = currentUrl.substr( currentUrl.indexOf('admin.php') );
 
     menuRoot.on('click', 'a', function() {

@@ -1,16 +1,22 @@
 <?php
-
-namespace DCoders\Bkash\Admin;
-
 /**
  * Admin Pages Handler
  *
  * Class Menu
+ *
  * @since 2.0.0
  *
  * @package DCoders\Bkash\Admin
  *
  * @author Kapil Paul
+ */
+
+namespace DCoders\Bkash\Admin;
+
+/**
+ * Class Menu.
+ *
+ * @package DCoders\Bkash\Admin
  */
 class Menu {
 	/**
@@ -40,11 +46,11 @@ class Menu {
 		$hook = add_menu_page( __( 'bKash', 'dc-bkash' ), __( 'bKash', 'dc-bkash' ), $capability, $parent_slug, [ $this, 'plugin_page' ], BKASH_ASSETS . '/images/bkash.png' );
 
 		if ( current_user_can( $capability ) ) {
-			$submenu[ $parent_slug ][] = [ __( 'Transactions', 'dc-bkash' ), $capability, $this->get_submenu_url() ];
+			$submenu[ $parent_slug ][] = [ __( 'Transactions', 'dc-bkash' ), $capability, $this->get_submenu_url() ]; // phpcs:ignore
 
-			$submenu[ $parent_slug ][] = [ __( 'Settings', 'dc-bkash' ), $capability, $this->get_submenu_url( 'settings' ) ];
+			$submenu[ $parent_slug ][] = [ __( 'Settings', 'dc-bkash' ), $capability, $this->get_submenu_url( 'settings' ) ]; // phpcs:ignore
 
-			$submenu[ $parent_slug ][] = [ __( 'Generate Doc', 'dc-bkash' ), $capability, $this->get_submenu_url( 'generate-doc' ) ];
+			$submenu[ $parent_slug ][] = [ __( 'Generate Doc', 'dc-bkash' ), $capability, $this->get_submenu_url( 'generate-doc' ) ]; // phpcs:ignore
 		}
 
 		add_action( 'load-' . $hook, [ $this, 'init_hooks' ] );
@@ -81,14 +87,14 @@ class Menu {
 	 * @return void
 	 */
 	public function plugin_page() {
-		echo '<div id="hmr-app"></div>';
+		echo '<div id="dc-bkash-app"></div>';
 	}
 
 	/**
 	 * Make submenu admin url from slug
 	 *
-	 * @param string $slug
-	 * @param string $parent_slug
+	 * @param string $slug Slug for menu.
+	 * @param string $parent_slug Parent slug.
 	 *
 	 * @since 2.0.0
 	 *

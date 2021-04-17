@@ -1,10 +1,10 @@
 <?php
 
 /**
- * bkash settings option
+ * Bkash settings option.
  *
- * @param $option
- * @param $section
+ * @param string $option  Option from settings.
+ * @param string $section Settings Section.
  *
  * @since 2.0.0
  *
@@ -13,11 +13,11 @@
 function dc_bkash_get_option( $option, $section = 'gateway' ) {
 	$installed_version = get_option( dc_bkash()->get_db_version_key(), null );
 
-	//doing this for backward compatibility
+	// doing this for backward compatibility.
 	if ( $installed_version && version_compare( $installed_version, '1.3.0', '<=' ) ) {
 		$payment_settings = get_option( 'woocommerce_bkash_settings', [] );
 
-		//replace sandbox_ with blank string. we donot have any sandbox_ prefix in older version
+		// replace sandbox_ with blank string. we do not have any 'sandbox_' prefix in older version.
 		$option = str_replace( 'sandbox_', '', $option );
 
 		if ( array_key_exists( $option, $payment_settings ) ) {
@@ -31,9 +31,9 @@ function dc_bkash_get_option( $option, $section = 'gateway' ) {
 }
 
 /**
- * Insert transaction in table
+ * Insert transaction in table.
  *
- * @param $data
+ * @param array $data Data to insert.
  *
  * @since 2.0.0
  *
@@ -46,15 +46,19 @@ function dc_bkash_insert_transaction( $data ) {
 
 	$data = apply_filters( 'dc_bkash_before_insert_transaction', $data );
 
-	$insert = $wpdb->insert( $table_name, [
-		"order_number"        => sanitize_text_field( $data['order_number'] ),
-		"payment_id"          => sanitize_text_field( $data['payment_id'] ),
-		"trx_id"              => sanitize_text_field( $data['trx_id'] ),
-		"transaction_status"  => sanitize_text_field( $data['transaction_status'] ),
-		"invoice_number"      => sanitize_text_field( $data['invoice_number'] ),
-		"amount"              => sanitize_text_field( $data['amount'] ),
-		"verification_status" => sanitize_key( $data['verification_status'] ),
-	] );
+	//phpcs:ignore
+	$insert = $wpdb->insert(
+		$table_name,
+		[
+			'order_number'        => sanitize_text_field( $data['order_number'] ),
+			'payment_id'          => sanitize_text_field( $data['payment_id'] ),
+			'trx_id'              => sanitize_text_field( $data['trx_id'] ),
+			'transaction_status'  => sanitize_text_field( $data['transaction_status'] ),
+			'invoice_number'      => sanitize_text_field( $data['invoice_number'] ),
+			'amount'              => sanitize_text_field( $data['amount'] ),
+			'verification_status' => sanitize_key( $data['verification_status'] ),
+		]
+	);
 
 	if ( is_wp_error( $insert ) ) {
 		return $insert;
@@ -64,9 +68,9 @@ function dc_bkash_insert_transaction( $data ) {
 }
 
 /**
- * Get payment form bkash table
+ * Get payment form bkash table.
  *
- * @param $order_number
+ * @param int $order_number Order Number.
  *
  * @since 2.0.0
  *
@@ -79,6 +83,7 @@ function dc_bkash_get_payment( $order_number ) {
 
 	$query = "SELECT * FROM $table_name WHERE order_number='%d'";
 
+	//phpcs:ignore
 	$item = $wpdb->get_row(
 		$wpdb->prepare( $query, $order_number )
 	);
@@ -89,7 +94,7 @@ function dc_bkash_get_payment( $order_number ) {
 /**
  * Get all payment list form bkash table
  *
- * @param array $args
+ * @param array $args Arguments.
  *
  * @since 2.0.0
  *
@@ -117,6 +122,7 @@ function dc_bkash_get_payments_list( $args = [] ) {
 
 	$query .= " ORDER BY {$args['orderby']} {$args['order']} LIMIT %d, %d";
 
+	//phpcs:ignore
 	$items = $wpdb->get_results(
 		$wpdb->prepare( $query, $args['offset'], $args['number'] )
 	);
@@ -136,13 +142,14 @@ function dc_bkash_get_payments_count() {
 
 	$table_name = $wpdb->prefix . 'bkash_transactions';
 
+	//phpcs:ignore
 	return (int) $wpdb->get_var( "SELECT COUNT(id) from $table_name" );
 }
 
 /**
  * Delete a payment
  *
- * @param int $id
+ * @param int $id ID.
  *
  * @since 2.0.0
  *
@@ -151,6 +158,7 @@ function dc_bkash_get_payments_count() {
 function dc_bkash_delete_payment( $id ) {
 	global $wpdb;
 
+	//phpcs:ignore
 	return $wpdb->delete(
 		$wpdb->prefix . 'bkash_transactions',
 		[ 'id' => $id ],
@@ -161,7 +169,7 @@ function dc_bkash_delete_payment( $id ) {
 /**
  * Delete multiple data from table
  *
- * @param array $ids
+ * @param array $ids Multiple IDs.
  *
  * @since 2.0.0
  *
@@ -173,17 +181,18 @@ function dc_bkash_delete_multiple_payments( array $ids ) {
 
 	$ids = implode( ',', $ids );
 
+	//phpcs:ignore
 	return $wpdb->query( "DELETE FROM {$table_name} WHERE ID IN($ids)" );
 }
 
 /**
- * Insert bKash transaction
+ * Insert bKash transaction.
  *
  * @deprecated from 2.0.0
  *
  * @use dc_bkash_insert_transaction() instead
  *
- * @param $data
+ * @param array $data Data to insert.
  *
  * @return false|int
  */
@@ -200,7 +209,7 @@ function insert_bkash_transaction( $data ) {
  *
  * @use dc_bkash_get_payment() instead
  *
- * @param $order_number
+ * @param int $order_number Order number.
  *
  * @return array|object|null
  */
@@ -217,7 +226,7 @@ function get_bkash_payment( $order_number ) {
  *
  * @use dc_bkash_get_payments_list() instead
  *
- * @param array $args
+ * @param array $args Arguments.
  *
  * @return array|object|null
  */
@@ -228,7 +237,7 @@ function get_bkash_payments_list( $args = [] ) {
 }
 
 /**
- * Get Count of total payments in DB
+ * Get Count of total payments in DB.
  *
  * @deprecated from 2.0.0
  *
@@ -249,7 +258,7 @@ function get_payments_count() {
  *
  * @use dc_bkash_delete_payment() instead
  *
- * @param int $id
+ * @param int $id ID.
  *
  * @return int|boolean
  */
@@ -266,7 +275,7 @@ function delete_bkash_payment( $id ) {
  *
  * @use delete_multiple_bkash_payments() instead
  *
- * @param array $ids
+ * @param array $ids IDs.
  *
  * @return bool|int
  */
@@ -277,13 +286,13 @@ function delete_multiple_bkash_payments( array $ids ) {
 }
 
 /**
- * Get template part implementation
+ * Get template part implementation.
  *
- * Looks at the theme directory first
+ * Looks at the theme directory first.
  *
- * @param $slug
- * @param string $name
- * @param array $args
+ * @param string $slug Slug of template.
+ * @param string $name Name of template.
+ * @param array  $args Arguments to passed.
  *
  * @since 2.0.0
  *
@@ -295,25 +304,27 @@ function dc_bkash_get_template_part( $slug, $name = '', $args = [] ) {
 	$args = wp_parse_args( $args, $defaults );
 
 	if ( $args && is_array( $args ) ) {
-		extract( $args );
+		extract( $args ); //phpcs:ignore
 	}
 
 	$template = '';
 
-	// Look in yourtheme/bkash/slug-name.php and yourtheme/bkash/slug.php
-	$template = locate_template( [
-		BKASH_TEMPLATE_PATH . "{$slug}-{$name}.php",
-		BKASH_TEMPLATE_PATH . "{$slug}.php",
-	] );
+	// Look in yourtheme/bkash/slug-name.php and yourtheme/bkash/slug.php.
+	$template = locate_template(
+		[
+			BKASH_TEMPLATE_PATH . "{$slug}-{$name}.php",
+			BKASH_TEMPLATE_PATH . "{$slug}.php",
+		]
+	);
 
 	/**
-	 * Change template directory path filter
+	 * Change template directory path filter.
 	 *
 	 * @since 2.0.0
 	 */
 	$template_path = apply_filters( 'dc_bkash_set_template_path', BKASH_TEMPLATE_PATH, $template, $args );
 
-	// Get default slug-name.php
+	// Get default slug-name.php.
 	if ( ! $template && $name && file_exists( $template_path . "/{$slug}-{$name}.php" ) ) {
 		$template = $template_path . "/{$slug}-{$name}.php";
 	}
@@ -322,7 +333,7 @@ function dc_bkash_get_template_part( $slug, $name = '', $args = [] ) {
 		$template = $template_path . "/{$slug}.php";
 	}
 
-	// Allow 3rd party plugin filter template file from their plugin
+	// Allow 3rd party plugin filter template file from their plugin.
 	$template = apply_filters( 'dc_bkash_get_template_part', $template, $slug, $name );
 
 	if ( $template ) {
@@ -333,10 +344,10 @@ function dc_bkash_get_template_part( $slug, $name = '', $args = [] ) {
 /**
  * Get other templates (e.g. product attributes) passing attributes and including the file.
  *
- * @param mixed $template_name
- * @param array $args (default: array())
- * @param string $template_path (default: '')
- * @param string $default_path (default: '')
+ * @param mixed  $template_name Template Name.
+ * @param array  $args          (default: array()) arguments.
+ * @param string $template_path (default: '').
+ * @param string $default_path  (default: '').
  *
  * @since 2.0.0
  *
@@ -344,10 +355,10 @@ function dc_bkash_get_template_part( $slug, $name = '', $args = [] ) {
  */
 function dc_bkash_get_template( $template_name, $args = [], $template_path = '', $default_path = '' ) {
 	if ( $args && is_array( $args ) ) {
-		extract( $args );
+		extract( $args ); //phpcs:ignore
 	}
 
-	$extension = get_extension( $template_name ) ? "" : ".php";
+	$extension = get_extension( $template_name ) ? '' : '.php';
 
 	$located = dc_bkash_locate_template( $template_name . $extension, $template_path, $default_path );
 
@@ -373,16 +384,15 @@ function dc_bkash_get_template( $template_name, $args = [], $template_path = '',
  *      yourtheme       /   $template_name
  *      $default_path   /   $template_name
  *
- * @param mixed $template_name
- * @param string $template_path (default: '')
- * @param string $default_path (default: '')
- * @param bool $pro
+ * @param mixed  $template_name Template name.
+ * @param string $template_path (default: '').
+ * @param string $default_path  (default: '').
  *
  * @since 2.0.0
  *
  * @return string
  */
-function dc_bkash_locate_template( $template_name, $template_path = '', $default_path = '', $pro = false ) {
+function dc_bkash_locate_template( $template_name, $template_path = '', $default_path = '' ) {
 	if ( ! $template_path ) {
 		$template_path = BKASH_TEMPLATE_PATH;
 	}
@@ -391,33 +401,33 @@ function dc_bkash_locate_template( $template_name, $template_path = '', $default
 		$default_path = BKASH_TEMPLATE_PATH;
 	}
 
-	// Look within passed path within the theme - this is priority
+	// Look within passed path within the theme - this is priority.
 	$template = locate_template(
 		[
 			trailingslashit( $template_path ) . $template_name,
 		]
 	);
 
-	// Get default template
+	// Get default template.
 	if ( ! $template ) {
 		$template = $default_path . $template_name;
 	}
 
-	// Return what we found
+	// Return what we found.
 	return apply_filters( 'dc_bkash_locate_template', $template, $template_name, $template_path );
 }
 
 /**
- * Get filename extension
+ * Get filename extension.
  *
- * @param $file_name
+ * @param string $file_name File name.
  *
  * @since 2.0.0
  *
  * @return false|string
  */
 function get_extension( $file_name ) {
-	$n = strrpos( $file_name, "." );
+	$n = strrpos( $file_name, '.' );
 
-	return ( $n === false ) ? "" : substr( $file_name, $n + 1 );
+	return ( false === $n ) ? '' : substr( $file_name, $n + 1 );
 }

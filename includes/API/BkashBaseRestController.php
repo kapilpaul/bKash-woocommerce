@@ -1,4 +1,13 @@
 <?php
+/**
+ * Class BkashBaseRestController
+ *
+ * @since 2.0.0
+ *
+ * @package DCoders\Bkash\API
+ *
+ * @author Kapil Paul
+ */
 
 namespace DCoders\Bkash\API;
 
@@ -7,27 +16,27 @@ use WP_REST_Controller;
 
 /**
  * Class BkashBaseRestController
- *
- * @author Kapil Paul
- * @since 2.0.0
- *
  */
 class BkashBaseRestController extends WP_REST_Controller {
 
 	/**
-	 * @var string
+	 * Namespace.
+	 *
+	 * @var string Namespace.
 	 */
 	public $namespace = 'dc-bkash';
 
 	/**
-	 * @var string
+	 * Version.
+	 *
+	 * @var string version.
 	 */
 	public $version = 'v1';
 
 	/**
 	 * Permission check
 	 *
-	 * @param \WP_REST_Request $request
+	 * @param \WP_REST_Request $request WP Rest Request.
 	 *
 	 * @since 2.0.0
 	 *

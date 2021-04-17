@@ -1,22 +1,28 @@
 <?php
+/**
+ * Bkash payment processor helper class
+ *
+ * Class Processor
+ *
+ * @since 2.0.0
+ *
+ * @author Kapil Paul
+ *
+ * @package DCoders\Bkash\Gateway
+ */
 
 namespace DCoders\Bkash\Gateway;
 
 use PHPMailer\PHPMailer\Exception;
 
 /**
- * Bkash payment processor helper class
- *
  * Class Processor
- * @author Kapil Paul
- * @since 2.0.0
- *
- * @package DCoders\Bkash\Gateway
- *
  */
 class Processor {
 	/**
 	 * Holds the processor class
+	 *
+	 * @var Processor
 	 *
 	 * @since 2.0.0
 	 */
@@ -50,6 +56,8 @@ class Processor {
 	public $payment_search_url;
 
 	/**
+	 * Holds the version.
+	 *
 	 * @var string
 	 */
 	protected $version = 'v1.2.0-beta';
@@ -81,7 +89,7 @@ class Processor {
 	 */
 	public static function get_instance() {
 		if ( ! self::$instance ) {
-			return self::$instance = new Processor();
+			self::$instance = new Processor();
 		}
 
 		return self::$instance;
@@ -99,9 +107,9 @@ class Processor {
 	}
 
 	/**
-	 * Payment execute Url
+	 * Payment execute Url.
 	 *
-	 * @param $payment_id
+	 * @param string $payment_id Payment ID.
 	 *
 	 * @return string
 	 */
@@ -113,9 +121,9 @@ class Processor {
 	}
 
 	/**
-	 * Get Payment url based on type
+	 * Get Payment url based on type.
 	 *
-	 * @param $type
+	 * @param string $type Type of payment.
 	 *
 	 * @return string
 	 */
@@ -130,11 +138,11 @@ class Processor {
 	}
 
 	/**
-	 * Sending remote request
+	 * Sending remote request.
 	 *
-	 * @param $url
-	 * @param $data
-	 * @param array $headers
+	 * @param string $url     Target URL request.
+	 * @param array  $data    Data for sending request.
+	 * @param array  $headers Headers data.
 	 *
 	 * @return mixed|string|\WP_Error
 	 */
@@ -144,7 +152,7 @@ class Processor {
 		}
 
 		$args = [
-			'body'        => json_encode( $data ),
+			'body'        => wp_json_encode( $data ),
 			'timeout'     => '30',
 			'redirection' => '30',
 			'httpversion' => '1.0',
@@ -165,11 +173,11 @@ class Processor {
 	}
 
 	/**
-	 * Create payment request in bKash
+	 * Create payment request in bKash.
 	 *
-	 * @param $amount
-	 * @param $invoice_id
-	 * @param bool $calculate_final_amount
+	 * @param float   $amount                 Amount.
+	 * @param string  $invoice_id             Invoice ID.
+	 * @param boolean $calculate_final_amount Final amount calculation.
 	 *
 	 * @return bool|mixed|string
 	 */
@@ -205,9 +213,9 @@ class Processor {
 	}
 
 	/**
-	 * Execute payment url
+	 * Execute payment url.
 	 *
-	 * @param $payment_id
+	 * @param string $payment_id Payment ID.
 	 *
 	 * @return bool|mixed|string
 	 */
@@ -236,10 +244,10 @@ class Processor {
 	}
 
 	/**
-	 * Verify payment on bKash end
+	 * Verify payment on bKash end.
 	 *
-	 * @param $payment_id
-	 * @param $order_total
+	 * @param string $payment_id  Payment ID.
+	 * @param float  $order_total Order Total.
 	 *
 	 * @return bool|mixed|string
 	 */
@@ -277,9 +285,9 @@ class Processor {
 	}
 
 	/**
-	 * Search payment on bKash end
+	 * Search payment on bKash end.
 	 *
-	 * @param $payment_id
+	 * @param string $payment_id Payment ID.
 	 *
 	 * @since 2.0.0
 	 *
@@ -319,13 +327,15 @@ class Processor {
 	 */
 	public function get_authorization_header() {
 		try {
-			if ( $token = $this->get_token() ) {
+			$token = $this->get_token();
+
+			if ( $token ) {
 				$prefix = $this->get_test_mode_type( 'with_key' ) ? 'sandbox_' : '';
 
 				$headers = [
-					"Authorization" => sprintf( 'Bearer %s', $token ),
-					"X-App-Key"     => dc_bkash_get_option( $prefix . 'app_key' ),
-					"Content-Type"  => 'application/json',
+					'Authorization' => sprintf( 'Bearer %s', $token ),
+					'X-App-Key'     => dc_bkash_get_option( $prefix . 'app_key' ),
+					'Content-Type'  => 'application/json',
 				];
 
 				$args = [
@@ -336,16 +346,16 @@ class Processor {
 				return $args;
 			}
 
-			return [ 'headers' => [ "Content-Type" => 'application/json' ] ];
+			return [ 'headers' => [ 'Content-Type' => 'application/json' ] ];
 		} catch ( \Exception $e ) {
-			return [ 'headers' => [ "Content-Type" => 'application/json' ] ];
+			return [ 'headers' => [ 'Content-Type' => 'application/json' ] ];
 		}
 	}
 
 	/**
 	 * Get Token from bKash
 	 *
-	 * @param bool $token_data
+	 * @param bool|string $token_data Token data.
 	 *
 	 * @since 2.0.0
 	 *
@@ -370,14 +380,14 @@ class Processor {
 		$password  = dc_bkash_get_option( $prefix . 'password' );
 
 		$data = [
-			"app_key"    => dc_bkash_get_option( $prefix . 'app_key' ),
-			"app_secret" => dc_bkash_get_option( $prefix . 'app_secret' ),
+			'app_key'    => dc_bkash_get_option( $prefix . 'app_key' ),
+			'app_secret' => dc_bkash_get_option( $prefix . 'app_secret' ),
 		];
 
 		$headers = [
-			"username"     => $user_name,
-			"password"     => $password,
-			"Content-Type" => "application/json",
+			'username'     => $user_name,
+			'password'     => $password,
+			'Content-Type' => 'application/json',
 		];
 
 		$result = $this->make_request( $this->grant_token_url, $data, $headers );
@@ -390,7 +400,7 @@ class Processor {
 			$token = $result['id_token'];
 			set_transient( 'dc_bkash_token', $token, $result['expires_in'] );
 
-			// Setting full response data in transient
+			// Setting full response data in transient.
 			set_transient( 'dc_bkash_token_data', $result, $result['expires_in'] );
 
 			if ( $token_data ) {
@@ -417,9 +427,9 @@ class Processor {
 	}
 
 	/**
-	 * Calculate final amount based on bKash charge option
+	 * Calculate final amount based on bKash charge option.
 	 *
-	 * @param $amount
+	 * @param float $amount Amount.
 	 *
 	 * @since 1.3.0
 	 *
@@ -436,9 +446,9 @@ class Processor {
 	}
 
 	/**
-	 * Get transaction charge amount
+	 * Get transaction charge amount.
 	 *
-	 * @param $total_amount
+	 * @param float $total_amount Total Amount.
 	 *
 	 * @since 2.0.0
 	 *
@@ -483,7 +493,7 @@ class Processor {
 	/**
 	 * Get test mode type with key or not
 	 *
-	 * @param bool $key
+	 * @param string $key Key for the option.
 	 *
 	 * @since 2.0.0
 	 *
@@ -504,7 +514,7 @@ class Processor {
 	}
 
 	/**
-	 * Get Credential from settings
+	 * Get Credential from settings.
 	 *
 	 * @since 2.0.0
 	 *

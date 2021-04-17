@@ -1,14 +1,18 @@
 <?php
+/**
+ * Class Ajax
+ *
+ * @since 2.0.0
+ *
+ * @author Kapil Paul
+ *
+ * @package DCoders\Bkash
+ */
 
 namespace DCoders\Bkash;
 
 /**
  * Class Ajax
- * @since 2.0.0
- *
- * @package DCoders\Bkash
- *
- * @author Kapil Paul
  */
 class Ajax {
 	/**
@@ -27,16 +31,18 @@ class Ajax {
 	 */
 	public function execute_payment_request() {
 		try {
-			if ( ! wp_verify_nonce( $_POST['_nonce'], 'dc-bkash-nonce' ) ) {
+			$post_data = wp_unslash( $_POST );
+
+			if ( ! wp_verify_nonce( $post_data['_nonce'], 'dc-bkash-nonce' ) ) {
 				$this->send_json_error( __( 'Something went wrong here!', 'dc-bkash' ) );
 			}
 
-			if ( ! $this->validate_fields( $_POST ) ) {
+			if ( ! $this->validate_fields( $post_data ) ) {
 				$this->send_json_error( __( 'Empty value is not allowed', 'dc-bkash' ) );
 			}
 
-			$payment_id   = ( isset( $_POST['payment_id'] ) ) ? sanitize_text_field( $_POST['payment_id'] ) : '';
-			$order_number = ( isset( $_POST['order_number'] ) ) ? sanitize_text_field( $_POST['order_number'] ) : '';
+			$payment_id   = ( isset( $post_data['payment_id'] ) ) ? sanitize_text_field( $post_data['payment_id'] ) : '';
+			$order_number = ( isset( $post_data['order_number'] ) ) ? sanitize_text_field( $post_data['order_number'] ) : '';
 
 			$order = wc_get_order( $order_number );
 
@@ -66,21 +72,21 @@ class Ajax {
 	}
 
 	/**
-	 * Send json error
+	 * Send json error.
 	 *
-	 * @param $text
+	 * @param string $text Text to send as message.
 	 *
 	 * @return void
 	 */
 	public function send_json_error( $text ) {
-		wp_send_json_error( __( $text, 'dc-bkash' ) );
+		wp_send_json_error( $text );
 		wp_die();
 	}
 
 	/**
-	 * Validate fields
+	 * Validate fields.
 	 *
-	 * @param $data
+	 * @param array $data Data for validation.
 	 *
 	 * @return bool
 	 */

@@ -1,4 +1,13 @@
 <?php
+/**
+ * Class Assets
+ *
+ * @since 2.0.0
+ *
+ * @author Kapil Paul
+ *
+ * @package DCoders\Bkash
+ */
 
 namespace DCoders\Bkash;
 
@@ -61,7 +70,7 @@ class Assets {
 	/**
 	 * Register scripts
 	 *
-	 * @param array $scripts
+	 * @param array $scripts Scripts data.
 	 *
 	 * @since 2.0.0
 	 *
@@ -80,7 +89,7 @@ class Assets {
 	/**
 	 * Register styles
 	 *
-	 * @param array $styles
+	 * @param array $styles Styles array data.
 	 *
 	 * @since 2.0.0
 	 *
@@ -110,7 +119,7 @@ class Assets {
 
 		// for local development
 		// when webpack "hot module replacement" is enabled, this
-		// constant needs to be turned "true" on "wp-config.php"
+		// constant needs to be turned "true" on "wp-config.php".
 		if ( defined( 'WP_LOCAL_DEV' ) && WP_LOCAL_DEV ) {
 			$plugin_js_assets_path = 'http://localhost:8080/';
 		}
@@ -168,7 +177,7 @@ class Assets {
 
 		// for local development
 		// when webpack "hot module replacement" is enabled, this
-		// constant needs to be turned "true" on "wp-config.php"
+		// constant needs to be turned "true" on "wp-config.php".
 		if ( defined( 'WP_LOCAL_DEV' ) && WP_LOCAL_DEV ) {
 			$plugin_css_assets_path = 'http://localhost:8080/';
 		}
