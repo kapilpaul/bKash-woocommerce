@@ -8,10 +8,10 @@ import { BrowserRouter } from 'react-router-dom';
 
 var mountNode = document.getElementById('dc-bkash-app');
 ReactDOM.render(
-  <BrowserRouter>
-    <App />
-  </BrowserRouter>,
-  mountNode
+	<BrowserRouter>
+		<App />
+	</BrowserRouter>,
+	mountNode
 )
 
 // fix the admin menu for the slug "vue-app"

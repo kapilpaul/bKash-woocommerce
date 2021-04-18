@@ -90,8 +90,6 @@
               jQuery(document.body).trigger('update_checkout');
             }
 
-            console.log('errr', result, wc_checkout_params.i18n_checkout_error);
-
             // Add new errors
             if (result.messages) {
               dc_bkash_payment.submit_error(result.messages);

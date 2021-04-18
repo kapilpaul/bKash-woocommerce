@@ -4,15 +4,15 @@ import Header from './components/Header';
 import Routerview from './router/index';
 
 function App() {
-  return (
-    <>
-      <Header />
+	return (
+		<>
+			<Header />
 
-      <div className="wrap">
-        <Routerview />
-      </div>
-    </>
-  )
+			<div className="wrap">
+				<Routerview />
+			</div>
+		</>
+	);
 }
 
 export default hot(App);

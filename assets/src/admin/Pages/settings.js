@@ -3,6 +3,7 @@ import { __ } from '@wordpress/i18n';
 import { Spinner, Button } from '@wordpress/components';
 import apiFetch from '@wordpress/api-fetch';
 import Fields from '../components/fields';
+import Loader from '../components/loader';
 import { toast } from 'react-toastify';
 import '../styles/react-toastify.css';
 
@@ -101,11 +102,7 @@ function Settings() {
   }, []);
 
   if (isFetching) {
-    return (
-      <div>
-        <Spinner /> {__('Loading...', 'dc-bkash')}
-      </div>
-    );
+    return ( <Loader /> );
   }
 
   return (
