@@ -117,7 +117,7 @@ function dc_bkash_get_payments_list( $args = [] ) {
 	$query = "SELECT * FROM $table_name";
 
 	if ( isset( $args['search'] ) ) {
-		$query .= " WHERE order_number LIKE '%{$args['search']}%' OR WHERE invoice_number LIKE '%{$args['search']}%'";
+		$query .= " WHERE order_number LIKE '%{$args['search']}%' OR invoice_number LIKE '%{$args['search']}%' OR trx_id LIKE '%{$args['search']}%' OR payment_id LIKE '%{$args['search']}%'";
 	}
 
 	$query .= " ORDER BY {$args['orderby']} {$args['order']} LIMIT %d, %d";

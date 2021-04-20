@@ -111,7 +111,7 @@ pre {
 }
 
 .border-primary {
-	border-color: $bKash-color !important;
+	border-color: $light-bkash-color !important;
 }
 
 .success-label,
@@ -144,6 +144,7 @@ pre {
 
 .pagination {
 	margin: 15px auto;
+	margin-bottom: 0;
 	display: flex;
 	list-style: none;
 	outline: none;

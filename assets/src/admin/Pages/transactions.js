@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { __ } from '@wordpress/i18n';
 import apiFetch from '@wordpress/api-fetch';
 import { toast } from 'react-toastify';
@@ -11,6 +11,8 @@ const Transactions = () => {
   const [transactions, setTransactions] = useState([]);
   const [pageCount, setPageCount] = useState(1);
   const [initialPage, setInitialPage] = useState(1);
+  const [awaitingSearch, setAwaitingSearch] = useState(false);
+  const searchInput = useRef(null);
 
   /**
    * Fetch transactions data
@@ -18,8 +20,17 @@ const Transactions = () => {
    * @param {*} pageNumber 
    */
   const fetchTransactions = ( pageNumber = 1 ) => {
+    let url = '/dc-bkash/v1/transactions?per_page=20&page=' + pageNumber;
+
+    sendRequest( url );
+  }
+
+  /**
+   * Send Request by api fetch
+   */
+  const sendRequest = ( path ) => {
     apiFetch({
-      path: '/dc-bkash/v1/transactions?per_page=20&page=' + pageNumber,
+      path: path,
       parse: false
     })
       .then((resp) => {
@@ -58,15 +69,65 @@ const Transactions = () => {
     return <p className='error-label'>Pending</p>;
   }
 
+  /**
+   * Handle page change
+   * @param {*} data 
+   */
   const handlePageChange = (data) => {
     let selectedPage = data.selected + 1;
 
     fetchTransactions( selectedPage );
   }
 
+  /**
+   * Search
+   * @param {*} search 
+   */
+  const handleSearch = ( search ) => {
+    if ( '' === search ) {
+      fetchTransactions();
+      return;
+    }
+
+    if (! awaitingSearch) {
+      setTimeout(() => {
+          let searchText = searchInput.current.value;
+          setAwaitingSearch( false );
+          doSearch( searchText );
+      }, 1000);
+    }
+
+    setAwaitingSearch( true );
+  }
+
+  /**
+   * Do search
+   * 
+   * @param {*} searchText 
+   */
+  const doSearch = ( searchText ) => {
+    let url = '/dc-bkash/v1/transactions/?search=' + searchText;
+
+    sendRequest( url );
+  }
+
   return (
     <div className="dokan_admin_settings_container">
-      <h2>{ __( 'Transactions', 'dc-bkash' ) }</h2>
+      <div className="title-section">
+        <h2>{ __( 'Transactions', 'dc-bkash' ) }</h2>
+
+        <div className="search-transaction">
+          <input 
+            type="text"
+            className="widefat"
+            name="search" 
+            id="search" 
+            placeholder={ __( 'Search', 'dc-bkash' ) }
+            onChange={ (event) => handleSearch( event.target.value ) }
+            ref={searchInput}
+          />
+        </div>
+      </div>
 
       <div className="all-transactions">
         <table className="table table-bordered border-primary transactions">

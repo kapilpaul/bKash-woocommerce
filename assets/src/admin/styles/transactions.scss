@@ -1,7 +1,26 @@
+.title-section {
+    overflow: hidden;
+    display: flex;
+    flex-wrap: nowrap;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+
+    .search-transaction {
+        width: 20%;
+        overflow: hidden;
+
+        input {
+            width: 100%;
+        }
+    }
+}
+
 .all-transactions {
     background: $white;
     padding: 20px;
     border-radius: 5px;
+    overflow: hidden;
 
     .transactions {
         border-radius: 5px;

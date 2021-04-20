@@ -78,12 +78,14 @@ class Transaction extends BkashBaseRestController {
 		$data         = [];
 		$transactions = dc_bkash_get_payments_list( $args );
 
-		foreach ( $transactions as $transaction ) {
-			$response = $this->prepare_item_for_response( $transaction, $request );
-			$data[]   = $this->prepare_response_for_collection( $response );
+		if ( ! empty( $transactions ) ) {
+			foreach ( $transactions as $transaction ) {
+				$response = $this->prepare_item_for_response( $transaction, $request );
+				$data[]   = $this->prepare_response_for_collection( $response );
+			}
 		}
 
-		$total     = dc_bkash_get_payments_count();
+		$total     = isset( $args['search'] ) ? count( $transactions ) : dc_bkash_get_payments_count();
 		$max_pages = ceil( $total / (int) $args['number'] );
 
 		$response = rest_ensure_response( $data );
