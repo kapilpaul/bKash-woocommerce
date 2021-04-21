@@ -107,7 +107,7 @@ function dc_bkash_get_payments_list( $args = [] ) {
 		'number'  => 20,
 		'offset'  => 0,
 		'orderby' => 'id',
-		'order'   => 'ASC',
+		'order'   => 'DESC',
 	];
 
 	$args = wp_parse_args( $args, $defaults );
@@ -430,4 +430,33 @@ function get_extension( $file_name ) {
 	$n = strrpos( $file_name, '.' );
 
 	return ( false === $n ) ? '' : substr( $file_name, $n + 1 );
+}
+
+/**
+ * Add item in specific position of an array
+ *
+ * @param array      $array Array.
+ * @param int|string $position  <index position or name of the key after which you want to add the new array>.
+ * @param array      $new_array New array to add.
+ *
+ * @since 2.0.0
+ *
+ * @return array
+ */
+function dc_bkash_add_array_after( $array, $position, $new_array ) {
+	if ( is_int( $position ) ) {
+		return array_merge(
+			array_slice( $array, 0, $position ),
+			$new_array,
+			array_slice( $array, $position )
+		);
+	}
+
+	$pos = array_search( $position, array_keys( $array ), true );
+
+	return array_merge(
+		array_slice( $array, 0, $pos + 1 ),
+		$new_array,
+		array_slice( $array, $pos )
+	);
 }
