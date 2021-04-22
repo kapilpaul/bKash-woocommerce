@@ -28,4 +28,45 @@
         background: $white;
         margin-bottom: 0;
     }
+
+    .verify-btn-container {
+		text-align: center;
+
+        &.processing {
+            background: url('../../../images/wpspin.gif');
+            height: 16px;
+            background-repeat: no-repeat;
+            width: auto;
+            background-position: center;
+
+            .verify-btn {
+                display: none;
+            }
+        }
+
+		&.verified {
+			background: url('../../../images/checked.png');
+			height: 16px;
+			background-repeat: no-repeat;
+			width: auto;
+			background-position: center;
+		}
+    }
+
+    .verify-btn {
+        color: $white;
+        border: 0;
+        box-shadow: 0 0 0;
+        outline: none;
+        background: green;
+        padding: 2px 5px;
+        border-radius: 3px;
+        cursor: pointer;
+        transition: all 0.3s ease-in-out;
+
+        &:hover {
+            background: $green;
+            color: $light-black;
+        }
+    }
 }

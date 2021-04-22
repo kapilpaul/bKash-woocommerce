@@ -50,6 +50,7 @@ class Manager {
 		add_action( 'woocommerce_cart_totals_before_order_total', [ $this, 'dc_bkash_display_transaction_charge' ] );
 		add_action( 'woocommerce_review_order_before_order_total', [ $this, 'dc_bkash_display_transaction_charge' ] );
 		add_action( 'woocommerce_admin_order_totals_after_tax', [ $this, 'dc_bkash_display_transaction_charge_on_admin' ] );
+		add_action( 'dc_bkash_after_query_payment', [ $this, 'maybe_update_transaction' ], 10, 3 );
 
 		/**
 		 * Filters
@@ -290,5 +291,41 @@ class Manager {
 		$total_rows = dc_bkash_add_array_after( $total_rows, 'payment_method', $bkash_charge );
 
 		return apply_filters( 'dc_bkash_get_order_item_totals', $total_rows, $this, $tax_display );
+	}
+
+	/**
+	 * Maybe update transaction data.
+	 *
+	 * @param string $payment_id     bKash Payment ID.
+	 * @param array  $verify_payment Verification payment data.
+	 * @param array  $response       response data.
+	 *
+	 * @return void
+	 */
+	public function maybe_update_transaction( $payment_id, $verify_payment, $response ) {
+		if ( 'Completed' !== $verify_payment['transactionStatus'] ) {
+			return;
+		}
+
+		$order_number = $verify_payment['merchantInvoiceNumber'];
+
+		$payment = dc_bkash_get_payment( $order_number );
+
+		if ( $payment->verification_status ) {
+			return $payment;
+		}
+
+		global $wpdb;
+
+		$table_name = $wpdb->prefix . 'bkash_transactions';
+
+		//phpcs:ignore
+		$wpdb->update(
+			$table_name,
+			[ 'verification_status' => 1 ],
+			[ 'order_number' => $order_number ],
+			[ '%d' ],
+			[ '%s' ]
+		);
 	}
 }

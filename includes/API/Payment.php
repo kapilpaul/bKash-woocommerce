@@ -230,6 +230,8 @@ class Payment extends BkashBaseRestController {
 			'request_url'    => $bkash_processor->payment_query_url . $payment_id,
 		];
 
+		do_action( 'dc_bkash_after_query_payment', $payment_id, $verify_payment, $response );
+
 		return rest_ensure_response( $response );
 	}
 

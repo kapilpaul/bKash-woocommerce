@@ -10,14 +10,14 @@ const Transactions = () => {
   const [isFetching, setIsFetching] = useState(true);
   const [transactions, setTransactions] = useState([]);
   const [pageCount, setPageCount] = useState(1);
-  const [initialPage, setInitialPage] = useState(1);
+  const [currentPage, setCurrentPage] = useState(1);
   const [awaitingSearch, setAwaitingSearch] = useState(false);
   const searchInput = useRef(null);
 
   /**
    * Fetch transactions data
-   * 
-   * @param {*} pageNumber 
+   *
+   * @param {*} pageNumber
    */
   const fetchTransactions = ( pageNumber = 1 ) => {
     let url = '/dc-bkash/v1/transactions?per_page=20&page=' + pageNumber;
@@ -70,18 +70,59 @@ const Transactions = () => {
   }
 
   /**
+   * Get verification Button
+   */
+   const getVerificationButton = ( status, paymentID ) => {
+    if ( '1' === status ) {
+      return (
+        <div className="verify-btn-container verified"></div>
+      );
+    }
+
+    return (
+      <div className="verify-btn-container">
+        <button className="btn verify-btn" onClick={(event) => handleVerify(event, paymentID)}>{ __( 'Verify', 'dc-bkash' ) }</button>
+      </div>
+    );
+  }
+
+  /**
+   * Handle Reverification
+   * @param {*} event
+   * @param {*} paymentID
+   */
+  const handleVerify = (event, paymentID) => {
+    //add processing class
+    event.target.parentNode.classList.add( 'processing' );
+
+    apiFetch({
+      path: '/dc-bkash/v1/payment/query-payment/' + paymentID,
+    })
+      .then((resp) => {
+        event.target.parentNode.classList.remove( 'processing' );
+
+        fetchTransactions( currentPage );
+      })
+      .catch((err) => {
+        event.target.parentNode.classList.remove( 'processing' );
+      });
+  }
+
+  /**
    * Handle page change
-   * @param {*} data 
+   * @param {*} data
    */
   const handlePageChange = (data) => {
     let selectedPage = data.selected + 1;
+
+    setCurrentPage( selectedPage );
 
     fetchTransactions( selectedPage );
   }
 
   /**
    * Search
-   * @param {*} search 
+   * @param {*} search
    */
   const handleSearch = ( search ) => {
     if ( '' === search ) {
@@ -102,8 +143,8 @@ const Transactions = () => {
 
   /**
    * Do search
-   * 
-   * @param {*} searchText 
+   *
+   * @param {*} searchText
    */
   const doSearch = ( searchText ) => {
     let url = '/dc-bkash/v1/transactions/?search=' + searchText;
@@ -117,11 +158,11 @@ const Transactions = () => {
         <h2>{ __( 'Transactions', 'dc-bkash' ) }</h2>
 
         <div className="search-transaction">
-          <input 
+          <input
             type="text"
             className="widefat"
-            name="search" 
-            id="search" 
+            name="search"
+            id="search"
             placeholder={ __( 'Search', 'dc-bkash' ) }
             onChange={ (event) => handleSearch( event.target.value ) }
             ref={searchInput}
@@ -141,24 +182,26 @@ const Transactions = () => {
               <th scope="col">{ __( 'Trx Status', 'dc-bkash' ) }</th>
               <th scope="col">{ __( 'Verification Status', 'dc-bkash' ) }</th>
               <th scope="col">{ __( 'Payment Time', 'dc-bkash' ) }</th>
+              <th scope="col">{ __( 'Action', 'dc-bkash' ) }</th>
             </tr>
           </thead>
           <tbody>
           {transactions.map((transaction, i) => {
             return (
               <tr key={i}>
-                <td><a href={transaction.order_url}>{transaction.order_number}</a></td>
-                <td>{transaction.amount}</td>
-                <td>{transaction.payment_id}</td>
-                <td>{transaction.trx_id}</td>
-                <td>{transaction.invoice_number}</td>
-                <td>{transaction.transaction_status}</td>
+                <td><a href={ transaction.order_url }>{ transaction.order_number }</a></td>
+                <td>{ transaction.amount }</td>
+                <td>{ transaction.payment_id }</td>
+                <td>{ transaction.trx_id }</td>
+                <td>{ transaction.invoice_number }</td>
+                <td>{ transaction.transaction_status }</td>
                 <td>{ getVerificationLabel( transaction.verification_status ) }</td>
-                <td>{transaction.created_at}</td>
+                <td>{ transaction.created_at }</td>
+                <td>{ getVerificationButton( transaction.verification_status, transaction.payment_id ) }</td>
               </tr>
             );
           })}
-            
+
           </tbody>
         </table>
 

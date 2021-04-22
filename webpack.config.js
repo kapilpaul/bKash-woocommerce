@@ -60,6 +60,17 @@ const config = {
 					},
 				],
 			},
+			{
+				test: /\.gif$/,
+				use: [
+					{
+						loader: 'url-loader',
+						options: {
+							mimetype: 'image/gif',
+						},
+					},
+				],
+			},
 		],
 	},
 	resolve: {
@@ -85,8 +96,8 @@ const config = {
 	},
 	plugins: [
 		new MiniCssExtractPlugin({
-			filename: '../css/[name].css', //for build
-			// filename: '[name].css',
+			// filename: '../css/[name].css', //for build
+			filename: '[name].css',
 		}),
 	],
 	cache: true,
