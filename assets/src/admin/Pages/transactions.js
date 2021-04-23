@@ -101,10 +101,14 @@ const Transactions = () => {
       .then((resp) => {
         event.target.parentNode.classList.remove( 'processing' );
 
+        toast.success( __( 'Successfully verified!', 'dc-bkash' ) );
+
         fetchTransactions( currentPage );
       })
       .catch((err) => {
         event.target.parentNode.classList.remove( 'processing' );
+
+        toast.error( __( 'Problem in verification!', 'dc-bkash' ) );
       });
   }
 

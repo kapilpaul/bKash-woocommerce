@@ -96,8 +96,8 @@ const config = {
 	},
 	plugins: [
 		new MiniCssExtractPlugin({
-			// filename: '../css/[name].css', //for build
-			filename: '[name].css',
+			filename: '../css/[name].css', //for build
+			// filename: '[name].css',
 		}),
 	],
 	cache: true,
