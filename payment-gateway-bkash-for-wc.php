@@ -243,7 +243,7 @@ final class DCoders_Bkash {
 			$this->container['ajax'] = new DCoders\Bkash\Ajax();
 		}
 
-		$this->container['api']      = new DCoders\Bkash\Api();
+		$this->container['api']      = new DCoders\Bkash\API();
 		$this->container['assets']   = new DCoders\Bkash\Assets();
 		$this->container['settings'] = new DCoders\Bkash\Admin\Settings();
 		$this->container['upgrades'] = new DCoders\Bkash\Upgrade\Manager();

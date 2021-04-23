@@ -1,11 +1,25 @@
 {
   "name": "payment-gateway-bkash-for-wc",
   "version": "2.0.0",
-  "description": "",
-  "main": "index.js",
-  "keywords": [],
-  "author": "",
-  "license": "ISC",
+  "description": "An eCommerce payment method that helps you sell anything. Beautifully.",
+  "author": "Kapil Paul <kapilpaul007@gmail.com>",
+  "license": "GPL-3.0",
+  "keywords": [
+    "wordpress",
+    "woocommerce",
+    "payment",
+    "bkash",
+    "bangladesh",
+    "taka"
+  ],
+  "homepage": "https://github.com/kapilpaul/bKash-woocommerce",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/kapilpaul/bKash-woocommerce.git"
+  },
+  "bugs": {
+    "url": "https://github.com/kapilpaul/bKash-woocommerce/issues"
+  },
   "scripts": {
     "clean": "rm -rf ./dist",
     "build:dev": "webpack --mode development",
@@ -13,7 +27,9 @@
     "start": "webpack serve --hot --mode development --disable-host-check",
     "make-pot": "wp i18n make-pot --exclude='dist,node_modules,vendors' . languages/dc-bkash.pot",
     "lint-js": "eslint assets/src/",
-    "precommit": "npm run lint-js && npm run make-pot"
+    "precommit": "npm run lint-js && npm run make-pot",
+    "zip": "node build",
+    "release": "npm run make-pot && npm run build && npm run zip"
   },
   "dependencies": {
     "@wordpress/api-fetch": "^3.21.1",
@@ -58,6 +74,7 @@
     "postcss-sort-media-queries": "^3.6.5",
     "prettier": "^2.2.1",
     "sass-loader": "^10.1.0",
+    "shelljs": "^0.8.4",
     "style-loader": "^2.0.0",
     "url-loader": "^4.1.1",
     "webpack": "^5.12.2",

@@ -11,6 +11,8 @@ config.json
 /dist
 .vscode/
 /false
+/build/dc-bkash
+/build/dc-bkash*
 
 # Composer
 /vendor/
