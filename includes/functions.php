@@ -89,9 +89,7 @@ function dc_bkash_get_payment( $order_number ) {
 	$query = sprintf( "SELECT * FROM %s WHERE order_number='%d'", $table_name, $order_number );
 
 	//phpcs:ignore
-	$item = $wpdb->get_row(
-		$wpdb->prepare( $query ) // phpcs:ignore
-	);
+	$item = $wpdb->get_row( $query );
 
 	return $item;
 }
@@ -131,9 +129,7 @@ function dc_bkash_get_payments_list( $args = [] ) {
 	$query .= sprintf( ' ORDER BY `%1$s` %2$s LIMIT %3$d, %4$d', $args['orderby'], $args['order'], $args['offset'], $args['number'] );
 
 	//phpcs:ignore
-	$items = $wpdb->get_results(
-		$wpdb->prepare( $query ) //phpcs:ignore
-	);
+	$items = $wpdb->get_results( $query );
 
 	return $items;
 }

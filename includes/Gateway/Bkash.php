@@ -29,9 +29,7 @@ class Bkash extends \WC_Payment_Gateway {
 		$this->init_settings();
 
 		add_action( 'woocommerce_update_options_payment_gateways_' . $this->id, [ $this, 'process_admin_options' ] );
-
-		//phpcs:ignore
-//		add_action( 'woocommerce_thankyou_' . $this->id, array( $this, 'thank_you_page' ) );
+		add_action( 'woocommerce_thankyou_' . $this->id, array( $this, 'thank_you_page' ) );
 		add_action( 'wp_enqueue_scripts', [ $this, 'payment_scripts' ] );
 	}
 
@@ -66,7 +64,7 @@ class Bkash extends \WC_Payment_Gateway {
 		$bkash_settings_url = admin_url( 'admin.php?page=dc-bkash#/settings' );
 
 		printf(
-		/* translators: %1$d: page number %2$d: max page number */
+			/* translators: %1$d: page number %2$d: max page number */
 			esc_html__( '%1$sYou will get %2$s setting options in %3$s here %4$s.%5$s', 'dc-bkash' ),
 			'<p>',
 			esc_html( $this->method_title ),
@@ -88,6 +86,7 @@ class Bkash extends \WC_Payment_Gateway {
 
 		// Empty cart.
 		WC()->cart->empty_cart();
+
 		$create_payment_data = $this->create_payment_request( $order );
 
 		if ( is_wp_error( $create_payment_data ) ) {
@@ -167,5 +166,35 @@ class Bkash extends \WC_Payment_Gateway {
 		}
 
 		return $response;
+	}
+
+	/**
+	 * Thank you page after order
+	 *
+	 * @param int $order_id Order ID.
+	 *
+	 * @return void
+	 */
+	public function thank_you_page( $order_id ) {
+		$order = wc_get_order( $order_id );
+
+		if ( ! $order ) {
+			return;
+		}
+
+		if ( 'bkash' === $order->get_payment_method() ) {
+			$payment_data = dc_bkash_get_payment( $order_id );
+
+			$trx_id = $payment_data ? $payment_data->trx_id : '';
+			$status = $order->needs_payment() ? 'NOT PAID' : 'Completed';
+
+			dc_bkash_get_template(
+				'frontend/payment-details',
+				[
+					'trx_id' => $trx_id,
+					'status' => $status,
+				]
+			);
+		}
 	}
 }

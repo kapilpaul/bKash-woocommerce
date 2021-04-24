@@ -3,7 +3,7 @@ Contributors: kapilpaul
 Donate link: https://kapilpaul.me/
 Tags: bkash, woocommerce pgw, bdt, mobilebanking, bangladesh
 Requires at least: 4.0
-Tested up to: 5.4
+Tested up to: 5.7.1
 Stable tag: trunk
 Requires PHP: 5.6
 License: GPLv2 or later
@@ -20,17 +20,20 @@ Woocommerce payment method for bKash for easy checkout.
 = Installation Guide =
 
 1. After activate the plugin you need to go to Woocommerce settings for payments. Here you can see bKash as a payment method. Enable this and open settings for this payment method.
-2. Collect your USERNAME, PASSWORD, APP_KEY, APP_SECRET from bKash. Place this in here and you are able to collect your payment.
+2. Here you will see a link to go to the settings. (Or you may go to the bKash Settings from left menu).
+3. Collect your USERNAME, PASSWORD, APP_KEY, APP_SECRET from bKash. Place this in here and you are able to collect your payment.
 
-= On Test Mode =
+= Test Mode =
 
-You can use the information below for a test checkout. Default values that will pass with each request.
+In test mode, there are two options. One is with Test Credentials and another is without credentials.
+You may play with this plugin without giving any credentials.
+But when you need to generate document for bKash, you must need to fill up the necessary information.
 
-`Wallet : 01770618575`
-`OTP : 123456`
-`PIN : 12121`
+You can use the below information for a test transaction.
 
-** NB: Please note that this plugin requires jQuery 3.3.1 . Otherwise bKash script does not work with WordPress default jQuery. So called the jQuery 3.3.1 in checkout only. **
+`bKash Wallet : 01770618575`
+`bKash OTP : 123456`
+`bKash PIN : 12121`
 
 = Demo Video =
 
@@ -51,9 +54,8 @@ Payment Gateway bKash for WC is being developed on GitHub. If you’re intereste
 == Installation ==
 
 1. After activate the plugin you need to go to Woocommerce settings for payments. Here you can see bKash as a payment method. Enable this and open settings for this payment method.
-2. Collect your USERNAME, PASSWORD, APP_KEY, APP_SECRET from bKash. Place this in here and you are able to collect your payment.
-
-** NB: Please note that this plugin requires jQuery 3.3.1 . Otherwise bKash script does not work with WordPress default jQuery. So called the jQuery 3.3.1 in checkout only. **
+2. Here you will see a link to go to the settings. (Or you may go to the bKash Settings from left menu).
+3. Collect your USERNAME, PASSWORD, APP_KEY, APP_SECRET from bKash. Place this in here and you are able to collect your payment.
 
 == Frequently Asked Questions ==
 
@@ -64,6 +66,10 @@ Yes. You need bKash USERNAME, PASSWORD, APP_KEY and APP_SECRET.
 = How do I get credentials? =
 
 You may contact with bKash support 16247.
+
+= How do I get bKash dov for submission =
+
+In this plugin, you can generate the doc.
 
 = Is this a plug and play plugin? =
 
@@ -80,6 +86,21 @@ Yes. Follow the installation process and you are good to go.
 6. bkash Payment List
 
 == Changelog ==
+= v2.0.0 (April 28, 2021) =
+* New plugin structure with React JS.
+* New options panel with more options.
+* Transactions list and pagination without loading.
+* Verify transaction option.
+* Most Important: API doc generation and download automatically.
+* Actions and filters introduced.
+* Rest api added.
+* More functionalities added to simply the code.
+* Display transaction charge in admin order page.
+* Display transaction charge in checkout page.
+* Display transaction charge in order review.
+* jQuery removed from checkout page and added automatically from JS.
+* Upgrader option for auto update date from old version to new version.
+
 = v1.3.0 (June 28, 2020) =
 * Added: bKash transaction charge option.
 * Updated: thank you page bug.
@@ -106,6 +127,9 @@ Yes. Follow the installation process and you are good to go.
 * Payment for orders
 
 == Upgrade Notice ==
+= 2.0.0 =
+**Important Update** This update changes all the code structures for improving performance. Make sure to take backup and read the change logs first before upgrade process. Do not forget to upgrade the data to new version.
+
 = 1.3.0 =
 **Important Update** This update added the bKash transaction charge.
 
@@ -113,4 +137,4 @@ Yes. Follow the installation process and you are good to go.
 **Important Update** This update added the appsero tracker to get the analytics and performance of the plugin.
 
 = 1.1.0 =
-**Important Update** This update changes code structures for improving performance. Make sure to take backup and read the changlogs first before upgrade process.
+**Important Update** This update changes code structures for improving performance. Make sure to take backup and read the change logs first before upgrade process.

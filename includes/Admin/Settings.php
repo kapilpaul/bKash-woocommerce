@@ -21,17 +21,6 @@ class Settings {
 	const OPTION_KEY = 'dc_bkash_settings';
 
 	/**
-	 * Settings constructor
-	 *
-	 * @since 2.0.0
-	 *
-	 * @return void
-	 */
-	public function __construct() {
-
-	}
-
-	/**
 	 * Get settings field
 	 *
 	 * @since 2.0.0
@@ -40,13 +29,13 @@ class Settings {
 	 */
 	public function get_settings_fields() {
 		$fields = [
-			'gateway'           => [
-				'title'              => [
+			'gateway' => [
+				'title'          => [
 					'title'   => __( 'Title', 'dc-bkash' ),
 					'type'    => 'text',
 					'default' => __( 'bKash Payment', 'dc-bkash' ),
 				],
-				'test_mode'          => [
+				'test_mode'      => [
 					'title'   => __( 'Test Mode', 'dc-bkash' ),
 					'type'    => 'select',
 					'options' => [
@@ -55,7 +44,7 @@ class Settings {
 					],
 					'default' => __( 'off', 'dc-bkash' ),
 				],
-				'test_mode_type'     => [
+				'test_mode_type' => [
 					'title'   => __( 'Test Mode Type', 'dc-bkash' ),
 					'type'    => 'select',
 					'options' => [
@@ -71,7 +60,7 @@ class Settings {
 						],
 					],
 				],
-				'username'           => [
+				'username'       => [
 					'title'   => __( 'User Name', 'dc-bkash' ),
 					'type'    => 'text',
 					'show_if' => [
@@ -82,7 +71,7 @@ class Settings {
 						],
 					],
 				],
-				'password'           => [
+				'password'       => [
 					'title'   => __( 'Password', 'dc-bkash' ),
 					'type'    => 'password',
 					'show_if' => [
@@ -93,7 +82,7 @@ class Settings {
 						],
 					],
 				],
-				'app_key'            => [
+				'app_key'        => [
 					'title'   => __( 'App Key', 'dc-bkash' ),
 					'type'    => 'text',
 					'show_if' => [
@@ -104,7 +93,7 @@ class Settings {
 						],
 					],
 				],
-				'app_secret'         => [
+				'app_secret'     => [
 					'title'   => __( 'App Secret', 'dc-bkash' ),
 					'type'    => 'text',
 					'show_if' => [
@@ -228,7 +217,6 @@ class Settings {
 					'desc_tip'    => true,
 				],
 			],
-			'dokan_integration' => [],
 		];
 
 		return apply_filters( 'dc_bkash_settings_fields', $fields );
@@ -243,13 +231,9 @@ class Settings {
 	 */
 	public function get_settings_sections() {
 		$sections = [
-			'gateway'           => [
+			'gateway' => [
 				'id'    => 'gateway',
 				'title' => 'Payment Gateway',
-			],
-			'dokan_integration' => [
-				'id'    => 'dokan_integration',
-				'title' => 'Dokan Integration',
 			],
 		];
 
