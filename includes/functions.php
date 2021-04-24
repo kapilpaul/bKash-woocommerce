@@ -1,4 +1,9 @@
 <?php
+/**
+ * DC bKash functions.
+ *
+ * @package DCoders\Bkash
+ */
 
 /**
  * Bkash settings option.
@@ -81,11 +86,11 @@ function dc_bkash_get_payment( $order_number ) {
 
 	$table_name = $wpdb->prefix . 'bkash_transactions';
 
-	$query = "SELECT * FROM $table_name WHERE order_number='%d'";
+	$query = sprintf( "SELECT * FROM %s WHERE order_number='%d'", $table_name, $order_number );
 
 	//phpcs:ignore
 	$item = $wpdb->get_row(
-		$wpdb->prepare( $query, $order_number )
+		$wpdb->prepare( $query ) // phpcs:ignore
 	);
 
 	return $item;
@@ -114,17 +119,20 @@ function dc_bkash_get_payments_list( $args = [] ) {
 
 	$table_name = $wpdb->prefix . 'bkash_transactions';
 
-	$query = "SELECT * FROM $table_name";
+	$query = sprintf( 'SELECT * FROM %s', $table_name );
 
 	if ( isset( $args['search'] ) ) {
-		$query .= " WHERE order_number LIKE '%{$args['search']}%' OR invoice_number LIKE '%{$args['search']}%' OR trx_id LIKE '%{$args['search']}%' OR payment_id LIKE '%{$args['search']}%'";
+		$wild = '%';
+		$like = $wild . $wpdb->esc_like( $args['search'] ) . $wild;
+
+		$query .= sprintf( ' WHERE order_number LIKE "%1$s" OR invoice_number LIKE "%2$s" OR trx_id LIKE "%3$s" OR payment_id LIKE "%4$s"', $like, $like, $like, $like );
 	}
 
-	$query .= " ORDER BY {$args['orderby']} {$args['order']} LIMIT %d, %d";
+	$query .= sprintf( ' ORDER BY `%1$s` %2$s LIMIT %3$d, %4$d', $args['orderby'], $args['order'], $args['offset'], $args['number'] );
 
 	//phpcs:ignore
 	$items = $wpdb->get_results(
-		$wpdb->prepare( $query, $args['offset'], $args['number'] )
+		$wpdb->prepare( $query ) //phpcs:ignore
 	);
 
 	return $items;
