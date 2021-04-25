@@ -37,8 +37,9 @@ class AdminNotice {
 			return;
 		}
 
-		dc_bkash_get_template( 'admin/upgrade-notice' );
 		wp_enqueue_style( 'dc-upgrade-css' );
 		wp_enqueue_script( 'dc-upgrade-script' );
+
+		dc_bkash_get_template( 'admin/upgrade-notice' );
 	}
 }

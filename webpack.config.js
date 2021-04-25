@@ -97,10 +97,9 @@ const config = {
 	plugins: [
 		new MiniCssExtractPlugin({
 			filename: '../css/[name].css', //for build
-			// filename: '[name].css',
+			// filename: '[name].css', // for hot reload
 		}),
 	],
-	cache: true,
 };
 
 module.exports = (env, argv) => {

@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { __ } from '@wordpress/i18n';
-import '../styles/react-toastify.css';
+import '../styles/react-toastify.scss';
 
 const Loader = () => {
     return (

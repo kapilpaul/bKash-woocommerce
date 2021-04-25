@@ -84,9 +84,10 @@ Yes. Follow the installation process and you are good to go.
 4. bKash as a payment method
 5. bkash main payment
 6. bkash Payment List
+7. bKash Document Generator
 
 == Changelog ==
-= v2.0.0 (April 28, 2021) =
+= v2.0.0 (April 26, 2021) =
 * New plugin structure with React JS.
 * New options panel with more options.
 * Transactions list and pagination without loading.

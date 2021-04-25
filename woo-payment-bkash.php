@@ -88,8 +88,7 @@ final class DCoders_Bkash {
 		register_activation_hook( __FILE__, [ $this, 'activate' ] );
 		register_deactivation_hook( __FILE__, [ $this, 'deactivate' ] );
 
-		//phpcs:ignore
-		// $this->init_appsero_tracker();
+		$this->init_appsero_tracker();
 
 		add_action( 'plugins_loaded', [ $this, 'init_plugin' ] );
 	}
@@ -248,8 +247,6 @@ final class DCoders_Bkash {
 		$this->container['settings'] = new DCoders\Bkash\Admin\Settings();
 		$this->container['upgrades'] = new DCoders\Bkash\Upgrade\Manager();
 		$this->container['gateway']  = new DCoders\Bkash\Gateway\Manager();
-
-		\DCoders\Bkash\Upgrade\Upgrades\V_2_0_0::migrate_pgw_credentials();
 
 		$this->container = apply_filters( 'dc_bkash_get_class_container', $this->container );
 	}

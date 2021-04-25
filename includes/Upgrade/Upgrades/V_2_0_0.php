@@ -12,11 +12,13 @@
 namespace DCoders\Bkash\Upgrade\Upgrades;
 
 use DCoders\Bkash\Abstracts\DcBkashUpgrader;
+use DCoders\Bkash\Admin\Settings as AdminSettings;
 
 /**
  * Class V_2_0_0
  */
 class V_2_0_0 extends DcBkashUpgrader {
+
 	/**
 	 * Update bKash transactions table and add `verification_status` column
 	 *
@@ -82,10 +84,32 @@ class V_2_0_0 extends DcBkashUpgrader {
 
 		$gateway_settings = $settings_format['fields']['gateway'];
 
+		// adding data to sandbox key if it's on test mode.
+		if ( isset( $old_data['test_mode'] ) && 'on' === $old_data['test_mode'] ) {
+			$old_data['sandbox_username']   = $old_data['username'];
+			$old_data['sandbox_password']   = $old_data['password'];
+			$old_data['sandbox_app_key']    = $old_data['app_key'];
+			$old_data['sandbox_app_secret'] = $old_data['app_secret'];
+
+			//phpcs:ignore
+			$old_data['username'] = $old_data['password'] = $old_data['app_key'] = $old_data['app_secret'] = '';
+		}
+
+		// convert transaction charge value from 'yes' to 'on'.
+		if ( wc_string_to_bool( $old_data['transaction_charge'] ) ) {
+			$old_data['transaction_charge'] = 'on';
+		}
+
 		foreach ( $gateway_settings as $key => $settings ) {
 			if ( array_key_exists( $key, $old_data ) ) {
 				$gateway_settings[ $key ]['default'] = $old_data[ $key ];
 			}
 		}
+
+		update_option( AdminSettings::OPTION_KEY, [ 'gateway' => $gateway_settings ], false );
+
+		// Delete dependency transients.
+		delete_transient( 'dc_bkash_token' );
+		delete_transient( 'dc_bkash_token_data' );
 	}
 }

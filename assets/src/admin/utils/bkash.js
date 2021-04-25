@@ -2,7 +2,7 @@ import $ from 'jquery';
 import { __ } from '@wordpress/i18n';
 import { toast } from 'react-toastify';
 import Swal from 'sweetalert2';
-import '../styles/react-toastify.css';
+import '../styles/react-toastify.scss';
 
 /**
  * Bkash initialize, create payment and execute payment

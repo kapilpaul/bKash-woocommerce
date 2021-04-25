@@ -4,7 +4,7 @@ import apiFetch from '@wordpress/api-fetch';
 import ApiResponse from '../../components/bKash/api-response';
 import dcBkash from '../../utils/bkash';
 import { toast } from 'react-toastify';
-import '../../styles/react-toastify.css';
+import '../../styles/react-toastify.scss';
 import { beautifyJson } from '../../utils/helper';
 import DuplicateSS from '../../images/duplicate.png';
 import ExceedPinSS from '../../images/exceed-pin.png';
@@ -163,7 +163,7 @@ function DocDataContainer({afterComplete}) {
    */
   const renderExceedPinLimit = () => {
     if (exceedPinLimit) {
-    
+
       return (
         <div>
           <p className="strong">{__('Case #2', 'dc-bkash')}</p>

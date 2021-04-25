@@ -26,6 +26,10 @@ $primary-color: #e2136e;
   border-left-color: $primary-color !important;
 }
 
+.dc-bkash-notice-info-hide {
+  display: none;
+}
+
 .text-bkash {
   color: $primary-color;
 }

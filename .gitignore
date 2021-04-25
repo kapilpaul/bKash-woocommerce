@@ -11,8 +11,8 @@ config.json
 /dist
 .vscode/
 /false
-/build/dc-bkash
-/build/dc-bkash*
+/build/woo-payment-bkash
+/build/woo-payment-bkash*
 
 # Composer
 /vendor/

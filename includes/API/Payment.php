@@ -20,6 +20,7 @@ use WP_REST_Server;
  * Class Payment
  */
 class Payment extends BkashBaseRestController {
+
 	/**
 	 * Initialize the class
 	 */
@@ -279,7 +280,7 @@ class Payment extends BkashBaseRestController {
 	/**
 	 * Registering single route which will have a id as a argument.
 	 *
-	 * @param string $path           Route Path.
+	 * @param string $path            Route Path.
 	 * @param array  $callback_method Callback function to serve.
 	 *
 	 * @since 2.0.0

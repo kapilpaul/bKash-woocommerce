@@ -3,7 +3,7 @@ import { __ } from '@wordpress/i18n';
 import { Button } from '@wordpress/components';
 import apiFetch from '@wordpress/api-fetch';
 import { toast } from 'react-toastify';
-import '../../admin/styles/react-toastify.css';
+import '../../admin/styles/react-toastify.scss';
 
 /**
  * configure the toast
@@ -36,13 +36,24 @@ function Upgrades() {
     })
       .then((resp) => {
         setIsSubmitted(false);
-        // toast.success(__('Saved Successfully!', 'dc-bkash'));
+        toast.success(__('Updated Successfully!', 'dc-bkash'));
+
+        hideNotice();
       })
       .catch((err) => {
         setIsSubmitted(false);
         toast.error(err.data.status + ' : ' + err.message);
       });
   };
+
+  /**
+   * Hide notice container
+   */
+  const hideNotice = () => {
+    let noticeContainer = document.querySelector( '.dc-bkash-notice-info' );
+
+    noticeContainer.classList.add('dc-bkash-notice-info-hide');
+  }
 
   return (
     <div id="dc-bkash-upgrade-notice">

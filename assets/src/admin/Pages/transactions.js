@@ -4,7 +4,7 @@ import apiFetch from '@wordpress/api-fetch';
 import { toast } from 'react-toastify';
 import ReactPaginate from 'react-paginate';
 import Loader from '../components/loader';
-import '../styles/react-toastify.css';
+import '../styles/react-toastify.scss';
 
 const Transactions = () => {
   const [isFetching, setIsFetching] = useState(true);

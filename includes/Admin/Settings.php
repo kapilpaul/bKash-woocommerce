@@ -104,7 +104,6 @@ class Settings {
 						],
 					],
 				],
-
 				'sandbox_username'   => [
 					'title'   => __( 'Sandbox User Name', 'dc-bkash' ),
 					'type'    => 'text',
@@ -169,7 +168,6 @@ class Settings {
 						],
 					],
 				],
-
 				'transaction_charge' => [
 					'title'   => __( 'Enable bKash Charge', 'dc-bkash' ),
 					'type'    => 'select',
@@ -265,7 +263,7 @@ class Settings {
 	/**
 	 * Get option value
 	 *
-	 * @param string $option Setting Option.
+	 * @param string $option  Setting Option.
 	 * @param string $section Setting Section.
 	 *
 	 * @since 2.0.0

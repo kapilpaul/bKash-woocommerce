@@ -5,7 +5,7 @@ import apiFetch from '@wordpress/api-fetch';
 import Fields from '../components/fields';
 import Loader from '../components/loader';
 import { toast } from 'react-toastify';
-import '../styles/react-toastify.css';
+import '../styles/react-toastify.scss';
 
 /**
  * configure the toast

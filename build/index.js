@@ -7,7 +7,7 @@ function resolve(...paths) {
 	return path.resolve(__dirname, ...paths);
 }
 
-const DEST = resolve('dc-bkash');
+const DEST = resolve('woo-payment-bkash');
 const packageInfo = JSON.parse(fs.readFileSync('package.json'));
 const args = minimist(process.argv.slice(2));
 
@@ -25,7 +25,7 @@ if (args.version && args.version.match(semverRegex)) {
 		`sed -i '' 's/"version": "${currentVersion}"/"version": "${version}"/g' package.json`
 	);
 	shell.exec(
-		`sed -i '' 's/* Version: ${currentVersion}/* Version: ${version}/g' payment-gateway-bkash-for-wc.php`
+		`sed -i '' 's/* Version: ${currentVersion}/* Version: ${version}/g' woo-payment-bkash.php`
 	);
 	shell.exec(
 		`find includes -iname '*.php' -exec sed -i "" "s/DC_BKASH_SINCE/${version}/g" {} \\\;`
@@ -37,10 +37,10 @@ console.log( 'Installing composer without dev dependencies...' );
 
 shell.exec(`composer install --optimize-autoloader --no-dev`);
 
-const zip = `dc-bkash-${version}.zip`;
+const zip = `woo-payment-bkash-${version}.zip`;
 
 shell.rm('-rf', DEST);
-shell.rm('-f', resolve('dc-bkash-*.zip'));
+shell.rm('-f', resolve('woo-payment-bkash-*.zip'));
 shell.mkdir('-p', DEST + '/assets' );
 
 const include = [
@@ -53,7 +53,7 @@ const include = [
 	'vendor',
   'composer.json',
   'index.php',
-  'payment-gateway-bkash-for-wc.php',
+  'woo-payment-bkash.php',
 	'README.md',
 	'readme.txt',
 ];
@@ -64,10 +64,8 @@ include.forEach((item) => {
 	shell.cp('-r', resolve('../', item), resolve(DEST, item));
 });
 
-//shell.rm('-rf', resolve(DEST, 'vendor/psy/psysh/test'));
-
 console.log('Making zip...');
-shell.exec(`cd ${resolve()} && zip ${zip} dc-bkash -rq`);
+shell.exec(`cd ${resolve()} && zip ${zip} woo-payment-bkash -rq`);
 
 shell.rm('-rf', resolve(DEST));
 console.log('Done.');
