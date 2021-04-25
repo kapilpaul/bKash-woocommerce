@@ -190,7 +190,7 @@ Learn more about how [Appsero collects and uses this data](https://appsero.com/p
 
 #### Changelog
 
-= v2.0.0 (April 28, 2021) =
+= v2.0.0 (April 26, 2021) =
 * New plugin structure with React JS.
 * New options panel with more options.
 * Transactions list and pagination without loading.
