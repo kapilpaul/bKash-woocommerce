@@ -1,0 +1,24 @@
+<?xml version="1.0"?>
+<ruleset name="WordPress Conding Standards">
+    <description>Generally-applicable sniffs for WordPress plugins</description>
+
+    <rule ref="WordPress">
+        <exclude name="WordPress.Files.FileName.NotHyphenatedLowercase" />
+        <exclude name="WordPress.Files.FileName.InvalidClassFileName" />
+    </rule>
+
+    <rule ref="PHPCompatibility">
+        <exclude name="Generic.Arrays.DisallowShortArraySyntax.Found"/>
+    </rule>
+
+    <rule ref="PHPCompatibility"/>
+    <config name="testVersion" value="7.4-"/>
+
+    <arg name="extensions" value="php"/>
+    <arg value="s"/>
+
+    <exclude-pattern>*/dev-lib/*</exclude-pattern>
+    <exclude-pattern>*/node_modules/*</exclude-pattern>
+    <exclude-pattern>*/vendor/*</exclude-pattern>
+    <exclude-pattern>.github/</exclude-pattern>
+</ruleset>

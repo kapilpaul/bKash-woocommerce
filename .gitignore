@@ -8,7 +8,13 @@ includes/.DS_Store
 debug.log
 package-lock.json
 config.json
+/dist
+.vscode/
+/false
+/build/woo-payment-bkash
+/build/woo-payment-bkash*
 
 # Composer
 /vendor/
 phpcs-report.txt
+languages/*

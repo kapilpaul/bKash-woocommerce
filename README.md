@@ -1,15 +1,16 @@
 ## Payment Gateway bKash for WC
 
 Contributors: [kapilpaul](https://kapilpaul.me)\
-Donate link: https://kapilpaul.me/\
+Donate link: https://kapilpaul.me/ \
 Tags: bkash, mobile-banking, bkash-payment, bkash payment, bkashPayment, bkash payment method, woocommerce bkash, bkash Bangladesh, bkash wordpress, bkash woocommerce\
 Requires at least: 4.0\
-Tested up to: 5.3.2\
+Tested up to: 5.7.1\
 Stable tag: trunk\
 Requires PHP: 5.6\
 License: GPLv2 or later\
-License URI: https://www.gnu.org/licenses/gpl-2.0.html\
-You can easily pay via bKash.
+License URI: https://www.gnu.org/licenses/gpl-2.0.html
+
+### You can easily pay via bKash.
 
 ### Description
 
@@ -21,15 +22,23 @@ Woocommerce payment method for bKash for easy checkout.
 ##### Installation Guide
 
 1. After activate the plugin you need to go to Woocommerce settings for payments. Here you can see bKash as a payment method. Enable this and open settings for this payment method.
-2. Collect your <b><i>USERNAME, PASSWORD, APP_KEY, APP_SECRET</i></b> from bKash. Place this in here and you are able to collect your payment.
+2. Here you will see a link to go to the settings. (Or you may go to the bKash Settings from left menu).
+3. Collect your <b><i>USERNAME, PASSWORD, APP_KEY, APP_SECRET</i></b> from bKash. Place this in here and you are able to collect your payment.
 
 
-##### On Test Mode
+### Test Mode
 
-You can use the information below for a test checkout. Default values that will pass with each request.
-`Wallet : 01770618575`
-`OTP : 123456`
-`PIN : 12121`
+In test mode, there are two options. One is with Test Credentials and another is without credentials.
+You may play with this plugin without giving any credentials.
+But when you need to generate document for bKash, you must need to fill up the necessary information.
+
+You can use the below information for a test transaction.
+
+<pre>
+bKash Wallet : 01770618575
+bKash OTP    : 123456
+bKash PIN    : 12121
+</pre>
 
 ##### Demo Video
 [youtube](https://www.youtube.com/watch?v=U83RE3Kfy1A)
@@ -43,11 +52,133 @@ You can use the information below for a test checkout. Default values that will 
 2. How do I get credentials?
 
     -- You may contact with bKash support 16247.
+    
+3. How do I get bKash dov for submission =
+    
+   -- In this plugin, you can generate the doc.
 
-3. Is this a plug and play plugin?
+4. Is this a plug and play plugin?
 
     -- Yes. Follow the installation process and you are good to go.
     
+## File Structure
+
+```
+├── README.md
+├── assets
+│   ├── css
+│   │   ├── app.css
+│   │   ├── dc-bkash.css
+│   │   └── upgrade.css
+│   ├── images
+│   │   ├── bkash.png
+│   │   ├── bkash_logo.png
+│   │   ├── checked.png
+│   │   └── wpspin.gif
+│   ├── js
+│   │   ├── app.css
+│   │   ├── app.js
+│   │   ├── dc-bkash.js
+│   │   ├── runtime.js
+│   │   ├── upgrade.css
+│   │   ├── upgrade.js
+│   │   ├── vendors.js
+│   │   └── vendors.js.LICENSE.txt
+│   └── src
+│       ├── admin
+│       │   ├── App.js
+│       │   ├── Pages
+│       │   │   ├── Doc
+│       │   │   │   └── doc-container.js
+│       │   │   ├── generatedoc.js
+│       │   │   ├── settings.js
+│       │   │   └── transactions.js
+│       │   ├── components
+│       │   │   ├── Header.js
+│       │   │   ├── bKash
+│       │   │   │   └── api-response.js
+│       │   │   ├── fields.js
+│       │   │   └── loader.js
+│       │   ├── images
+│       │   │   ├── duplicate.png
+│       │   │   └── exceed-pin.png
+│       │   ├── index.js
+│       │   ├── router
+│       │   │   └── index.js
+│       │   ├── styles
+│       │   │   ├── _colors.scss
+│       │   │   ├── _common.scss
+│       │   │   ├── _print.scss
+│       │   │   ├── generate-doc.scss
+│       │   │   ├── header.scss
+│       │   │   ├── react-toastify.scss
+│       │   │   ├── settings.scss
+│       │   │   ├── style.scss
+│       │   │   └── transactions.scss
+│       │   └── utils
+│       │       ├── admin-menu-fix.js
+│       │       ├── bkash.js
+│       │       └── helper.js
+│       └── upgrade
+│           ├── App.js
+│           ├── Pages
+│           │   └── Upgrades.js
+│           ├── index.js
+│           └── styles
+│               └── style.scss
+├── composer.json
+├── composer.lock
+├── includes
+│   ├── API
+│   │   ├── BkashBaseRestController.php
+│   │   ├── Payment.php
+│   │   ├── Settings.php
+│   │   ├── Transaction.php
+│   │   └── Upgrade.php
+│   ├── API.php
+│   ├── Abstracts
+│   │   └── DcBkashUpgrader.php
+│   ├── Admin
+│   │   ├── Menu.php
+│   │   └── Settings.php
+│   ├── Admin.php
+│   ├── Ajax.php
+│   ├── Assets.php
+│   ├── Frontend
+│   │   └── Shortcode.php
+│   ├── Frontend.php
+│   ├── Gateway
+│   │   ├── Bkash.php
+│   │   ├── Manager.php
+│   │   └── Processor.php
+│   ├── Installer.php
+│   ├── Upgrade
+│   │   ├── AdminNotice.php
+│   │   ├── Manager.php
+│   │   ├── Upgrades
+│   │   │   └── V_2_0_0.php
+│   │   └── Upgrades.php
+│   └── functions.php
+├── index.php
+├── languages
+│   └── dc-bkash.pot
+├── package-lock.json
+├── package.json
+├── payment-gateway-bkash-for-wc.php
+├── phpcs.xml
+├── postcss.config.js
+├── readme.txt
+├── templates
+│   ├── admin
+│   │   ├── transaction-charge.php
+│   │   └── upgrade-notice.php
+│   └── frontend
+│       ├── payment-details.php
+│       └── transaction-charge.php
+└── webpack.config.js
+```
+
+
 ## Privacy Policy
 Payment Gateway bKash for WC uses [Appsero](https://appsero.com) SDK to collect some telemetry data upon user's confirmation. This helps us to troubleshoot problems faster & make product improvements.
     
@@ -58,6 +189,22 @@ Integrating Appsero SDK **DOES NOT IMMEDIATELY** start gathering data, **without
 Learn more about how [Appsero collects and uses this data](https://appsero.com/privacy-policy/).
 
 #### Changelog
+
+= v2.0.0 (April 28, 2021) =
+* New plugin structure with React JS.
+* New options panel with more options.
+* Transactions list and pagination without loading.
+* Verify transaction option.
+* Most Important: API doc generation and download automatically.
+* Actions and filters introduced.
+* Rest api added.
+* More functionalities added to simply the code.
+* Display transaction charge in admin order page.
+* Display transaction charge in checkout page.
+* Display transaction charge in order review.
+* jQuery removed from checkout page and added automatically from JS.
+* Upgrader option for auto update date from old version to new version.
+
 = v1.3.0 (June 28, 2020) =
 * Added: bKash transaction charge option.
 * Updated: thank you page bug.
