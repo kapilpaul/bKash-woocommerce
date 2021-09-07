@@ -67,7 +67,7 @@ Yes. You need bKash USERNAME, PASSWORD, APP_KEY and APP_SECRET.
 
 You may contact with bKash support 16247.
 
-= How do I get bKash dov for submission =
+= How do I get bKash doc for submission =
 
 In this plugin, you can generate the doc.
 
