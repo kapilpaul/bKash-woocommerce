@@ -5,12 +5,12 @@ import ApiResponse from '../../components/bKash/api-response';
 import dcBkash from '../../utils/bkash';
 import { toast } from 'react-toastify';
 import '../../styles/react-toastify.scss';
-import { beautifyJson } from '../../utils/helper';
 import DuplicateSS from '../../images/duplicate.png';
 import ExceedPinSS from '../../images/exceed-pin.png';
 
 function DocDataContainer({afterComplete}) {
   const [paymentID, setPaymentID] = useState('');
+  const [transactionID, setTransactionID] = useState('');
   const [amount, setAmount] = useState('');
   const [createPaymentData, setCreatePaymentData] = useState({});
   const [validatePin, setValidatePin] = useState(false);
@@ -36,6 +36,14 @@ function DocDataContainer({afterComplete}) {
       response.data,
       handleBkashAfterValidatePin
     );
+  };
+
+  /**
+   * Set transaction id to state
+   * @param {*} response
+   */
+  const handleTransactionID = (response) => {
+    setTransactionID(response.data.trxID);
   };
 
   /**
@@ -213,6 +221,23 @@ function DocDataContainer({afterComplete}) {
   };
 
   /**
+   * Execute search transaction after 
+   * @returns
+   */
+  const renderSearchPayment = () => {
+    if (transactionID && validatePin) {
+      let searchPath = '/dc-bkash/v1/payment/search-payment/' + transactionID;
+
+      return (
+        <div>
+          <ApiResponse path={searchPath} callback={initDuplicateTransaction} />
+        </div>
+      );
+    }
+  };
+
+
+  /**
    * Execute payment info after validate pin
    * @returns
    */
@@ -220,13 +245,11 @@ function DocDataContainer({afterComplete}) {
     if (validatePin) {
       let executePath = '/dc-bkash/v1/payment/execute-payment/' + paymentID;
       let verifyPath = '/dc-bkash/v1/payment/query-payment/' + paymentID;
-      let searchPath = '/dc-bkash/v1/payment/search-payment/' + paymentID;
 
       return (
         <div>
-          <ApiResponse path={executePath} />
+          <ApiResponse path={executePath} callback={handleTransactionID} />
           <ApiResponse path={verifyPath} />
-          <ApiResponse path={searchPath} callback={initDuplicateTransaction} />
         </div>
       );
     }
@@ -243,6 +266,7 @@ function DocDataContainer({afterComplete}) {
       />
 
       {renderExecutePayment()}
+      {renderSearchPayment()}
 
       {renderDuplicateTransaction()}
 
