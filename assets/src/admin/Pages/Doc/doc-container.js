@@ -11,15 +11,13 @@ import ExceedPinSS from '../../images/exceed-pin.png';
 
 function DocDataContainer({afterComplete}) {
   const [paymentID, setPaymentID] = useState('');
+  const [transactionID, setTransactionID] = useState('');
   const [amount, setAmount] = useState('');
   const [createPaymentData, setCreatePaymentData] = useState({});
   const [validatePin, setValidatePin] = useState(false);
   const [duplicateTransactionData, setDuplicateTransactionData] = useState({});
   const [exceedPinLimit, setExceedPinLimit] = useState(false);
-  const [
-    duplicateTransactionExecuteFailed,
-    setDuplicateTransactionExecuteFailed,
-  ] = useState(false);
+  const [ duplicateTransactionExecuteFailed, setDuplicateTransactionExecuteFailed ] = useState(false);
 
   /**
    * Set payment id to state and call bKash init
@@ -36,6 +34,14 @@ function DocDataContainer({afterComplete}) {
       response.data,
       handleBkashAfterValidatePin
     );
+  };
+
+  /**
+   * Store Trx ID in state
+   * @param response
+   */
+  const storeTrxId = (response) => {
+    setTransactionID( response.data.trxID );
   };
 
   /**
@@ -220,14 +226,26 @@ function DocDataContainer({afterComplete}) {
     if (validatePin) {
       let executePath = '/dc-bkash/v1/payment/execute-payment/' + paymentID;
       let verifyPath = '/dc-bkash/v1/payment/query-payment/' + paymentID;
-      let searchPath = '/dc-bkash/v1/payment/search-payment/' + paymentID;
 
       return (
         <div>
-          <ApiResponse path={executePath} />
+          <ApiResponse path={executePath} callback={storeTrxId} />
           <ApiResponse path={verifyPath} />
-          <ApiResponse path={searchPath} callback={initDuplicateTransaction} />
         </div>
+      );
+    }
+  };
+
+  /**
+   * Render search payment
+   * @returns {boolean}
+   */
+  const renderSearchPayment = () => {
+    if ( transactionID ) {
+      let searchPath = '/dc-bkash/v1/payment/search-payment/' + transactionID;
+
+      return (
+        <ApiResponse path={searchPath} callback={initDuplicateTransaction} />
       );
     }
   };
@@ -243,6 +261,8 @@ function DocDataContainer({afterComplete}) {
       />
 
       {renderExecutePayment()}
+
+      {renderSearchPayment()}
 
       {renderDuplicateTransaction()}
 

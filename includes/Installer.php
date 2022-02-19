@@ -69,6 +69,8 @@ class Installer {
                   `order_number` varchar(15) DEFAULT NULL,
                   `amount` float NOT NULL DEFAULT '0',
                   `verification_status` int(1) NOT NULL DEFAULT 0,
+                  `refund_status` int(1) NOT NULL DEFAULT 0,
+                  `refund_amount` float NOT NULL DEFAULT '0',
                   `created_at` timestamp NULL DEFAULT CURRENT_TIMESTAMP,
                   `updated_at` timestamp NULL DEFAULT CURRENT_TIMESTAMP,
                   PRIMARY KEY (`id`)

@@ -47,10 +47,10 @@ class Manager {
 		 * Actions
 		 */
 		add_action( 'dc_bkash_execute_payment_success', [ $this, 'after_execute_payment' ], 10, 2 );
+		add_action( 'dc_bkash_after_query_payment', [ $this, 'maybe_update_transaction' ], 10, 3 );
 		add_action( 'woocommerce_cart_totals_before_order_total', [ $this, 'dc_bkash_display_transaction_charge' ] );
 		add_action( 'woocommerce_review_order_before_order_total', [ $this, 'dc_bkash_display_transaction_charge' ] );
 		add_action( 'woocommerce_admin_order_totals_after_tax', [ $this, 'dc_bkash_display_transaction_charge_on_admin' ] );
-		add_action( 'dc_bkash_after_query_payment', [ $this, 'maybe_update_transaction' ], 10, 3 );
 
 		/**
 		 * Filters
@@ -192,7 +192,7 @@ class Manager {
 			return $total;
 		}
 
-		$payment_method = 'bkash';
+		$payment_method = $this->bkash()->id;
 
 		$chosen_payment_method = WC()->session->get( 'chosen_payment_method' );
 
@@ -213,7 +213,7 @@ class Manager {
 	 * @return void
 	 */
 	public function dc_bkash_display_transaction_charge() {
-		$payment_method        = 'bkash';
+		$payment_method        = $this->bkash()->id;
 		$chosen_payment_method = WC()->session->get( 'chosen_payment_method' );
 
 		if ( $payment_method !== $chosen_payment_method ) {
@@ -244,7 +244,7 @@ class Manager {
 	public function dc_bkash_display_transaction_charge_on_admin( $order_id ) {
 		$order = wc_get_order( $order_id );
 
-		$payment_method        = 'bkash';
+		$payment_method        = $this->bkash()->id;
 		$chosen_payment_method = $order->get_payment_method();
 
 		if ( $payment_method !== $chosen_payment_method ) {
@@ -273,7 +273,7 @@ class Manager {
 	 * @return array
 	 */
 	public function dc_bkash_get_order_item_totals( $total_rows, $order, $tax_display ) {
-		$payment_method        = 'bkash';
+		$payment_method        = $this->bkash()->id;
 		$chosen_payment_method = $order->get_payment_method();
 
 		if ( $payment_method !== $chosen_payment_method ) {
