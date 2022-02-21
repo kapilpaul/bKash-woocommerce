@@ -6,11 +6,13 @@ import dcBkash from '../../utils/bkash';
 import { toast } from 'react-toastify';
 import '../../styles/react-toastify.scss';
 import { beautifyJson } from '../../utils/helper';
+import { API } from '../../../constants';
 import DuplicateSS from '../../images/duplicate.png';
 import ExceedPinSS from '../../images/exceed-pin.png';
 
 function DocDataContainer( { afterComplete } ) {
 	const [ paymentID, setPaymentID ] = useState( '' );
+	const [ firstPaymentID, setFirstPaymentID ] = useState( '' );
 	const [ transactionID, setTransactionID ] = useState( '' );
 	const [ amount, setAmount ] = useState( '' );
 	const [ createPaymentData, setCreatePaymentData ] = useState( {} );
@@ -26,6 +28,7 @@ function DocDataContainer( { afterComplete } ) {
 	const handlePaymentID = ( response ) => {
 		setCreatePaymentData( response.data );
 		setPaymentID( response.data.paymentID );
+		setFirstPaymentID( response.data.paymentID );
 		setAmount( response.data.amount );
 
 		dcBkash.initBkash(
@@ -61,8 +64,7 @@ function DocDataContainer( { afterComplete } ) {
 	 */
 	const initDuplicateTransaction = ( response ) => {
 		if ( response ) {
-			let duplicateTransactionPath =
-				'/dc-bkash/v1/payment/create-payment?amount=' + amount;
+			let duplicateTransactionPath = API.v1.createPayment + '?amount=' + amount;
 
 			toast.warn( 'Duplicate Transaction Test', {
 				position: 'bottom-center',
@@ -103,8 +105,7 @@ function DocDataContainer( { afterComplete } ) {
 			let executePath;
 
 			setPaymentID( ( paymentID ) => {
-				executePath =
-					'/dc-bkash/v1/payment/execute-payment/' + paymentID;
+				executePath = API.v1.executePayment + paymentID;
 			} );
 
 			apiFetch( {
@@ -124,9 +125,7 @@ function DocDataContainer( { afterComplete } ) {
 	 * Initialize verification limit exceed
 	 */
 	const initVerificationLimitExceed = () => {
-		let duplicateTransactionPath = '/dc-bkash/v1/payment/create-payment';
-
-		toast.warn( 'Exceed Pin Limit', {
+		toast.warn( 'Exceed Pin Limit. Please enter wrong pin.', {
 			position: 'bottom-center',
 			autoClose: false,
 			hideProgressBar: true,
@@ -136,7 +135,7 @@ function DocDataContainer( { afterComplete } ) {
 		} );
 
 		apiFetch( {
-			path: duplicateTransactionPath
+			path: API.v1.createPayment
 		} )
 			.then( ( resp ) => {
 				setCreatePaymentData( resp.data );
@@ -232,9 +231,8 @@ function DocDataContainer( { afterComplete } ) {
 	 */
 	const renderExecutePayment = () => {
 		if ( validatePin ) {
-			let executePath =
-				'/dc-bkash/v1/payment/execute-payment/' + paymentID;
-			let verifyPath = '/dc-bkash/v1/payment/query-payment/' + paymentID;
+			let executePath = API.v1.executePayment + paymentID;
+			let verifyPath = API.v1.queryPayment + paymentID;
 
 			return (
 				<div>
@@ -251,8 +249,7 @@ function DocDataContainer( { afterComplete } ) {
 	 */
 	const renderSearchPayment = () => {
 		if ( transactionID ) {
-			let searchPath =
-				'/dc-bkash/v1/payment/search-payment/' + transactionID;
+			let searchPath = API.v1.searchPayment + transactionID;
 
 			return (
 				<ApiResponse
@@ -263,13 +260,33 @@ function DocDataContainer( { afterComplete } ) {
 		}
 	};
 
+	const renderRefundPayment = ( title, status = false ) => {
+
+		// after exceedPinLimit.
+		if ( exceedPinLimit ) {
+			let refundPath = API.v1.docRefundPayment + firstPaymentID + '?trx_id=' + transactionID + '&amount=' + amount + '&title=' + title;
+
+			if ( status ) {
+				refundPath = API.v1.docRefundPayment + firstPaymentID + '?trx_id=' + transactionID + '&title=' + title;
+			}
+
+			return (
+				<ApiResponse path={ refundPath } callback={ ! status ? renderRefundPaymentStatus : false  } />
+			);
+		}
+	};
+
+	const renderRefundPaymentStatus = () => {
+		renderRefundPayment( 'Refund Status API', true );
+	};
+
 	return (
 		<div className="generator-container-area" id="doc-details">
 			<h2>{ __( 'API Request/Response', 'dc-bkash' ) }</h2>
-			<ApiResponse path="/dc-bkash/v1/payment/get-token" />
+			<ApiResponse path={ API.v1.getToken } />
 
 			<ApiResponse
-				path="/dc-bkash/v1/payment/create-payment"
+				path={ API.v1.createPayment }
 				callback={ handlePaymentID }
 			/>
 
@@ -280,6 +297,8 @@ function DocDataContainer( { afterComplete } ) {
 			{ renderDuplicateTransaction() }
 
 			{ renderExceedPinLimit() }
+
+			{ renderRefundPayment( 'Refund API' ) }
 		</div>
 	);
 }

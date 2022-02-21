@@ -214,5 +214,22 @@ pre {
 		color: #3c434a;
 		border-color: rgb(204, 204, 204);
 		border-radius: 4px;
+
+		&.danger {
+			border-color: rgb(231, 13, 13);
+		}
+	}
+
+	.help {
+		color: #333333a6;
+		font-style: italic;
+		margin-top: 5px;
+		display: block;
+	}
+
+	.warning {
+		font-style: normal;
+		font-weight: 500;
+		color: rgb(223, 15, 50);
 	}
 }

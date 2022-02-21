@@ -187,7 +187,7 @@ class Bkash extends \WC_Payment_Gateway {
 			return;
 		}
 
-		if ( 'bkash' === $order->get_payment_method() ) {
+		if ( $this->id === $order->get_payment_method() ) {
 			$payment_data = dc_bkash_get_payment( $order_id );
 
 			$trx_id = $payment_data ? $payment_data->trx_id : '';
@@ -212,40 +212,11 @@ class Bkash extends \WC_Payment_Gateway {
 	 *
 	 * @since 2.1.0
 	 *
+	 * @see \DCoders\Bkash\Gateway\Manager::init_refund
+	 *
 	 * @return boolean|\WP_Error True or false based on success, or a WP_Error object.
 	 */
 	public function process_refund( $order_id, $amount = null, $reason = '' ) {
-		$order = wc_get_order( $order_id );
-
-		if ( ! $order instanceof \WC_Order ) {
-			return false;
-		}
-
-		do_action( 'dc_bkash_before_refund_amount', $order_id, $amount );
-
-		$payment_data = dc_bkash_get_payment( $order_id );
-
-		$processor       = dc_bkash()->gateway->processor();
-		$refund_response = $processor->refund( $amount, $payment_data->payment_id, $payment_data->trx_id, '' );
-
-		if ( is_wp_error( $refund_response ) ) {
-			return new \WP_Error( 'dc_bkash_refund_payment_error', $refund_response );
-		}
-
-		update_post_meta( $order_id, 'dc_bkash_refunded', 1 );
-		update_post_meta( $order_id, 'dc_bkash_refunded_amount', $refund_response['amount'] );
-
-		$order->add_order_note(
-			sprintf(
-				/* translators: %1$s: Refund Amount */
-				__( 'BDT %s has been refunded by bKash', 'dc-bkash' ),
-				$refund_response['amount']
-			),
-			1
-		);
-
-		do_action( 'dc_bkash_after_refund_amount', $order_id, $amount );
-
-		return true;
+		return dc_bkash()->gateway->init_refund( $order_id, $amount, $reason );
 	}
 }

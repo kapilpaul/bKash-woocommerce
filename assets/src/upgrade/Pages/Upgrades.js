@@ -3,6 +3,7 @@ import { __ } from '@wordpress/i18n';
 import { Button } from '@wordpress/components';
 import apiFetch from '@wordpress/api-fetch';
 import { toast } from 'react-toastify';
+import { API } from '../../constants';
 import '../../admin/styles/react-toastify.scss';
 
 /**
@@ -30,7 +31,7 @@ function Upgrades() {
 		setIsSubmitted( true );
 
 		apiFetch( {
-			path: '/dc-bkash/v1/upgrade',
+			path: API.v1.upgrade,
 			method: 'POST',
 			data: {}
 		} )

@@ -5,6 +5,7 @@ import apiFetch from '@wordpress/api-fetch';
 import Fields from '../components/fields';
 import Loader from '../components/loader';
 import { toast } from 'react-toastify';
+import { API } from '../../constants';
 import '../styles/react-toastify.scss';
 
 /**
@@ -66,7 +67,7 @@ function Settings() {
 		setIsSubmitted( true );
 
 		apiFetch( {
-			path: '/dc-bkash/v1/settings',
+			path: API.v1.settings,
 			method: 'POST',
 			data: settings
 		} )
@@ -87,7 +88,7 @@ function Settings() {
 		setIsFetching( true );
 
 		apiFetch( {
-			path: '/dc-bkash/v1/settings'
+			path: API.v1.settings
 		} )
 			.then( ( resp ) => {
 				setIsFetching( false );

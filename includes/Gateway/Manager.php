@@ -315,17 +315,99 @@ class Manager {
 			return $payment;
 		}
 
-		global $wpdb;
+		dc_bkash_update_transaction( $order_number, [ 'verification_status' => 1 ], [ '%d' ] );
+	}
 
-		$table_name = $wpdb->prefix . 'bkash_transactions';
+	/**
+	 * Initialize refund.
+	 *
+	 * @param int        $order_id         Order ID.
+	 * @param float|null $amount           Refund amount.
+	 * @param string     $reason           Refund reason.
+	 * @param bool       $wc_create_refund WC create refund.
+	 *
+	 * @since 2.1.0
+	 *
+	 * @return boolean|\WP_Error True or false based on success, or a WP_Error object.
+	 * @throws \Exception
+	 */
+	public function init_refund( $order_id, $amount = null, $reason = '', $wc_create_refund = false ) {
+		$order = wc_get_order( $order_id );
 
-		//phpcs:ignore
-		$wpdb->update(
-			$table_name,
-			[ 'verification_status' => 1 ],
-			[ 'order_number' => $order_number ],
-			[ '%d' ],
-			[ '%s' ]
-		);
+		if ( ! $order instanceof \WC_Order || ! $amount ) {
+			return false;
+		}
+
+		// if payment method is not bkash then return.
+		if ( $this->bkash()->id !== $order->get_payment_method() ) {
+			return false;
+		}
+
+		if ( 1 > $amount || $amount > (float) $order->get_total() ) {
+			return false;
+		}
+
+		do_action( 'dc_bkash_before_refund_amount', $order_id, $amount );
+
+		try {
+			$payment_data = dc_bkash_get_payment( $order_id );
+
+			$processor       = dc_bkash()->gateway->processor();
+			$refund_response = $processor->refund( $amount, $payment_data->payment_id, $payment_data->trx_id, $reason );
+
+			if ( is_wp_error( $refund_response ) ) {
+				return new \WP_Error( 'dc_bkash_refund_payment_error', $refund_response, [ 'status' => 500 ] );
+			}
+
+			update_post_meta( $order_id, 'dc_bkash_refunded', 1 );
+			update_post_meta( $order_id, 'dc_bkash_refunded_amount', $refund_response['amount'] );
+
+			$order->add_order_note(
+				sprintf(
+					/* translators: %1$s: Refund Amount */
+					__( 'BDT %s has been refunded by bKash', 'dc-bkash' ),
+					$refund_response['amount']
+				),
+				1
+			);
+
+			$refund_db = [
+				'data'   => [
+					'refund_status' => 1,
+					'refund_amount' => floatval( sanitize_text_field( $refund_response['amount'] ) ),
+				],
+				'format' => [ '%d', '%f' ],
+			];
+
+			if ( ! empty( $reason ) ) {
+				$refund_db['data']['refund_reason'] = $reason;
+				$refund_db['format'][]              = '%s';
+			}
+
+			// Update refund columns in DB.
+			dc_bkash_update_transaction(
+				$order_id,
+				$refund_db['data'],
+				$refund_db['format']
+			);
+
+			// Create refund on woocommerce if $wc_create_refund is true.
+			if ( $wc_create_refund ) {
+				wc_create_refund(
+					[
+						'amount'   => $amount,
+						'reason'   => $reason,
+						'order_id' => $order_id,
+					]
+				);
+			}
+
+			do_action( 'dc_bkash_after_refund_amount', $order_id, $amount );
+
+			return true;
+
+		} catch ( \Exception $e ) {
+			return new \WP_Error( 'dc_bkash_refund_init_error', $e->getMessage(), [ 'status' => 500 ] );
+		}
 	}
 }
