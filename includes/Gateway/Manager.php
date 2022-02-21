@@ -125,7 +125,7 @@ class Manager {
 				$order->add_order_note(
 					sprintf(
 						/* translators: %1$s: Transaction ID, %2$s: Grand Total. */
-						__( 'bKash payment completed. Transaction ID #%1$s! Amount: %2$s', 'dc-bkash' ),
+						__( 'bKash payment completed. Transaction ID #%1$s. Amount: %2$s', 'dc-bkash' ),
 						$execute_payment['trxID'],
 						$order_grand_total
 					)

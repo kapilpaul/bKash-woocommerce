@@ -464,3 +464,30 @@ function dc_bkash_add_array_after( $array, $position, $new_array ) {
 		array_slice( $array, $pos )
 	);
 }
+
+/**
+ * Check all credentials are filled.
+ *
+ * @since 2.1.0
+ *
+ * @return bool
+ */
+function dc_bkash_check_all_api_keys_filled() {
+	$processor = \DCoders\Bkash\Gateway\Processor::get_instance();
+	$prefix    = $processor->get_test_mode_type( 'with_key' ) ? 'sandbox_' : '';
+
+	$data = [
+		'app_key'    => dc_bkash_get_option( $prefix . 'app_key' ),
+		'app_secret' => dc_bkash_get_option( $prefix . 'app_secret' ),
+		'user_name'  => dc_bkash_get_option( $prefix . 'username' ),
+		'password'   => dc_bkash_get_option( $prefix . 'password' ),
+	];
+
+	foreach ( $data as $key ) {
+		if ( empty( $key ) ) {
+			return false;
+		}
+	}
+
+	return true;
+}

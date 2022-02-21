@@ -190,3 +190,29 @@ pre {
 .pagination > li > span {
 	color: #47ccde;
 }
+
+.generic-container {
+    background: $white;
+    padding: 20px;
+    border-radius: 5px;
+    overflow: hidden;
+}
+
+.form-group {
+	margin-bottom: 15px;
+
+	label {
+		font-weight: 500;
+		display: block;
+		margin-bottom: 5px;
+	}
+
+	.form-control {
+		display: block;
+		height: 44px;
+		width: 100%;
+		color: #3c434a;
+		border-color: rgb(204, 204, 204);
+		border-radius: 4px;
+	}
+}

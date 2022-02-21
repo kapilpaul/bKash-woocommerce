@@ -96,19 +96,22 @@ const config = {
 			},
 		},
 	},
-	plugins: [
-		new MiniCssExtractPlugin({
-			filename: '../css/[name].css', //for build
-			// filename: '[name].css', // for hot reload
-		}),
-	],
 };
 
 module.exports = (env, argv) => {
+	let cssFileName = '../css/[name].css';
+
 	if (argv.hot) {
 		// Cannot use 'contenthash' when hot reloading is enabled.
 		config.output.filename = '[name].js';
+		cssFileName = '[name].css';
 	}
+
+	config.plugins = [
+		new MiniCssExtractPlugin({
+			filename: cssFileName,
+		}),
+	];
 
 	return config;
 };

@@ -51,7 +51,7 @@ class Bkash extends \WC_Payment_Gateway {
 		$this->description        = dc_bkash_get_option( 'description', 'gateway' );
 
 		// Auto refunds by gateway enabled when API keys available.
-		if ( dc_bkash()->gateway->processor()->get_test_mode_type( 'with_key' ) ) {
+		if ( dc_bkash_check_all_api_keys_filled() ) {
 			$this->supports[] = 'refunds';
 		}
 	}

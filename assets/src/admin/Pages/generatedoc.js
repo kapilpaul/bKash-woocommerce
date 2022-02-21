@@ -5,42 +5,43 @@ import DocDataContainer from './Doc/doc-container';
 import dcBkash from '../utils/bkash';
 
 function GenerateDoc() {
-	const [isGenerating, setIsGenerating] = useState(false);
+	const [ isGenerating, setIsGenerating ] = useState( false );
 
 	const GenerateDocContainer = () => {
-		if (!isGenerating) {
+		if ( ! isGenerating ) {
 			return false;
 		}
 
 		return <DocDataContainer />;
 	};
 
-	useEffect(() => {
+	useEffect( () => {
+
 		//initialize bkash scripts
-		if (typeof bKash === 'undefined') {
+		if ( 'undefined' === typeof bKash ) {
 			dcBkash.init();
 		}
-	}, []);
+	}, [] );
 
 	return (
 		<div className="dokan_admin_settings_container">
-			<h2>{__('Generate Doc', 'dc-bkash')}</h2>
+			<h2>{ __( 'Generate Doc', 'dc-bkash' ) }</h2>
 
 			<div className="generate_help_text_container">
 				<h4>
-					{__(
+					{ __(
 						'You may generate API Request/Response doc from here.',
 						'dc-bkash'
-					)}
+					) }
 				</h4>
 
-				{dc_bkash_admin.test_mode_with_key === '1' ? (
+				{ '1' === dc_bkash_admin.all_credentials_filled ? (
 					<div className="generate-content-actions">
 						<p>
-							{__(
+							{ __(
 								'In case, if you need sandbox mobile number and OTP then you may use the below number.',
 								'dc-bkash'
-							)}
+							) }
 						</p>
 
 						<div className="sandbox_number_details">
@@ -57,43 +58,43 @@ function GenerateDoc() {
 
 						<Button
 							type="submit"
-							isBusy={isGenerating}
-							disabled={isGenerating}
+							isBusy={ isGenerating }
+							disabled={ isGenerating }
 							className="dc_bkash_save_btn"
-							isPrimary={true}
-							onClick={() => setIsGenerating(true)}
+							isPrimary={ true }
+							onClick={ () => setIsGenerating( true ) }
 						>
-							{isGenerating
-								? __('Generating', 'dc-bkash')
-								: __('Generate', 'dc-bkash')}
+							{ isGenerating ?
+								__( 'Generating', 'dc-bkash' ) :
+								__( 'Generate', 'dc-bkash' ) }
 						</Button>
 
 						<Button
 							type="submit"
 							className="dc_bkash_save_btn"
-							isPrimary={true}
-							disabled={!isGenerating}
-							onClick={() => {
-								setIsGenerating(false);
+							isPrimary={ true }
+							disabled={ ! isGenerating }
+							onClick={ () => {
+								setIsGenerating( false );
 								window.print();
-							}}
+							} }
 						>
-							{__('Download', 'dc-bkash')}
+							{ __( 'Download', 'dc-bkash' ) }
 						</Button>
 					</div>
 				) : (
 					<div className="generate-content-actions">
 						<p>
-							{__(
+							{ __(
 								'Before generate the doc, you must have to add sandbox keys in settings.',
 								'dc-bkash'
-							)}
+							) }
 						</p>
 					</div>
-				)}
+				) }
 			</div>
 
-			{GenerateDocContainer()}
+			{ GenerateDocContainer() }
 		</div>
 	);
 }
