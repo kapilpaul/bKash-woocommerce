@@ -51,6 +51,7 @@ class Manager {
 		add_action( 'woocommerce_cart_totals_before_order_total', [ $this, 'dc_bkash_display_transaction_charge' ] );
 		add_action( 'woocommerce_review_order_before_order_total', [ $this, 'dc_bkash_display_transaction_charge' ] );
 		add_action( 'woocommerce_admin_order_totals_after_tax', [ $this, 'dc_bkash_display_transaction_charge_on_admin' ] );
+		add_action( 'woocommerce_pay_order_before_submit', [ $this, 'add_fields_on_order_pay' ] );
 
 		/**
 		 * Filters
@@ -409,5 +410,22 @@ class Manager {
 		} catch ( \Exception $e ) {
 			return new \WP_Error( 'dc_bkash_refund_init_error', $e->getMessage(), [ 'status' => 500 ] );
 		}
+	}
+
+	/**
+	 * Add some fields on order pay page.
+	 *
+	 * @since 2.1.0
+	 *
+	 * @return void
+	 */
+	public function add_fields_on_order_pay() {
+		global $wp;
+
+		if ( isset( $wp->query_vars['order-pay'] ) && absint( $wp->query_vars['order-pay'] ) > 0 ) {
+			echo '<input type="hidden" name="order_id" value="' . absint( $wp->query_vars['order-pay'] ) . '">';
+		}
+
+		echo '<input type="hidden" name="action" value="dc-bkash-order-pay">';
 	}
 }

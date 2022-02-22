@@ -22,6 +22,7 @@ class Ajax {
 	 */
 	public function __construct() {
 		add_action( 'wp_ajax_dc-bkash-execute-payment-request', [ $this, 'execute_payment_request' ] );
+		add_action( 'wp_ajax_dc-bkash-order-pay', [ $this, 'process_order_pay' ] );
 	}
 
 	/**
@@ -98,5 +99,45 @@ class Ajax {
 		}
 
 		return true;
+	}
+
+	/**
+	 * Process order pay.
+	 *
+	 * @since 2.1.0
+	 *
+	 * @return void
+	 */
+	public function process_order_pay() {
+		try {
+			$post_data = wp_unslash( $_POST );
+
+			if ( ! wp_verify_nonce( $post_data['woocommerce-pay-nonce'], 'woocommerce-pay' ) ) {
+				$this->send_json_error( __( 'Something went wrong here!', 'dc-bkash' ) );
+			}
+
+			if ( ! $this->validate_fields( $post_data ) ) {
+				$this->send_json_error( __( 'Empty value is not allowed', 'dc-bkash' ) );
+			}
+
+			$order_id = ( isset( $post_data['order_id'] ) ) ? sanitize_text_field( $post_data['order_id'] ) : '';
+
+			$order = wc_get_order( $order_id );
+
+			if ( ! $order instanceof \WC_Order ) {
+				$this->send_json_error( __( 'Wrong or invalid order ID', 'dc-bkash' ) );
+			}
+
+			$process_payment = dc_bkash()->gateway->bkash()->process_payment( $order_id );
+
+			if ( $process_payment ) {
+				wp_send_json_success( $process_payment );
+			}
+
+			$this->send_json_error( __( 'Something went wrong!', 'dc-bkash' ) );
+
+		} catch ( \Exception $e ) {
+			$this->send_json_error( $e->getMessage() );
+		}
 	}
 }
