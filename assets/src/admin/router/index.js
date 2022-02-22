@@ -4,12 +4,17 @@ import Settings from '../Pages/settings';
 import GenerateDoc from '../Pages/generatedoc';
 import Transactions from '../Pages/transactions';
 import RefundContainer from '../Pages/refund-container';
+import SearchTransaction from '../Pages/search-transaction';
 
 const routes = [
 	{
 		path: '/',
 		component: Transactions,
 		exact: true
+	},
+	{
+		path: '/search-transaction',
+		component: SearchTransaction
 	},
 	{
 		path: '/refund',

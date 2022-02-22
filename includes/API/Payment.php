@@ -66,6 +66,7 @@ class Payment extends BkashBaseRestController {
 		$this->register_single_route( 'execute-payment/(?P<id>[a-zA-Z0-9-]+)', [ $this, 'execute_payment' ] );
 		$this->register_single_route( 'query-payment/(?P<id>[a-zA-Z0-9-]+)', [ $this, 'query_payment' ] );
 		$this->register_single_route( 'search-payment/(?P<id>[a-zA-Z0-9-]+)', [ $this, 'search_payment' ] );
+		$this->register_single_route( 'search-transaction/(?P<id>[a-zA-Z0-9-]+)', [ $this, 'search_transaction' ] );
 		$this->register_single_route( 'refund-payment/(?P<id>[a-zA-Z0-9-]+)', [ $this, 'refund_payment' ] );
 	}
 
@@ -272,6 +273,29 @@ class Payment extends BkashBaseRestController {
 		$response['data'] = $search_transaction;
 
 		return rest_ensure_response( $response );
+	}
+
+	/**
+	 * Search Transaction details
+	 * returning with search payment data and request header
+	 *
+	 * @param object $request Request Object.
+	 *
+	 * @since 2.0.0
+	 *
+	 * @return WP_Error|\WP_REST_Response
+	 */
+	public function search_transaction( $request ) {
+		$trx_id = $request->get_param( 'id' );
+
+		$bkash_processor    = Processor::get_instance();
+		$search_transaction = $bkash_processor->search_transaction( $trx_id );
+
+		if ( is_wp_error( $search_transaction ) ) {
+			return $search_transaction;
+		}
+
+		return rest_ensure_response( $search_transaction );
 	}
 
 	/**

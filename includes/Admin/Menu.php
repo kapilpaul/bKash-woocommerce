@@ -48,6 +48,8 @@ class Menu {
 		if ( current_user_can( $capability ) ) {
 			$submenu[ $parent_slug ][] = [ __( 'Transactions', 'dc-bkash' ), $capability, $this->get_submenu_url() ]; // phpcs:ignore
 
+			$submenu[ $parent_slug ][] = [ __( 'Search Transaction', 'dc-bkash' ), $capability, $this->get_submenu_url( 'search-transaction' ) ]; // phpcs:ignore
+
 			$submenu[ $parent_slug ][] = [ __( 'Refund', 'dc-bkash' ), $capability, $this->get_submenu_url( 'refund' ) ]; // phpcs:ignore
 
 			$submenu[ $parent_slug ][] = [ __( 'Settings', 'dc-bkash' ), $capability, $this->get_submenu_url( 'settings' ) ]; // phpcs:ignore

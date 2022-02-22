@@ -1,42 +1,42 @@
-const path = require('path');
-const MiniCssExtractPlugin = require('mini-css-extract-plugin');
+const path = require( 'path' );
+const MiniCssExtractPlugin = require( 'mini-css-extract-plugin' );
 
 const config = {
 	entry: {
 		app: './assets/src/admin/index.js',
-		upgrade: './assets/src/upgrade/index.js',
+		upgrade: './assets/src/upgrade/index.js'
 	},
 	output: {
-		path: path.resolve(__dirname, './assets/js/'),
-		filename: '[name].js',
+		path: path.resolve( __dirname, './assets/js/' ),
+		filename: '[name].js'
 	},
 	devServer: {
-		contentBase: path.join(__dirname, 'dist'),
+		contentBase: path.join( __dirname, 'dist' ),
 		headers: {
 			'Access-Control-Allow-Origin': '*',
 			'Access-Control-Allow-Methods':
 				'GET, POST, PUT, DELETE, PATCH, OPTIONS',
 			'Access-Control-Allow-Headers':
-				'X-Requested-With, content-type, Authorization',
-		},
+				'X-Requested-With, content-type, Authorization'
+		}
 	},
 	externals: {
-		'@wordpress/api-fetch': ['wp', 'apiFetch'],
+		'@wordpress/api-fetch': [ 'wp', 'apiFetch' ]
 	},
 	module: {
 		rules: [
 			{
 				test: /\.(js|jsx)$/,
 				use: 'babel-loader',
-				exclude: /node_modules/,
+				exclude: /node_modules/
 			},
 			{
 				test: /\.css$/,
 				use: [
 					MiniCssExtractPlugin.loader,
 					'css-loader',
-					'postcss-loader',
-				],
+					'postcss-loader'
+				]
 			},
 			{
 				test: /\.scss$/,
@@ -44,12 +44,12 @@ const config = {
 					MiniCssExtractPlugin.loader,
 					'css-loader',
 					'postcss-loader',
-					'sass-loader',
-				],
+					'sass-loader'
+				]
 			},
 			{
 				test: /\.svg$/,
-				use: 'file-loader',
+				use: 'file-loader'
 			},
 			{
 				test: /\.png$/,
@@ -57,10 +57,10 @@ const config = {
 					{
 						loader: 'url-loader',
 						options: {
-							mimetype: 'image/png',
-						},
-					},
-				],
+							mimetype: 'image/png'
+						}
+					}
+				]
 			},
 			{
 				test: /\.gif$/,
@@ -68,21 +68,21 @@ const config = {
 					{
 						loader: 'url-loader',
 						options: {
-							mimetype: 'image/gif',
-						},
-					},
-				],
-			},
-		],
+							mimetype: 'image/gif'
+						}
+					}
+				]
+			}
+		]
 	},
 	resolve: {
-		extensions: ['.js', '.jsx'],
+		extensions: [ '.js', '.jsx' ],
 		alias: {
-			'react-dom': '@hot-loader/react-dom',
+			'react-dom': '@hot-loader/react-dom'
 		},
 		fallback: {
-			path: require.resolve('path-browserify'),
-		},
+			path: require.resolve( 'path-browserify' )
+		}
 	},
 	optimization: {
 		runtimeChunk: 'single',
@@ -91,26 +91,27 @@ const config = {
 				vendor: {
 					test: /[\\/]node_modules[\\/]/,
 					name: 'vendors',
-					chunks: 'all',
-				},
-			},
-		},
-	},
+					chunks: 'all'
+				}
+			}
+		}
+	}
 };
 
-module.exports = (env, argv) => {
+module.exports = ( env, argv ) => {
 	let cssFileName = '../css/[name].css';
 
-	if (argv.hot) {
+	if ( argv.hot ) {
+
 		// Cannot use 'contenthash' when hot reloading is enabled.
 		config.output.filename = '[name].js';
 		cssFileName = '[name].css';
 	}
 
 	config.plugins = [
-		new MiniCssExtractPlugin({
-			filename: cssFileName,
-		}),
+		new MiniCssExtractPlugin( {
+			filename: cssFileName
+		} )
 	];
 
 	return config;

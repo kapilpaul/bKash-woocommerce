@@ -305,26 +305,26 @@ class Processor {
 	 */
 	public function search_transaction( $trx_id ) {
 		if ( $this->check_test_mode() && $this->get_test_mode_type( 'without_key' ) ) {
-			return false;
+			return new \WP_Error( 'dc_bkash_search_payment_error', __( 'No API keys available', 'dc-bkash' ), [ 'status' => 500 ] );
 		}
 
 		$token = $this->get_token();
 
 		if ( ! $token || is_wp_error( $token ) ) {
-			return false;
+			return new \WP_Error( 'dc_bkash_search_payment_error', $token, [ 'status' => 500 ] );
 		}
 
 		$url      = esc_url_raw( $this->payment_search_url . $trx_id );
 		$response = wp_remote_get( $url, $this->get_authorization_header() );
 
 		if ( is_wp_error( $response ) ) {
-			return $response;
+			return new \WP_Error( 'dc_bkash_search_payment_error', $response, [ 'status' => 500 ] );
 		}
 
 		$result = json_decode( wp_remote_retrieve_body( $response ), true );
 
 		if ( isset( $result['errorCode'] ) && isset( $result['errorMessage'] ) ) {
-			return new \WP_Error( 'dc_bkash_search_payment_error', $result );
+			return new \WP_Error( 'dc_bkash_search_payment_error', $result, [ 'status' => 500 ] );
 		}
 
 		return $result;

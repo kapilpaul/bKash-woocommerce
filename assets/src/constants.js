@@ -17,9 +17,10 @@ const API = {
 		createPayment: v1 + '/payment/create-payment',
 		queryPayment: v1 + '/payment/query-payment/',
 		executePayment: v1 + '/payment/execute-payment/',
-		searchPayment: v1 + '/payment/search-payment/',
+		docSearchPayment: v1 + '/payment/search-payment/',
 		docRefundPayment: v1 + '/payment/refund-payment/',
 		refund: v1 + '/transactions/refund',
+		searchTransaction: v1 + '/payment/search-transaction/',
 		upgrade: v1 + '/upgrade'
 	}
 };

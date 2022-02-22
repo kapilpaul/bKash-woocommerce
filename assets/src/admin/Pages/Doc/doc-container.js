@@ -5,7 +5,6 @@ import ApiResponse from '../../components/bKash/api-response';
 import dcBkash from '../../utils/bkash';
 import { toast } from 'react-toastify';
 import '../../styles/react-toastify.scss';
-import { beautifyJson } from '../../utils/helper';
 import { API } from '../../../constants';
 import DuplicateSS from '../../images/duplicate.png';
 import ExceedPinSS from '../../images/exceed-pin.png';
@@ -249,7 +248,7 @@ function DocDataContainer( { afterComplete } ) {
 	 */
 	const renderSearchPayment = () => {
 		if ( transactionID ) {
-			let searchPath = API.v1.searchPayment + transactionID;
+			let searchPath = API.v1.docSearchPayment + transactionID;
 
 			return (
 				<ApiResponse
