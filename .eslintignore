@@ -2,3 +2,8 @@
 **/node_modules/**
 **/vendor/**
 **/build/**
+.github
+assets/js/app.js
+assets/js/runtime.js
+assets/js/upgrade.js
+assets/js/vendors.js
