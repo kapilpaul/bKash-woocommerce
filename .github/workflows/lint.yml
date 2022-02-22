@@ -21,4 +21,4 @@ jobs:
           eslint_args: "--config .eslintrc.json"
           continue_on_error: false
           eslint: true
-          eslint_dir: assets/src/
+          eslint_dir: .
