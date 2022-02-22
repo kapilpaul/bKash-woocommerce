@@ -1,5 +1,5 @@
 import React from 'react';
-import { hot } from 'react-hot-loader/root';
+import {hot} from 'react-hot-loader/root';
 import Header from './components/Header';
 import Routerview from './router/index';
 
@@ -15,4 +15,4 @@ function App() {
 	);
 }
 
-export default hot( App );
+export default hot(App);
