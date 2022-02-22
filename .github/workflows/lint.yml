@@ -18,7 +18,7 @@ jobs:
         uses: wearerequired/lint-action@v1
         with:
           github_token: ${{ secrets.GH_BOT_TOKEN }}
-          eslint_args: "--max-warnings 0"
+          eslint_args: "--config .eslintrc.json"
           continue_on_error: false
           eslint: true
           eslint_dir: assets/src/
