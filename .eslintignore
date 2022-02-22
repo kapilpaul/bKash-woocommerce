@@ -3,4 +3,7 @@
 **/vendor/**
 **/build/**
 .github
-assets/js/**
+assets/js/app.js
+assets/js/runtime.js
+assets/js/upgrade.js
+assets/js/vendors.js
