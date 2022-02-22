@@ -1,0 +1,12 @@
+on: pull_request
+
+name: Inspections
+jobs:
+  eslint:
+    name: Run ES Lint inspection
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v1
+      - uses: stefanoeb/eslint-action@1.0.2
+        with:
+          files: "./assets/src/"
