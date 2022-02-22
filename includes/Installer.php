@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Class Installer
  *
@@ -14,7 +15,8 @@ namespace DCoders\Bkash;
 /**
  * Class Installer
  */
-class Installer {
+class Installer
+{
 
 	/**
 	 * Run the installer
@@ -23,7 +25,8 @@ class Installer {
 	 *
 	 * @return void
 	 */
-	public function run() {
+	public function run()
+	{
 		$this->add_version();
 		$this->create_tables();
 	}
@@ -35,14 +38,15 @@ class Installer {
 	 *
 	 * @return void
 	 */
-	public function add_version() {
-		$installed = get_option( 'dc_bkash_installed' );
+	public function add_version()
+	{
+		$installed = get_option('dc_bkash_installed');
 
-		if ( ! $installed ) {
-			update_option( 'dc_bkash_installed', time() );
+		if (!$installed) {
+			update_option('dc_bkash_installed', time());
 		}
 
-		update_option( dc_bkash()->get_db_version_key(), BKASH_VERSION );
+		update_option(dc_bkash()->get_db_version_key(), BKASH_VERSION);
 	}
 
 	/**
@@ -52,8 +56,9 @@ class Installer {
 	 *
 	 * @return void
 	 */
-	public function create_tables() {
-		if ( ! function_exists( 'dbDelta' ) ) {
+	public function create_tables()
+	{
+		if (!function_exists('dbDelta')) {
 			require_once ABSPATH . 'wp-admin/includes/upgrade.php';
 		}
 
@@ -77,6 +82,6 @@ class Installer {
                   PRIMARY KEY (`id`)
                 ) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8;";
 
-		dbDelta( $sql );
+		dbDelta($sql);
 	}
 }
