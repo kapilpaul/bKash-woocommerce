@@ -6,7 +6,11 @@ jobs:
     name: Run ES Lint inspection
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v1
-      - uses: stefanoeb/eslint-action@1.0.2
-        with:
-          files: "./assets/src/"
+      - uses: actions/checkout@v2
+      - name: Run linters with annotation
+          uses: wearerequired/lint-action@v1
+          with:
+            GH_BOT_TOKEN: ${{ secrets.GH_BOT_TOKEN }}
+            eslint_args: "--max-warnings 0"
+            eslint: true
+            eslint_dir: assets/src/
