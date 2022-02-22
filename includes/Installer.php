@@ -36,7 +36,7 @@ class Installer {
 	 * @return void
 	 */
 	public function add_version() {
-		$installed = get_option( 'dc_bkash_installed' );
+		$installed = get_option('dc_bkash_installed');
 
 		if ( ! $installed ) {
 			update_option( 'dc_bkash_installed', time() );
