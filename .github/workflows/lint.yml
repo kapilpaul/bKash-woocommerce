@@ -22,7 +22,7 @@ jobs:
       - name: Run linters with annotation
         uses: wearerequired/lint-action@v1
         with:
-          github_token: ${{ secrets.GH_BOT_TOKEN }}
+          github_token: ${{ secrets.GITHUB_TOKEN }}
           eslint_args: "--config .eslintrc.json"
           continue_on_error: false
           eslint: true
