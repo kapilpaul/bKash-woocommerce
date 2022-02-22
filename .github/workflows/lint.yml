@@ -8,9 +8,9 @@ jobs:
     steps:
       - uses: actions/checkout@v2
       - name: Run linters with annotation
-          uses: wearerequired/lint-action@v1
-          with:
-            GH_BOT_TOKEN: ${{ secrets.GH_BOT_TOKEN }}
-            eslint_args: "--max-warnings 0"
-            eslint: true
-            eslint_dir: assets/src/
+        uses: wearerequired/lint-action@v1
+        with:
+          GH_BOT_TOKEN: ${{ secrets.GH_BOT_TOKEN }}
+          eslint_args: "--max-warnings 0"
+          eslint: true
+          eslint_dir: assets/src/
