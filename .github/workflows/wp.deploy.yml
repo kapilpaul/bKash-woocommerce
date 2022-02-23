@@ -11,7 +11,7 @@ jobs:
       - name: WordPress Plugin Deploy
         uses: rtCamp/action-wordpress-org-plugin-deploy@master
         env:
-          CUSTOM_COMMAND: npm run release
+          CUSTOM_COMMAND: npm install && npm run release
           CUSTOM_PATH: build/woo-payment-bkash
           SLUG: woo-payment-bkash
           WORDPRESS_PASSWORD: ${{ secrets.WORDPRESS_PASSWORD }}
