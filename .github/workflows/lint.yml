@@ -1,10 +1,6 @@
-on: pull_request
+on: push
 
 name: Inspections
-
-permissions:
-  checks: write
-  contents: write
 
 jobs:
   eslint:
@@ -19,11 +15,5 @@ jobs:
       - name: Install Dependencies
         run: npm install --frozen-lockfile
 
-      - name: Run linters with annotation
-        uses: wearerequired/lint-action@v1
-        with:
-          github_token: ${{ secrets.GH_BOT_TOKEN }}
-          eslint_args: "--config .eslintrc.json"
-          continue_on_error: false
-          eslint: true
-          eslint_dir: .
+      - name: Run linters
+        run: npm run lint-js
