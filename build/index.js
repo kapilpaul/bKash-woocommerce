@@ -39,6 +39,7 @@ shell.exec(`composer install --optimize-autoloader --no-dev`);
 
 const zip = `woo-payment-bkash-${version}.zip`;
 
+console.log( 'Cleaning the build directory' );
 shell.rm('-rf', DEST);
 shell.rm('-f', resolve('woo-payment-bkash-*.zip'));
 shell.mkdir('-p', DEST + '/assets');
@@ -64,8 +65,11 @@ include.forEach((item) => {
 	shell.cp('-r', resolve('../', item), resolve(DEST, item));
 });
 
-console.log('Making zip...');
-shell.exec(`cd ${resolve()} && zip ${zip} woo-payment-bkash -rq`);
+if ( args.zip ) {
+	console.log('Making zip...');
+	shell.exec(`cd ${resolve()} && zip ${zip} woo-payment-bkash -rq`);
 
-shell.rm('-rf', resolve(DEST));
+	shell.rm('-rf', resolve(DEST));
+}
+
 console.log('Done.');
