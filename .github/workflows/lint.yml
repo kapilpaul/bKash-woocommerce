@@ -1,6 +1,6 @@
 on: push
 
-name: Inspections
+name: ESLint Inspections
 
 jobs:
   eslint:
