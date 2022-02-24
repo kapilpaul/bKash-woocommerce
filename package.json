@@ -29,7 +29,8 @@
     "lint-js": "eslint assets/src/",
     "precommit": "npm run lint-js && npm run make-pot",
     "zip": "node build --zip",
-    "release": "npm run make-pot && npm run build && node build"
+    "pre-release": "npm run make-pot && npm run build && node build",
+    "release": "npm run build && node build"
   },
   "dependencies": {
     "@wordpress/api-fetch": "^3.21.1",

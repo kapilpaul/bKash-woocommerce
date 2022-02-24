@@ -7,15 +7,23 @@ jobs:
   tag:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@master
       - uses: actions/setup-node@v2
         with:
           node-version: "14"
+
+      - name: Install Dependencies
+        run: npm install
+
+      - name: Build
+        run: npm run release
+
       - name: WordPress Plugin Deploy
-        uses: rtCamp/action-wordpress-org-plugin-deploy@master
+        uses: 10up/action-wordpress-plugin-deploy@stable
         env:
-          CUSTOM_COMMAND: npm install && npm run release
-          CUSTOM_PATH: build/woo-payment-bkash
+          BUILD_DIR: build/woo-payment-bkash
+          ASSETS_DIR: wp-assets
           SLUG: woo-payment-bkash
-          WORDPRESS_PASSWORD: ${{ secrets.WORDPRESS_PASSWORD }}
-          WORDPRESS_USERNAME: ${{ secrets.WORDPRESS_USERNAME }}
+          SVN_PASSWORD: ${{ secrets.SVN_PASSWORD }}
+          SVN_USERNAME: ${{ secrets.SVN_USERNAME }}
+
