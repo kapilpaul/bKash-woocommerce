@@ -21,7 +21,7 @@ jobs:
       - name: WordPress Plugin Deploy
         uses: 10up/action-wordpress-plugin-deploy@develop
         env:
-          BUILD_DIR: ./build/woo-payment-bkash
+          BUILD_DIR: ./build/woo-payment-bkash/
           ASSETS_DIR: wp-assets
           SLUG: woo-payment-bkash
           SVN_PASSWORD: ${{ secrets.SVN_PASSWORD }}
