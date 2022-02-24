@@ -1,0 +1,524 @@
+# Copyright (C) 2022 Kapil Paul
+# This file is distributed under the GPLv2 or later.
+msgid ""
+msgstr ""
+"Project-Id-Version: Payment Gateway bKash for WC 2.0.1\n"
+"Report-Msgid-Bugs-To: https://wordpress.org/support/plugin/bKash-woocommerce\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"POT-Creation-Date: 2022-02-24T08:41:17+00:00\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"X-Generator: WP-CLI 2.6.0\n"
+"X-Domain: dc-bkash\n"
+
+#. Plugin Name of the plugin
+msgid "Payment Gateway bKash for WC"
+msgstr ""
+
+#. Plugin URI of the plugin
+msgid "https://wordpress.org/plugins/woo-payment-bkash/"
+msgstr ""
+
+#. Description of the plugin
+msgid "An eCommerce payment method that helps you sell anything. Beautifully."
+msgstr ""
+
+#. Author of the plugin
+msgid "Kapil Paul"
+msgstr ""
+
+#. Author URI of the plugin
+msgid "https://kapilpaul.me"
+msgstr ""
+
+#: build/woo-payment-bkash/includes/Admin/Menu.php:46
+#: build/woo-payment-bkash/includes/Gateway/Bkash.php:47
+#: build/woo-payment-bkash/includes/Gateway/Bkash.php:50
+#: includes/Admin/Menu.php:46
+#: includes/Gateway/Bkash.php:47
+#: includes/Gateway/Bkash.php:50
+msgid "bKash"
+msgstr ""
+
+#: build/woo-payment-bkash/includes/Admin/Menu.php:49
+#: includes/Admin/Menu.php:49
+#: assets/js/app.js:1
+#: assets/src/admin/Pages/transactions.js:162
+#: build/woo-payment-bkash/assets/js/app.js:1
+msgid "Transactions"
+msgstr ""
+
+#: build/woo-payment-bkash/includes/Admin/Menu.php:51
+#: includes/Admin/Menu.php:51
+#: assets/js/app.js:1
+#: assets/src/admin/Pages/settings.js:110
+#: build/woo-payment-bkash/assets/js/app.js:1
+msgid "Settings"
+msgstr ""
+
+#: build/woo-payment-bkash/includes/Admin/Menu.php:53
+#: includes/Admin/Menu.php:53
+#: assets/js/app.js:1
+#: assets/src/admin/Pages/generatedoc.js:27
+#: build/woo-payment-bkash/assets/js/app.js:1
+msgid "Generate Doc"
+msgstr ""
+
+#: build/woo-payment-bkash/includes/Admin/Settings.php:34
+#: includes/Admin/Settings.php:34
+msgid "Title"
+msgstr ""
+
+#: build/woo-payment-bkash/includes/Admin/Settings.php:36
+#: includes/Admin/Settings.php:36
+msgid "bKash Payment"
+msgstr ""
+
+#: build/woo-payment-bkash/includes/Admin/Settings.php:39
+#: includes/Admin/Settings.php:39
+msgid "Test Mode"
+msgstr ""
+
+#: build/woo-payment-bkash/includes/Admin/Settings.php:42
+#: includes/Admin/Settings.php:42
+msgid "ON"
+msgstr ""
+
+#: build/woo-payment-bkash/includes/Admin/Settings.php:43
+#: includes/Admin/Settings.php:43
+msgid "OFF"
+msgstr ""
+
+#: build/woo-payment-bkash/includes/Admin/Settings.php:45
+#: includes/Admin/Settings.php:45
+msgid "off"
+msgstr ""
+
+#: build/woo-payment-bkash/includes/Admin/Settings.php:48
+#: includes/Admin/Settings.php:48
+msgid "Test Mode Type"
+msgstr ""
+
+#: build/woo-payment-bkash/includes/Admin/Settings.php:54
+#: includes/Admin/Settings.php:54
+msgid "with_key"
+msgstr ""
+
+#: build/woo-payment-bkash/includes/Admin/Settings.php:64
+#: includes/Admin/Settings.php:64
+msgid "User Name"
+msgstr ""
+
+#: build/woo-payment-bkash/includes/Admin/Settings.php:75
+#: includes/Admin/Settings.php:75
+msgid "Password"
+msgstr ""
+
+#: build/woo-payment-bkash/includes/Admin/Settings.php:86
+#: includes/Admin/Settings.php:86
+msgid "App Key"
+msgstr ""
+
+#: build/woo-payment-bkash/includes/Admin/Settings.php:97
+#: includes/Admin/Settings.php:97
+msgid "App Secret"
+msgstr ""
+
+#: build/woo-payment-bkash/includes/Admin/Settings.php:108
+#: includes/Admin/Settings.php:108
+msgid "Sandbox User Name"
+msgstr ""
+
+#: build/woo-payment-bkash/includes/Admin/Settings.php:124
+#: includes/Admin/Settings.php:124
+msgid "Sandbox Password"
+msgstr ""
+
+#: build/woo-payment-bkash/includes/Admin/Settings.php:140
+#: includes/Admin/Settings.php:140
+msgid "Sandbox App Key"
+msgstr ""
+
+#: build/woo-payment-bkash/includes/Admin/Settings.php:156
+#: includes/Admin/Settings.php:156
+msgid "Sandbox App Secret"
+msgstr ""
+
+#: build/woo-payment-bkash/includes/Admin/Settings.php:172
+#: includes/Admin/Settings.php:172
+msgid "Enable bKash Charge"
+msgstr ""
+
+#: build/woo-payment-bkash/includes/Admin/Settings.php:181
+#: includes/Admin/Settings.php:181
+msgid "Charge Type"
+msgstr ""
+
+#: build/woo-payment-bkash/includes/Admin/Settings.php:188
+#: build/woo-payment-bkash/includes/Admin/Settings.php:201
+#: includes/Admin/Settings.php:188
+#: includes/Admin/Settings.php:201
+msgid "This option will only work when the bKash Charge is enabled"
+msgstr ""
+
+#: build/woo-payment-bkash/includes/Admin/Settings.php:198
+#: includes/Admin/Settings.php:198
+msgid "Charge Amount"
+msgstr ""
+
+#: build/woo-payment-bkash/includes/Admin/Settings.php:211
+#: includes/Admin/Settings.php:211
+msgid "Description"
+msgstr ""
+
+#: build/woo-payment-bkash/includes/Admin/Settings.php:213
+#: includes/Admin/Settings.php:213
+msgid "Payment method description that the customer will see on your checkout."
+msgstr ""
+
+#: build/woo-payment-bkash/includes/Admin/Settings.php:214
+#: includes/Admin/Settings.php:214
+msgid "Pay via bKash"
+msgstr ""
+
+#: build/woo-payment-bkash/includes/Ajax.php:37
+#: includes/Ajax.php:37
+msgid "Something went wrong here!"
+msgstr ""
+
+#: build/woo-payment-bkash/includes/Ajax.php:41
+#: includes/Ajax.php:41
+msgid "Empty value is not allowed"
+msgstr ""
+
+#: build/woo-payment-bkash/includes/Ajax.php:50
+#: includes/Ajax.php:50
+msgid "Wrong or invalid order ID"
+msgstr ""
+
+#: build/woo-payment-bkash/includes/Ajax.php:67
+#: includes/Ajax.php:67
+msgid "Something went wrong!"
+msgstr ""
+
+#: build/woo-payment-bkash/includes/API/BkashBaseRestController.php:49
+#: build/woo-payment-bkash/includes/API/Upgrade.php:98
+#: includes/API/BkashBaseRestController.php:49
+#: includes/API/Upgrade.php:98
+msgid "You have no permission to do that"
+msgstr ""
+
+#: build/woo-payment-bkash/includes/API/Payment.php:107
+#: includes/API/Payment.php:107
+msgid "Grant Token"
+msgstr ""
+
+#: build/woo-payment-bkash/includes/API/Payment.php:190
+#: includes/API/Payment.php:190
+msgid "Execute Payment"
+msgstr ""
+
+#: build/woo-payment-bkash/includes/API/Payment.php:228
+#: includes/API/Payment.php:228
+msgid "Query Payment"
+msgstr ""
+
+#: build/woo-payment-bkash/includes/API/Payment.php:261
+#: build/woo-payment-bkash/includes/API/Payment.php:271
+#: includes/API/Payment.php:261
+#: includes/API/Payment.php:271
+msgid "Search Transaction Details"
+msgstr ""
+
+#: build/woo-payment-bkash/includes/API/Payment.php:297
+#: includes/API/Payment.php:297
+msgid "Unique identifier for the payment."
+msgstr ""
+
+#: build/woo-payment-bkash/includes/API/Upgrade.php:67
+#: includes/API/Upgrade.php:67
+msgid "There is an upgrading process going on."
+msgstr ""
+
+#: build/woo-payment-bkash/includes/API/Upgrade.php:71
+#: includes/API/Upgrade.php:71
+msgid "Update is not required"
+msgstr ""
+
+#: build/woo-payment-bkash/includes/Gateway/Bkash.php:48
+#: includes/Gateway/Bkash.php:48
+msgid "Pay via bKash payment"
+msgstr ""
+
+#. translators: %1$d: page number %2$d: max page number
+#: build/woo-payment-bkash/includes/Gateway/Bkash.php:68
+#: includes/Gateway/Bkash.php:68
+msgid "%1$sYou will get %2$s setting options in %3$s here %4$s.%5$s"
+msgstr ""
+
+#. translators: %1$s: Transaction ID, %2$s: Grand Total.
+#: build/woo-payment-bkash/includes/Gateway/Manager.php:128
+#: includes/Gateway/Manager.php:128
+msgid "bKash payment completed. Transaction ID #%1$s! Amount: %2$s"
+msgstr ""
+
+#. translators: %1$s: Transaction ID, %2$s: Payment Amount.
+#: build/woo-payment-bkash/includes/Gateway/Manager.php:141
+#: includes/Gateway/Manager.php:141
+msgid "Partial payment. Transaction ID #%1$s! Amount: %2$s"
+msgstr ""
+
+#: build/woo-payment-bkash/includes/Gateway/Manager.php:287
+#: build/woo-payment-bkash/templates/frontend/transaction-charge.php:12
+#: includes/Gateway/Manager.php:287
+#: templates/frontend/transaction-charge.php:12
+msgid "bKash Charge"
+msgstr ""
+
+#: build/woo-payment-bkash/templates/admin/transaction-charge.php:11
+#: templates/admin/transaction-charge.php:11
+msgid "bKash Charge:"
+msgstr ""
+
+#: build/woo-payment-bkash/templates/frontend/payment-details.php:13
+#: templates/frontend/payment-details.php:13
+msgid "bKash Transaction ID:"
+msgstr ""
+
+#: build/woo-payment-bkash/templates/frontend/payment-details.php:19
+#: templates/frontend/payment-details.php:19
+msgid "Payment Status:"
+msgstr ""
+
+#: build/woo-payment-bkash/templates/frontend/transaction-charge.php:11
+#: templates/frontend/transaction-charge.php:11
+msgid "bKash Charge "
+msgstr ""
+
+#: assets/js/app.js:1
+#: assets/src/admin/Pages/Doc/doc-container.js:237
+#: build/woo-payment-bkash/assets/js/app.js:1
+msgid "API Request/Response"
+msgstr ""
+
+#: assets/js/app.js:1
+#: assets/src/admin/Pages/Doc/doc-container.js:196
+#: build/woo-payment-bkash/assets/js/app.js:1
+msgid "Error Message Implimentation"
+msgstr ""
+
+#: assets/js/app.js:1
+#: assets/src/admin/Pages/Doc/doc-container.js:198
+#: build/woo-payment-bkash/assets/js/app.js:1
+msgid "Case #1"
+msgstr ""
+
+#: assets/js/app.js:1
+#: assets/src/admin/Pages/Doc/doc-container.js:170
+#: assets/src/admin/Pages/Doc/doc-container.js:199
+#: build/woo-payment-bkash/assets/js/app.js:1
+msgid "Invoice Number: "
+msgstr ""
+
+#: assets/js/app.js:1
+#: assets/src/admin/Pages/Doc/doc-container.js:172
+#: assets/src/admin/Pages/Doc/doc-container.js:201
+#: build/woo-payment-bkash/assets/js/app.js:1
+msgid "Time of Transaction: "
+msgstr ""
+
+#: assets/js/app.js:1
+#: assets/src/admin/Pages/Doc/doc-container.js:177
+#: assets/src/admin/Pages/Doc/doc-container.js:206
+#: build/woo-payment-bkash/assets/js/app.js:1
+msgid "Screenshot"
+msgstr ""
+
+#: assets/js/app.js:1
+#: assets/src/admin/Pages/Doc/doc-container.js:169
+#: build/woo-payment-bkash/assets/js/app.js:1
+msgid "Case #2"
+msgstr ""
+
+#: assets/js/app.js:1
+#: assets/src/admin/Pages/generatedoc.js:31
+#: build/woo-payment-bkash/assets/js/app.js:1
+msgid "You may generate API Request/Response doc from here."
+msgstr ""
+
+#: assets/js/app.js:1
+#: assets/src/admin/Pages/generatedoc.js:38
+#: build/woo-payment-bkash/assets/js/app.js:1
+msgid "In case, if you need sandbox mobile number and OTP then you may use the below number."
+msgstr ""
+
+#: assets/js/app.js:1
+#: assets/src/admin/Pages/generatedoc.js:65
+#: build/woo-payment-bkash/assets/js/app.js:1
+msgid "Generating"
+msgstr ""
+
+#: assets/js/app.js:1
+#: assets/src/admin/Pages/generatedoc.js:66
+#: build/woo-payment-bkash/assets/js/app.js:1
+msgid "Generate"
+msgstr ""
+
+#: assets/js/app.js:1
+#: assets/src/admin/Pages/generatedoc.js:79
+#: build/woo-payment-bkash/assets/js/app.js:1
+msgid "Download"
+msgstr ""
+
+#: assets/js/app.js:1
+#: assets/src/admin/Pages/settings.js:78
+#: build/woo-payment-bkash/assets/js/app.js:1
+msgid "Saved Successfully!"
+msgstr ""
+
+#: assets/js/app.js:1
+#: assets/src/admin/Pages/settings.js:162
+#: build/woo-payment-bkash/assets/js/app.js:1
+msgid "Saving"
+msgstr ""
+
+#: assets/js/app.js:1
+#: assets/src/admin/Pages/settings.js:163
+#: build/woo-payment-bkash/assets/js/app.js:1
+msgid "Save"
+msgstr ""
+
+#: assets/js/app.js:1
+#: assets/src/admin/Pages/transactions.js:170
+#: build/woo-payment-bkash/assets/js/app.js:1
+msgid "Search"
+msgstr ""
+
+#: assets/js/app.js:1
+#: assets/src/admin/Pages/transactions.js:181
+#: build/woo-payment-bkash/assets/js/app.js:1
+msgid "Order Number"
+msgstr ""
+
+#: assets/js/app.js:1
+#: assets/src/admin/Pages/transactions.js:182
+#: build/woo-payment-bkash/assets/js/app.js:1
+msgid "Amount"
+msgstr ""
+
+#: assets/js/app.js:1
+#: assets/src/admin/Pages/transactions.js:183
+#: build/woo-payment-bkash/assets/js/app.js:1
+msgid "Payment ID"
+msgstr ""
+
+#: assets/js/app.js:1
+#: assets/src/admin/Pages/transactions.js:184
+#: build/woo-payment-bkash/assets/js/app.js:1
+msgid "Trx ID"
+msgstr ""
+
+#: assets/js/app.js:1
+#: assets/src/admin/Pages/transactions.js:185
+#: build/woo-payment-bkash/assets/js/app.js:1
+msgid "Invoice No"
+msgstr ""
+
+#: assets/js/app.js:1
+#: assets/src/admin/Pages/transactions.js:186
+#: build/woo-payment-bkash/assets/js/app.js:1
+msgid "Trx Status"
+msgstr ""
+
+#: assets/js/app.js:1
+#: assets/src/admin/Pages/transactions.js:187
+#: build/woo-payment-bkash/assets/js/app.js:1
+msgid "Verification Status"
+msgstr ""
+
+#: assets/js/app.js:1
+#: assets/src/admin/Pages/transactions.js:188
+#: build/woo-payment-bkash/assets/js/app.js:1
+msgid "Payment Time"
+msgstr ""
+
+#: assets/js/app.js:1
+#: assets/src/admin/Pages/transactions.js:189
+#: build/woo-payment-bkash/assets/js/app.js:1
+msgid "Action"
+msgstr ""
+
+#: assets/js/app.js:1
+#: assets/src/admin/Pages/transactions.js:104
+#: build/woo-payment-bkash/assets/js/app.js:1
+msgid "Successfully verified!"
+msgstr ""
+
+#: assets/js/app.js:1
+#: assets/src/admin/Pages/transactions.js:111
+#: build/woo-payment-bkash/assets/js/app.js:1
+msgid "Problem in verification!"
+msgstr ""
+
+#: assets/js/app.js:1
+#: assets/src/admin/Pages/transactions.js:84
+#: build/woo-payment-bkash/assets/js/app.js:1
+msgid "Verify"
+msgstr ""
+
+#: assets/js/app.js:1
+#: assets/src/admin/components/bKash/api-response.js:32
+#: build/woo-payment-bkash/assets/js/app.js:1
+msgid "API Title: "
+msgstr ""
+
+#: assets/js/app.js:1
+#: assets/src/admin/components/bKash/api-response.js:36
+#: build/woo-payment-bkash/assets/js/app.js:1
+msgid "API URL: "
+msgstr ""
+
+#: assets/js/app.js:1
+#: assets/src/admin/components/loader.js:9
+#: build/woo-payment-bkash/assets/js/app.js:1
+msgid "Loading..."
+msgstr ""
+
+#: assets/js/app.js:1
+#: assets/src/admin/utils/bkash.js:62
+#: build/woo-payment-bkash/assets/js/app.js:1
+msgid "bKash Processing..."
+msgstr ""
+
+#: assets/js/upgrade.js:1
+#: assets/src/upgrade/Pages/Upgrades.js:65
+#: build/woo-payment-bkash/assets/js/upgrade.js:1
+msgid "bKash Data Update Required"
+msgstr ""
+
+#: assets/js/upgrade.js:1
+#: assets/src/upgrade/Pages/Upgrades.js:71
+#: build/woo-payment-bkash/assets/js/upgrade.js:1
+msgid "We need to update your install to the latest version"
+msgstr ""
+
+#: assets/js/upgrade.js:1
+#: assets/src/upgrade/Pages/Upgrades.js:39
+#: build/woo-payment-bkash/assets/js/upgrade.js:1
+msgid "Updated Successfully!"
+msgstr ""
+
+#: assets/js/upgrade.js:1
+#: assets/src/upgrade/Pages/Upgrades.js:86
+#: build/woo-payment-bkash/assets/js/upgrade.js:1
+msgid "Updating"
+msgstr ""
+
+#: assets/js/upgrade.js:1
+#: assets/src/upgrade/Pages/Upgrades.js:87
+#: build/woo-payment-bkash/assets/js/upgrade.js:1
+msgid "Update"
+msgstr ""
