@@ -1,6 +1,6 @@
 {
   "name": "payment-gateway-bkash-for-wc",
-  "version": "2.0.0",
+  "version": "2.1.0",
   "description": "An eCommerce payment method that helps you sell anything. Beautifully.",
   "author": "Kapil Paul <kapilpaul007@gmail.com>",
   "license": "GPL-3.0",
@@ -29,7 +29,7 @@
     "lint-js": "eslint assets/src/",
     "precommit": "npm run lint-js && npm run make-pot",
     "zip": "node build --zip",
-    "pre-release": "npm run make-pot && npm run build && node build",
+    "pre-release": "npm run make-pot && npm run build",
     "release": "npm run build && node build"
   },
   "dependencies": {

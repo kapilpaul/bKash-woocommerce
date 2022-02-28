@@ -75,6 +75,14 @@ In this plugin, you can generate the doc.
 
 Yes. Follow the installation process and you are good to go.
 
+= Can I generate API doc in this plugin? =
+
+Yes. You can generate and download the API doc inside the admin panel.
+
+= Can I refund? =
+
+Yes uou can refund from this plugin. Both automatic and manual payments are available.
+
 
 == Screenshots ==
 
@@ -84,9 +92,19 @@ Yes. Follow the installation process and you are good to go.
 4. bKash as a payment method
 5. bkash main payment
 6. bkash Payment List
-7. bKash Document Generator
+7. bkash Payment Refund
+8. bkash Search Transaction
+9. bKash Document Generator
 
 == Changelog ==
+= v2.1.0 (February 28, 2022) =
+* Add: Refund Transaction
+* Add: Manual and automatic refund
+* Add: Search Transaction
+* Add: Refund API document generation
+* fix: Order Pay Page bKash Payment
+* fix: Document generation process
+
 = v2.0.0 (April 26, 2021) =
 * New plugin structure with React JS.
 * New options panel with more options.
@@ -128,6 +146,9 @@ Yes. Follow the installation process and you are good to go.
 * Payment for orders
 
 == Upgrade Notice ==
+= 2.1.0 =
+**Important Update** This update will alter some tables on database. Make sure to take backup and read the change logs first before upgrade process. Do not forget to upgrade the data to new version.
+
 = 2.0.0 =
 **Important Update** This update changes all the code structures for improving performance. Make sure to take backup and read the change logs first before upgrade process. Do not forget to upgrade the data to new version.
 
