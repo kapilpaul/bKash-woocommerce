@@ -20,6 +20,29 @@ function DocDataContainer( { afterComplete } ) {
 	const [ exceedPinLimit, setExceedPinLimit ] = useState( false );
 	const [ duplicateTransactionExecuteFailed, setDuplicateTransactionExecuteFailed ] = useState( false );
 
+	const [ docSteps, setDocSteps ] = useState( {
+		getToken: false,
+		createPayment: false,
+		executePayment: false,
+		queryPayment: false,
+		searchPayment: false,
+		duplicateTransaction: false,
+		exceedPinLimit: false,
+		refundPayment: false,
+		refundStatusApi: false
+	} );
+
+	/**
+	 * After complete a step update the data. set it to `true`
+	 * @param {*} stepKey
+	 */
+	const updateStep = ( stepKey ) => {
+		setDocSteps( {
+			...docSteps,
+			[ stepKey ]: true
+		} );
+	};
+
 	/**
 	 * Set payment id to state and call bKash init
 	 * @param {*} response
@@ -44,6 +67,7 @@ function DocDataContainer( { afterComplete } ) {
 	 */
 	const storeTrxId = ( response ) => {
 		setTransactionID( response.data.trxID );
+		updateStep( 'executePayment' );
 	};
 
 	/**
@@ -53,6 +77,7 @@ function DocDataContainer( { afterComplete } ) {
 	const handleBkashAfterValidatePin = ( success ) => {
 		if ( success ) {
 			setValidatePin( true );
+			updateStep( 'createPayment' );
 		}
 	};
 
@@ -63,6 +88,8 @@ function DocDataContainer( { afterComplete } ) {
 	 */
 	const initDuplicateTransaction = ( response ) => {
 		if ( response ) {
+			updateStep( 'searchPayment' );
+
 			let duplicateTransactionPath = API.v1.createPayment + '?amount=' + amount;
 
 			toast.warn( 'Duplicate Transaction Test', {
@@ -113,6 +140,9 @@ function DocDataContainer( { afterComplete } ) {
 				.then( ( resp ) => {} )
 				.catch( ( err ) => {
 					setDuplicateTransactionExecuteFailed( true );
+
+					updateStep( 'duplicateTransaction' );
+
 					toast.dismiss();
 
 					initVerificationLimitExceed();
@@ -157,6 +187,7 @@ function DocDataContainer( { afterComplete } ) {
 	const executeExceedPinLimit = ( success ) => {
 		if ( success ) {
 			toast.dismiss();
+			updateStep( 'exceedPinLimit' );
 			setExceedPinLimit( true );
 		}
 	};
@@ -231,15 +262,30 @@ function DocDataContainer( { afterComplete } ) {
 	const renderExecutePayment = () => {
 		if ( validatePin ) {
 			let executePath = API.v1.executePayment + paymentID;
-			let verifyPath = API.v1.queryPayment + paymentID;
 
 			return (
 				<div>
 					<ApiResponse path={ executePath } callback={ storeTrxId } />
-					<ApiResponse path={ verifyPath } />
 				</div>
 			);
 		}
+	};
+
+	/**
+	 * Render Query Payment
+	 * @returns
+	 */
+	const renderQueryPayment = () => {
+		let verifyPath = API.v1.queryPayment + paymentID;
+
+		return (
+			<div>
+				<ApiResponse path={ verifyPath } callback={ () => {
+					updateStep( 'queryPayment' );
+				} } />
+			</div>
+		);
+
 	};
 
 	/**
@@ -267,37 +313,56 @@ function DocDataContainer( { afterComplete } ) {
 
 			if ( status ) {
 				refundPath = API.v1.docRefundPayment + firstPaymentID + '?trx_id=' + transactionID + '&title=' + title;
+
+				return (
+					<ApiResponse path={ refundPath } callback={ () => {
+						toast.success( __( 'Doc Generation Done.', 'dc-bkash' ) );
+						afterComplete();
+					} } />
+				);
 			}
 
 			return (
-				<ApiResponse path={ refundPath } callback={ ! status ? renderRefundPaymentStatus : false  } />
+				<ApiResponse path={ refundPath } callback={ () => {
+					updateStep( 'refundPayment' );
+				} } />
 			);
 		}
-	};
-
-	const renderRefundPaymentStatus = () => {
-		renderRefundPayment( 'Refund Status API', true );
 	};
 
 	return (
 		<div className="generator-container-area" id="doc-details">
 			<h2>{ __( 'API Request/Response', 'dc-bkash' ) }</h2>
-			<ApiResponse path={ API.v1.getToken } />
 
 			<ApiResponse
-				path={ API.v1.createPayment }
-				callback={ handlePaymentID }
+				path={ API.v1.getToken }
+				callback={ () => {
+					updateStep( 'getToken' );
+				} }
 			/>
 
-			{ renderExecutePayment() }
+			{ /* after get token start create payment. */ }
 
-			{ renderSearchPayment() }
+			{ docSteps.getToken && (
+				<ApiResponse
+					path={ API.v1.createPayment }
+					callback={ handlePaymentID }
+				/>
+			) }
+
+			{ docSteps.createPayment && renderExecutePayment() }
+
+			{ docSteps.executePayment && renderQueryPayment() }
+
+			{ docSteps.queryPayment && renderSearchPayment() }
 
 			{ renderDuplicateTransaction() }
 
 			{ renderExceedPinLimit() }
 
-			{ renderRefundPayment( 'Refund API' ) }
+			{ docSteps.exceedPinLimit && renderRefundPayment( 'Refund API' ) }
+
+			{ docSteps.refundPayment && renderRefundPayment( 'Refund Status API', true ) }
 		</div>
 	);
 }

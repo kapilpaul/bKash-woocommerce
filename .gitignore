@@ -17,4 +17,3 @@ config.json
 # Composer
 /vendor/
 phpcs-report.txt
-languages/*

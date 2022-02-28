@@ -6,13 +6,18 @@ import dcBkash from '../utils/bkash';
 
 function GenerateDoc() {
 	const [ isGenerating, setIsGenerating ] = useState( false );
+	const [ isDownloadable, setIsDownloadable ] = useState( false );
+	const [ visibleDocContainer, setVisibleDocContainer ] = useState( false );
 
 	const GenerateDocContainer = () => {
-		if ( ! isGenerating ) {
+		if ( ! visibleDocContainer ) {
 			return false;
 		}
 
-		return <DocDataContainer />;
+		return <DocDataContainer afterComplete={ () => {
+			setIsGenerating( false );
+			setIsDownloadable( true );
+		} } />;
 	};
 
 	useEffect( () => {
@@ -62,7 +67,10 @@ function GenerateDoc() {
 							disabled={ isGenerating }
 							className="dc_bkash_save_btn"
 							isPrimary={ true }
-							onClick={ () => setIsGenerating( true ) }
+							onClick={ () => {
+								setVisibleDocContainer( true );
+								setIsGenerating( true );
+							} }
 						>
 							{ isGenerating ?
 								__( 'Generating', 'dc-bkash' ) :
@@ -73,9 +81,8 @@ function GenerateDoc() {
 							type="submit"
 							className="dc_bkash_save_btn"
 							isPrimary={ true }
-							disabled={ ! isGenerating }
+							disabled={ ! isDownloadable }
 							onClick={ () => {
-								setIsGenerating( false );
 								window.print();
 							} }
 						>

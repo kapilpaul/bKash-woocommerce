@@ -1,9 +1,11 @@
 import React, { useState, useEffect } from 'react';
 import { __ } from '@wordpress/i18n';
 import apiFetch from '@wordpress/api-fetch';
+import { Spinner } from '@wordpress/components';
 import { beautifyJson } from '../../utils/helper';
 
 function ApiResponse( { path, callback = false } ) {
+	const [ loading, setLoading ] = useState( true );
 	const [ apiTitle, setApiTitle ] = useState( '' );
 	const [ responseData, setResponseData ] = useState( {} );
 	const [ requestParamsData, setRequestParamsData ] = useState( {} );
@@ -14,6 +16,7 @@ function ApiResponse( { path, callback = false } ) {
 			path: path
 		} )
 			.then( ( resp ) => {
+				setLoading( false );
 				setApiTitle( resp.title );
 				setResponseData( resp.data );
 				setRequestParamsData( resp.request_params );
@@ -28,23 +31,32 @@ function ApiResponse( { path, callback = false } ) {
 
 	return (
 		<div className="grant-token-container">
-			<p className="strong">
-				{ __( 'API Title: ', 'dc-bkash' ) }
-				{ apiTitle }
-			</p>
-			<p className="strong">
-				{ __( 'API URL: ', 'dc-bkash' ) }
-				<a href={ requestUrl } target="_blank">
-					{ requestUrl }
-				</a>
-			</p>
 
-			<p className="strong">Request Body:</p>
+			{ loading && <Spinner /> }
 
-			<pre>{ beautifyJson( requestParamsData ) }</pre>
+			{ ! loading && (
+				<>
+					<p className="strong">
+						{ __( 'API Title: ', 'dc-bkash' ) }
+						{ apiTitle }
+					</p>
+					<p className="strong">
+						{ __( 'API URL: ', 'dc-bkash' ) }
+						<a href={ requestUrl } target="_blank">
+							{ requestUrl }
+						</a>
+					</p>
 
-			<p className="strong">API Response:</p>
-			<pre>{ beautifyJson( responseData ) }</pre>
+					<p className="strong">Request Body:</p>
+
+					<pre>{ beautifyJson( requestParamsData ) }</pre>
+
+					<p className="strong">API Response:</p>
+					<pre>{ beautifyJson( responseData ) }</pre>
+				</>
+			) }
+
+
 		</div>
 	);
 }
