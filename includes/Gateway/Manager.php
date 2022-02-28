@@ -330,7 +330,7 @@ class Manager {
 	 * @since 2.1.0
 	 *
 	 * @return boolean|\WP_Error True or false based on success, or a WP_Error object.
-	 * @throws \Exception
+	 * @throws \Exception Exception message.
 	 */
 	public function init_refund( $order_id, $amount = null, $reason = '', $wc_create_refund = false ) {
 		$order = wc_get_order( $order_id );
