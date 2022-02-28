@@ -46,6 +46,19 @@ class Transaction extends BkashBaseRestController {
 				'schema' => [ $this, 'get_item_schema' ],
 			]
 		);
+
+		register_rest_route(
+			$this->get_namespace(),
+			sprintf( '/%s/refund', $this->rest_base ),
+			[
+				[
+					'methods'             => WP_REST_Server::CREATABLE,
+					'callback'            => [ $this, 'refund_transaction' ],
+					'permission_callback' => [ $this, 'admin_permissions_check' ],
+				],
+				'schema' => [ $this, 'get_item_schema' ],
+			]
+		);
 	}
 
 	/**
@@ -92,6 +105,28 @@ class Transaction extends BkashBaseRestController {
 
 		$response->header( 'X-WP-Total', (int) $total );
 		$response->header( 'X-WP-TotalPages', (int) $max_pages );
+
+		return $response;
+	}
+
+	/**
+	 * Refund transaction.
+	 *
+	 * @param object $request Request Object.
+	 *
+	 * @since 2.1.0
+	 *
+	 * @return \WP_Error|\WP_REST_Response
+	 */
+	public function refund_transaction( $request ) {
+		$order_number     = $request->get_param( 'order_number' );
+		$amount           = $request->get_param( 'amount' );
+		$reason           = $request->get_param( 'refund_reason' );
+		$wc_create_refund = $request->get_param( 'wc_create_refund' );
+
+		$refund = dc_bkash()->gateway->init_refund( $order_number, $amount, $reason, $wc_create_refund );
+
+		$response = rest_ensure_response( $refund );
 
 		return $response;
 	}

@@ -151,6 +151,35 @@ function dc_bkash_get_payments_count() {
 }
 
 /**
+ * Update transaction.
+ *
+ * @param int   $order_number Order number.
+ * @param array $data         Data to update (in column => value pairs).
+ *                            Both $data columns and $data values should be "raw" (neither should be SQL escaped).
+ *                            Sending a null value will cause the column to be set to NULL - the corresponding
+ *                            format is ignored in this case.
+ * @param array $format       Format of the inserted data.
+ *
+ * @since 2.1.0
+ *
+ * @return false|int
+ */
+function dc_bkash_update_transaction( $order_number, array $data, array $format ) {
+	global $wpdb;
+
+	$table_name = $wpdb->prefix . 'bkash_transactions';
+
+	//phpcs:ignore
+	return $wpdb->update(
+		$table_name,
+		$data,
+		[ 'order_number' => $order_number ],
+		$format,
+		[ '%s' ]
+	);
+}
+
+/**
  * Delete a payment
  *
  * @param int $id ID.
@@ -463,4 +492,31 @@ function dc_bkash_add_array_after( $array, $position, $new_array ) {
 		$new_array,
 		array_slice( $array, $pos )
 	);
+}
+
+/**
+ * Check all credentials are filled.
+ *
+ * @since 2.1.0
+ *
+ * @return bool
+ */
+function dc_bkash_check_all_api_keys_filled() {
+	$processor = \DCoders\Bkash\Gateway\Processor::get_instance();
+	$prefix    = $processor->get_test_mode_type( 'with_key' ) ? 'sandbox_' : '';
+
+	$data = [
+		'app_key'    => dc_bkash_get_option( $prefix . 'app_key' ),
+		'app_secret' => dc_bkash_get_option( $prefix . 'app_secret' ),
+		'user_name'  => dc_bkash_get_option( $prefix . 'username' ),
+		'password'   => dc_bkash_get_option( $prefix . 'password' ),
+	];
+
+	foreach ( $data as $key ) {
+		if ( empty( $key ) ) {
+			return false;
+		}
+	}
+
+	return true;
 }

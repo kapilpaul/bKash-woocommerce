@@ -52,15 +52,23 @@ bKash PIN    : 12121
 2. How do I get credentials?
 
     -- You may contact with bKash support 16247.
-    
+
 3. How do I get bKash dov for submission =
-    
+
    -- In this plugin, you can generate the doc.
 
 4. Is this a plug and play plugin?
 
-    -- Yes. Follow the installation process and you are good to go.
-    
+   -- Yes. Follow the installation process and you are good to go.
+
+5. Can I generate API doc in this plugin? =
+
+   -- Yes. You can generate and download the API doc inside the admin panel.
+
+6. Can I refund? =
+
+   -- Yes uou can refund from this plugin. Both automatic and manual payments are available.
+
 ## File Structure
 
 ```
@@ -76,11 +84,9 @@ bKash PIN    : 12121
 │   │   ├── checked.png
 │   │   └── wpspin.gif
 │   ├── js
-│   │   ├── app.css
 │   │   ├── app.js
 │   │   ├── dc-bkash.js
 │   │   ├── runtime.js
-│   │   ├── upgrade.css
 │   │   ├── upgrade.js
 │   │   ├── vendors.js
 │   │   └── vendors.js.LICENSE.txt
@@ -91,12 +97,15 @@ bKash PIN    : 12121
 │       │   │   ├── Doc
 │       │   │   │   └── doc-container.js
 │       │   │   ├── generatedoc.js
+│       │   │   ├── refund-container.js
+│       │   │   ├── search-transaction.js
 │       │   │   ├── settings.js
 │       │   │   └── transactions.js
 │       │   ├── components
 │       │   │   ├── Header.js
 │       │   │   ├── bKash
-│       │   │   │   └── api-response.js
+│       │   │   │   ├── api-response.js
+│       │   │   │   └── refund.js
 │       │   │   ├── fields.js
 │       │   │   └── loader.js
 │       │   ├── images
@@ -112,6 +121,7 @@ bKash PIN    : 12121
 │       │   │   ├── generate-doc.scss
 │       │   │   ├── header.scss
 │       │   │   ├── react-toastify.scss
+│       │   │   ├── refund.scss
 │       │   │   ├── settings.scss
 │       │   │   ├── style.scss
 │       │   │   └── transactions.scss
@@ -119,6 +129,7 @@ bKash PIN    : 12121
 │       │       ├── admin-menu-fix.js
 │       │       ├── bkash.js
 │       │       └── helper.js
+│       ├── constants.js
 │       └── upgrade
 │           ├── App.js
 │           ├── Pages
@@ -126,6 +137,8 @@ bKash PIN    : 12121
 │           ├── index.js
 │           └── styles
 │               └── style.scss
+├── build
+│   └── index.js
 ├── composer.json
 ├── composer.lock
 ├── includes
@@ -156,7 +169,8 @@ bKash PIN    : 12121
 │   │   ├── AdminNotice.php
 │   │   ├── Manager.php
 │   │   ├── Upgrades
-│   │   │   └── V_2_0_0.php
+│   │   │   ├── V_2_0_0.php
+│   │   │   └── V_2_1_0.php
 │   │   └── Upgrades.php
 │   └── functions.php
 ├── index.php
@@ -164,7 +178,6 @@ bKash PIN    : 12121
 │   └── dc-bkash.pot
 ├── package-lock.json
 ├── package.json
-├── payment-gateway-bkash-for-wc.php
 ├── phpcs.xml
 ├── postcss.config.js
 ├── readme.txt
@@ -175,20 +188,30 @@ bKash PIN    : 12121
 │   └── frontend
 │       ├── payment-details.php
 │       └── transaction-charge.php
-└── webpack.config.js
+├── vendor
+├── webpack.config.js
+└── woo-payment-bkash.php
 ```
 
 
 ## Privacy Policy
 Payment Gateway bKash for WC uses [Appsero](https://appsero.com) SDK to collect some telemetry data upon user's confirmation. This helps us to troubleshoot problems faster & make product improvements.
-    
+
 Appsero SDK **does not gather any data by default.** The SDK only starts gathering basic telemetry data **when a user allows it via the admin notice**. We collect the data to ensure a great user experience for all our users.
-    
+
 Integrating Appsero SDK **DOES NOT IMMEDIATELY** start gathering data, **without confirmation from users in any case.**
-    
+
 Learn more about how [Appsero collects and uses this data](https://appsero.com/privacy-policy/).
 
 #### Changelog
+
+= v2.1.0 (February 28, 2022) =
+* Add: Refund Transaction
+* Add: Manual and automatic refund
+* Add: Search Transaction
+* Add: Refund API document generation
+* fix: Order Pay Page bKash Payment
+* fix: Document generation process
 
 = v2.0.0 (April 26, 2021) =
 * New plugin structure with React JS.
@@ -231,6 +254,12 @@ Learn more about how [Appsero collects and uses this data](https://appsero.com/p
 * Payment for orders
 
 #### Upgrade Notice
+= 2.1.0 =\
+**Important Update** This update will alter some tables on database. Make sure to take backup and read the change logs first before upgrade process. Do not forget to upgrade the data to new version.
+
+= 2.0.0 =\
+**Important Update** This update changes all the code structures for improving performance. Make sure to take backup and read the change logs first before upgrade process. Do not forget to upgrade the data to new version.
+
 = 1.3.0 =\
 **Important Update** This update added the bKash transaction charge.
 

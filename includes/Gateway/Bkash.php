@@ -49,6 +49,11 @@ class Bkash extends \WC_Payment_Gateway {
 		$title                    = dc_bkash_get_option( 'title', 'gateway' );
 		$this->title              = empty( $title ) ? __( 'bKash', 'dc-bkash' ) : $title;
 		$this->description        = dc_bkash_get_option( 'description', 'gateway' );
+
+		// Auto refunds by gateway enabled when API keys available.
+		if ( dc_bkash_check_all_api_keys_filled() ) {
+			$this->supports[] = 'refunds';
+		}
 	}
 
 	/**
@@ -182,7 +187,7 @@ class Bkash extends \WC_Payment_Gateway {
 			return;
 		}
 
-		if ( 'bkash' === $order->get_payment_method() ) {
+		if ( $this->id === $order->get_payment_method() ) {
 			$payment_data = dc_bkash_get_payment( $order_id );
 
 			$trx_id = $payment_data ? $payment_data->trx_id : '';
@@ -196,5 +201,22 @@ class Bkash extends \WC_Payment_Gateway {
 				]
 			);
 		}
+	}
+
+	/**
+	 * Process refund.
+	 *
+	 * @param int        $order_id Order ID.
+	 * @param float|null $amount   Refund amount.
+	 * @param string     $reason   Refund reason.
+	 *
+	 * @since 2.1.0
+	 *
+	 * @see \DCoders\Bkash\Gateway\Manager::init_refund
+	 *
+	 * @return boolean|\WP_Error True or false based on success, or a WP_Error object.
+	 */
+	public function process_refund( $order_id, $amount = null, $reason = '' ) {
+		return dc_bkash()->gateway->init_refund( $order_id, $amount, $reason );
 	}
 }

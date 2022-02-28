@@ -1,255 +1,262 @@
-(function ($, window, document) {
-  var script_loaded = false;
-  var loader;
+( function ( $, window, document ) {
+	var script_loaded = false;
+	var loader;
 
-  const dc_bkash = window.dc_bkash;
+	const dc_bkash = window.dc_bkash;
 
-  const dc_bkash_payment = {
-    checkout_form: $('form.checkout, form#order_review'),
-    is_bkash_selected: function () {
-      return (
-        $('.woocommerce-checkout')
-          .find('input[name="payment_method"]:checked')
-          .val() === 'bkash'
-      );
-    },
-    set_loading_on: function () {
-      dc_bkash_payment.checkout_form.addClass('processing').block({
-        message: null,
-        overlayCSS: {
-          background: '#fff',
-          opacity: 0.6,
-        },
-      });
-    },
-    set_loading_done: function () {
-      dc_bkash_payment.checkout_form.removeClass('processing').unblock();
-    },
-    submit_error: function (errorMessage) {
-      dc_bkash_payment.set_loading_done();
-      loader.style.display = 'none';
+	const dc_bkash_payment = {
+		checkout_form: $( 'form.checkout, form#order_review' ),
+		is_bkash_selected: function () {
+			return (
+				'bkash' === $( '.woocommerce-checkout' )
+					.find( 'input[name="payment_method"]:checked' )
+					.val()
+			);
+		},
+		set_loading_on: function () {
+			dc_bkash_payment.checkout_form.addClass( 'processing' ).block( {
+				message: null,
+				overlayCSS: {
+					background: '#fff',
+					opacity: 0.6
+				}
+			} );
+		},
+		set_loading_done: function () {
+			dc_bkash_payment.checkout_form.removeClass( 'processing' ).unblock();
+		},
+		submit_error: function ( errorMessage ) {
+			dc_bkash_payment.set_loading_done();
+			loader.style.display = 'none';
 
-      $(
-        '.woocommerce-NoticeGroup-checkout, .woocommerce-error, .woocommerce-message'
-      ).remove();
+			$( '.woocommerce-NoticeGroup-checkout, .woocommerce-error, .woocommerce-message' ).remove();
 
-      dc_bkash_payment.checkout_form.prepend(
-        '<div class="woocommerce-NoticeGroup woocommerce-NoticeGroup-checkout">' +
-          errorMessage +
-          '</div>'
-      );
+			dc_bkash_payment.checkout_form.prepend(
+				'<div class="woocommerce-NoticeGroup woocommerce-NoticeGroup-checkout">' + errorMessage + '</div>'
+			);
 
-      dc_bkash_payment.checkout_form.removeClass('processing');
-      dc_bkash_payment.checkout_form
-        .find('.input-text, select, input:checkbox')
-        .trigger('validate')
-        .blur();
+			dc_bkash_payment.checkout_form.removeClass( 'processing' );
+			dc_bkash_payment.checkout_form
+				.find( '.input-text, select, input:checkbox' )
+				.trigger( 'validate' )
+				.blur();
 
-      dc_bkash_payment.scroll_to_notice();
-      $(document.body).trigger('checkout_error');
-    },
-    scroll_to_notice: function () {
-      $('html, body').animate(
-        {
-          scrollTop: $('form.checkout, form#order_review').offset().top - 100,
-        },
-        1000
-      );
-    },
-    set_order: function () {
-      $.ajax({
-        type: 'POST',
-        url: wc_checkout_params.checkout_url,
-        data: dc_bkash_payment.checkout_form.serialize(),
-        dataType: 'json',
-      })
-        .done(function (result) {
-          try {
-            if (result.result === 'success') {
-              dc_bkash_payment.init_bkash(
-                result.order_number,
-                result.amount,
-                result.create_payment_data
-              );
+			dc_bkash_payment.scroll_to_notice();
+			$( document.body ).trigger( 'checkout_error' );
+		},
+		scroll_to_notice: function () {
+			$( 'html, body' ).animate(
+				{
+					scrollTop: $( 'form.checkout, form#order_review' ).offset().top - 100
+				},
+				1000
+			);
+		},
+		set_order: function ( urlPath = wc_checkout_params.checkout_url ) {
+			$.ajax( {
+				type: 'POST',
+				url: urlPath,
+				data: dc_bkash_payment.checkout_form.serialize(),
+				dataType: 'json'
+			} )
+				.done( function ( result ) {
+					try {
+						if ( 'success' === result.result || result.success ) {
 
-              return;
-            } else if (result.result === 'failure') {
-              throw new Error('Result failure');
-            } else {
-              throw new Error('Invalid response');
-            }
-          } catch (err) {
-            // Reload page
-            if (result.reload === true) {
-              window.location.reload();
-              return;
-            }
+							if ( 'object' === typeof result.data ) {
+								result = result.data;
+							}
 
-            // Trigger update in case we need a fresh nonce
-            if (result.refresh === true) {
-              jQuery(document.body).trigger('update_checkout');
-            }
+							dc_bkash_payment.init_bkash(
+								result.order_number,
+								result.amount,
+								result.create_payment_data
+							);
 
-            // Add new errors
-            if (result.messages) {
-              dc_bkash_payment.submit_error(result.messages);
-            } else {
-              dc_bkash_payment.submit_error(
-                '<div class="woocommerce-error">' +
-                  wc_checkout_params.i18n_checkout_error +
-                  '</div>'
-              );
-            }
-          }
-        })
-        .fail(function (jqXHR, textStatus, errorThrown) {
-          dc_bkash_payment.submit_error(
-            '<div class="woocommerce-error">' + errorThrown + '</div>'
-          );
-        });
-    },
-    do_submit: function () {
-      dc_bkash_payment.set_loading_on();
+							return;
+						} else if ( 'failure' === result.result ) {
+							throw new Error( 'Result failure' );
+						} else {
+							throw new Error( 'Invalid response' );
+						}
+					} catch ( err ) {
 
-      let set_order;
+						// Reload page
+						if ( true === result.reload ) {
+							window.location.reload();
+							return;
+						}
 
-      dc_bkash_payment.set_order();
-    },
-    load_bkash_script: function () {
-      if (!script_loaded) {
-        //create loader for bKash
-        dc_bkash_payment.create_bkash_loader();
+						// Trigger update in case we need a fresh nonce
+						if ( true === result.refresh ) {
+							$( document.body ).trigger( 'update_checkout' );
+						}
 
-        loader.style.display = 'block';
-        window.$ = $.noConflict(true);
+						// Add new errors
+						if ( result.messages ) {
+							dc_bkash_payment.submit_error( result.messages );
+						} else {
+							dc_bkash_payment.submit_error(
+								'<div class="woocommerce-error">' + wc_checkout_params.i18n_checkout_error + '</div>'
+							);
+						}
+					}
+				} )
+				.fail( function ( jqXHR, textStatus, errorThrown ) {
+					dc_bkash_payment.submit_error(
+						'<div class="woocommerce-error">' + errorThrown + '</div>'
+					);
+				} );
+		},
+		do_submit: function () {
+			dc_bkash_payment.set_loading_on();
 
-        //fetching script
-        $.getScript(dc_bkash.script_url, function () {
-          loader.style.display = 'none';
-          dc_bkash_payment.create_bkash_button();
-          script_loaded = true;
-        });
-      }
-    },
-    create_bkash_loader: function () {
-      var elem = document.createElement('div');
-      elem.className = 'bkash-loader';
-      elem.id = 'bkash-loader';
-      document.body.appendChild(elem);
-      loader = document.getElementById('bkash-loader');
-    },
-    create_bkash_button: function () {
-      var bkashBtn = document.createElement('button');
-      bkashBtn.id = 'bKash_button';
-      bkashBtn.className = 'btn btn-danger';
-      bkashBtn.setAttribute('disabled', 'disabled');
-      bkashBtn.style.display = 'none';
-      document.body.appendChild(bkashBtn);
-    },
-    execute_bkash_request: function (order_number, payment_id) {
-      let execute_payment_data = {
-        payment_id: payment_id,
-        order_number: order_number,
-        action: 'dc-bkash-execute-payment-request',
-        _nonce: dc_bkash.nonce,
-      };
+			let set_order;
 
-      $.ajax({
-        url: dc_bkash.ajax_url,
-        method: 'POST',
-        data: execute_payment_data,
-        success: function (response) {
-          if (response.success && response.data.paymentID != null) {
-            let data = response.data;
-            window.location.href = data.order_success_url;
-          } else {
-            bKash.execute().onError(); //run clean up code
-            dc_bkash_payment.show_alert( 'Payment Failed!', response.data.errorMessage );
-          }
-        },
-        error: function () {
-          bKash.execute().onError(); // Run clean up code
+			if ( $( document.body ).hasClass( 'woocommerce-order-pay' ) ) {
+				dc_bkash_payment.set_order( dc_bkash.ajax_url );
+			} else {
+				dc_bkash_payment.set_order();
+			}
+		},
+		load_bkash_script: function () {
+			if ( ! script_loaded ) {
 
-          dc_bkash_payment.show_alert( 'Payment Failed!', 'Something went wrong!' );
-        },
-      });
-    },
-    init_bkash: function (order_number, amount, create_payment = false) {
-      loader.style.display = 'block';
+				//create loader for bKash
+				dc_bkash_payment.create_bkash_loader();
 
-      let payment_id;
-      let payment_request = {
-        amount: amount,
-        intent: 'sale',
-        currency: 'BDT',
-        merchantInvoiceNumber: order_number,
-      };
+				loader.style.display = 'block';
+				window.$ = $.noConflict( true );
 
-      bKash.init({
-        paymentMode: 'checkout',
-        paymentRequest: payment_request,
-        createRequest: function () {
-          if (!create_payment) {
-            bKash.create().onError();
-            return;
-          }
+				//fetching script
+				$.getScript( dc_bkash.script_url, function () {
+					loader.style.display = 'none';
+					dc_bkash_payment.create_bkash_button();
+					script_loaded = true;
+				} );
+			}
+		},
+		create_bkash_loader: function () {
+			var elem = document.createElement( 'div' );
+			elem.className = 'bkash-loader';
+			elem.id = 'bkash-loader';
+			document.body.appendChild( elem );
+			loader = document.getElementById( 'bkash-loader' );
+		},
+		create_bkash_button: function () {
+			var bkashBtn = document.createElement( 'button' );
+			bkashBtn.id = 'bKash_button';
+			bkashBtn.className = 'btn btn-danger';
+			bkashBtn.setAttribute( 'disabled', 'disabled' );
+			bkashBtn.style.display = 'none';
+			document.body.appendChild( bkashBtn );
+		},
+		execute_bkash_request: function ( order_number, payment_id ) {
+			let execute_payment_data = {
+				payment_id: payment_id,
+				order_number: order_number,
+				action: 'dc-bkash-execute-payment-request',
+				_nonce: dc_bkash.nonce
+			};
 
-          payment_id = create_payment.paymentID;
-          bKash.create().onSuccess(create_payment);
-        },
-        executeRequestOnAuthorization: function () {
-          dc_bkash_payment.execute_bkash_request(order_number, payment_id);
-        },
-        onClose: function () {
-          loader.style.display = 'none';
+			$.ajax( {
+				url: dc_bkash.ajax_url,
+				method: 'POST',
+				data: execute_payment_data,
+				success: function ( response ) {
+					if ( response.success && null != response.data.paymentID ) {
+						let data = response.data;
+						window.location.href = data.order_success_url;
+					} else {
+						bKash.execute().onError(); //run clean up code
+						dc_bkash_payment.show_alert( 'Payment Failed!', response.data.errorMessage );
+					}
+				},
+				error: function () {
+					bKash.execute().onError(); // Run clean up code
 
-          dc_bkash_payment.show_alert( 'Opps...', 'Payment Cancelled!' );
-        },
-      });
+					dc_bkash_payment.show_alert( 'Payment Failed!', 'Something went wrong!' );
+				}
+			} );
+		},
+		init_bkash: function ( order_number, amount, create_payment = false ) {
+			loader.style.display = 'block';
 
-      bKash.reconfigure({
-        paymentRequest: payment_request
-      });
+			let payment_id;
+			let payment_request = {
+				amount: amount,
+				intent: 'sale',
+				currency: 'BDT',
+				merchantInvoiceNumber: order_number
+			};
 
-      $('#bKash_button').removeAttr('disabled');
-      $('#bKash_button').click();
-    },
-    show_alert: function(title, text) {
-      Swal.fire({
-        icon: 'error',
-        title: title,
-        text: text,
-        confirmButtonText: 'OK',
-      }).then((result) => {
-        loader.style.display = 'none';
-        $(dc_bkash_payment.checkout_form).removeClass('processing').unblock();
-      });
-    },
-    init: function () {
-      if (dc_bkash_payment.is_bkash_selected()) {
-        dc_bkash_payment.load_bkash_script();
-      }
+			bKash.init( {
+				paymentMode: 'checkout',
+				paymentRequest: payment_request,
+				createRequest: function () {
+					if ( ! create_payment ) {
+						bKash.create().onError();
+						return;
+					}
 
-      //on change load payment script
-      dc_bkash_payment.checkout_form.on(
-        'change',
-        'input[name="payment_method"]',
-        function (e) {
-          $('body').trigger('update_checkout');
+					payment_id = create_payment.paymentID;
+					bKash.create().onSuccess( create_payment );
+				},
+				executeRequestOnAuthorization: function () {
+					dc_bkash_payment.execute_bkash_request( order_number, payment_id );
+				},
+				onClose: function () {
+					loader.style.display = 'none';
 
-          if (dc_bkash_payment.is_bkash_selected()) {
-            dc_bkash_payment.load_bkash_script();
-          }
-        }
-      );
+					dc_bkash_payment.show_alert( 'Opps...', 'Payment Cancelled!' );
+				}
+			} );
 
-      dc_bkash_payment.checkout_form.on('click', '#place_order', function (e) {
-        if (dc_bkash_payment.is_bkash_selected()) {
-          dc_bkash_payment.do_submit();
-        }
-      });
-    },
-  };
+			bKash.reconfigure( {
+				paymentRequest: payment_request
+			} );
 
-  dc_bkash_payment.init();
-})(jQuery, window, document);
+			$( '#bKash_button' ).removeAttr( 'disabled' );
+			$( '#bKash_button' ).click();
+		},
+		show_alert: function( title, text ) {
+			Swal.fire( {
+				icon: 'error',
+				title: title,
+				text: text,
+				confirmButtonText: 'OK'
+			} ).then( ( result ) => {
+				loader.style.display = 'none';
+				$( dc_bkash_payment.checkout_form ).removeClass( 'processing' ).unblock();
+			} );
+		},
+		init: function () {
+			if ( dc_bkash_payment.is_bkash_selected() ) {
+				dc_bkash_payment.load_bkash_script();
+			}
+
+			//on change load payment script
+			dc_bkash_payment.checkout_form.on(
+				'change',
+				'input[name="payment_method"]',
+				function ( e ) {
+					$( 'body' ).trigger( 'update_checkout' );
+
+					if ( dc_bkash_payment.is_bkash_selected() ) {
+						dc_bkash_payment.load_bkash_script();
+					}
+				}
+			);
+
+			dc_bkash_payment.checkout_form.on( 'click', '#place_order', function ( e ) {
+				if ( dc_bkash_payment.is_bkash_selected() ) {
+					e.preventDefault();
+
+					dc_bkash_payment.do_submit();
+				}
+			} );
+		}
+	};
+
+	dc_bkash_payment.init();
+} ( jQuery, window, document ) );

@@ -5,250 +5,366 @@ import ApiResponse from '../../components/bKash/api-response';
 import dcBkash from '../../utils/bkash';
 import { toast } from 'react-toastify';
 import '../../styles/react-toastify.scss';
-import { beautifyJson } from '../../utils/helper';
+import { API } from '../../../constants';
 import DuplicateSS from '../../images/duplicate.png';
 import ExceedPinSS from '../../images/exceed-pin.png';
 
-function DocDataContainer({afterComplete}) {
-  const [paymentID, setPaymentID] = useState('');
-  const [amount, setAmount] = useState('');
-  const [createPaymentData, setCreatePaymentData] = useState({});
-  const [validatePin, setValidatePin] = useState(false);
-  const [duplicateTransactionData, setDuplicateTransactionData] = useState({});
-  const [exceedPinLimit, setExceedPinLimit] = useState(false);
-  const [
-    duplicateTransactionExecuteFailed,
-    setDuplicateTransactionExecuteFailed,
-  ] = useState(false);
+function DocDataContainer( { afterComplete } ) {
+	const [ paymentID, setPaymentID ] = useState( '' );
+	const [ firstPaymentID, setFirstPaymentID ] = useState( '' );
+	const [ transactionID, setTransactionID ] = useState( '' );
+	const [ amount, setAmount ] = useState( '' );
+	const [ createPaymentData, setCreatePaymentData ] = useState( {} );
+	const [ validatePin, setValidatePin ] = useState( false );
+	const [ duplicateTransactionData, setDuplicateTransactionData ] = useState( {} );
+	const [ exceedPinLimit, setExceedPinLimit ] = useState( false );
+	const [ duplicateTransactionExecuteFailed, setDuplicateTransactionExecuteFailed ] = useState( false );
 
-  /**
-   * Set payment id to state and call bKash init
-   * @param {*} response
-   */
-  const handlePaymentID = (response) => {
-    setCreatePaymentData(response.data);
-    setPaymentID(response.data.paymentID);
-    setAmount(response.data.amount);
+	const [ docSteps, setDocSteps ] = useState( {
+		getToken: false,
+		createPayment: false,
+		executePayment: false,
+		queryPayment: false,
+		searchPayment: false,
+		duplicateTransaction: false,
+		exceedPinLimit: false,
+		refundPayment: false,
+		refundStatusApi: false
+	} );
 
-    dcBkash.initBkash(
-      response.data.merchantInvoiceNumber,
-      response.data.amount,
-      response.data,
-      handleBkashAfterValidatePin
-    );
-  };
+	/**
+	 * After complete a step update the data. set it to `true`
+	 * @param {*} stepKey
+	 */
+	const updateStep = ( stepKey ) => {
+		setDocSteps( {
+			...docSteps,
+			[ stepKey ]: true
+		} );
+	};
 
-  /**
-   * after validate the pin
-   * @param {*} success
-   */
-  const handleBkashAfterValidatePin = (success) => {
-    if (success) {
-      setValidatePin(true);
-    }
-  };
+	/**
+	 * Set payment id to state and call bKash init
+	 * @param {*} response
+	 */
+	const handlePaymentID = ( response ) => {
+		setCreatePaymentData( response.data );
+		setPaymentID( response.data.paymentID );
+		setFirstPaymentID( response.data.paymentID );
+		setAmount( response.data.amount );
 
-  /**
-   * Initialize the duplicate Transaction
-   *
-   * @param {*} response
-   */
-  const initDuplicateTransaction = (response) => {
-    if (response) {
-      let duplicateTransactionPath =
-        '/dc-bkash/v1/payment/create-payment?amount=' + amount;
+		dcBkash.initBkash(
+			response.data.merchantInvoiceNumber,
+			response.data.amount,
+			response.data,
+			handleBkashAfterValidatePin
+		);
+	};
 
-      toast.warn('Duplicate Transaction Test', {
-        position: 'bottom-center',
-        autoClose: false,
-        hideProgressBar: true,
-        closeOnClick: true,
-        pauseOnHover: false,
-        draggable: false,
-      });
+	/**
+	 * Store Trx ID in state
+	 * @param response
+	 */
+	const storeTrxId = ( response ) => {
+		setTransactionID( response.data.trxID );
+		updateStep( 'executePayment' );
+	};
 
-      apiFetch({
-        path: duplicateTransactionPath,
-      })
-        .then((resp) => {
-          setCreatePaymentData(resp.data);
-          setDuplicateTransactionData(resp.data);
-          setPaymentID(resp.data.paymentID);
+	/**
+	 * after validate the pin
+	 * @param {*} success
+	 */
+	const handleBkashAfterValidatePin = ( success ) => {
+		if ( success ) {
+			setValidatePin( true );
+			updateStep( 'createPayment' );
+		}
+	};
 
-          dcBkash.initBkash(
-            resp.data.merchantInvoiceNumber,
-            resp.data.amount,
-            resp.data,
-            duplicateTransactionExecute
-          );
-        })
-        .catch((err) => {});
-    }
-  };
+	/**
+	 * Initialize the duplicate Transaction
+	 *
+	 * @param {*} response
+	 */
+	const initDuplicateTransaction = ( response ) => {
+		if ( response ) {
+			updateStep( 'searchPayment' );
 
-  /**
-   * Execute Duplicate Transaction
-   * Here, we know the return will be a error.
-   *
-   * @param {*} success
-   */
-  const duplicateTransactionExecute = (success) => {
-    if (success) {
-      let executePath;
+			let duplicateTransactionPath = API.v1.createPayment + '?amount=' + amount;
 
-      setPaymentID((paymentID) => {
-        executePath = '/dc-bkash/v1/payment/execute-payment/' + paymentID;
-      });
+			toast.warn( 'Duplicate Transaction Test', {
+				position: 'bottom-center',
+				autoClose: false,
+				hideProgressBar: true,
+				closeOnClick: true,
+				pauseOnHover: false,
+				draggable: false
+			} );
 
-      apiFetch({
-        path: executePath,
-      })
-        .then((resp) => {})
-        .catch((err) => {
-          setDuplicateTransactionExecuteFailed(true);
-          toast.dismiss();
+			apiFetch( {
+				path: duplicateTransactionPath
+			} )
+				.then( ( resp ) => {
+					setCreatePaymentData( resp.data );
+					setDuplicateTransactionData( resp.data );
+					setPaymentID( resp.data.paymentID );
 
-          initVerificationLimitExceed();
-        });
-    }
-  };
+					dcBkash.initBkash(
+						resp.data.merchantInvoiceNumber,
+						resp.data.amount,
+						resp.data,
+						duplicateTransactionExecute
+					);
+				} )
+				.catch( ( err ) => {} );
+		}
+	};
 
-  /**
-   * Initialize verification limit exceed
-   */
-  const initVerificationLimitExceed = () => {
-    let duplicateTransactionPath = '/dc-bkash/v1/payment/create-payment';
+	/**
+	 * Execute Duplicate Transaction
+	 * Here, we know the return will be a error.
+	 *
+	 * @param {*} success
+	 */
+	const duplicateTransactionExecute = ( success ) => {
+		if ( success ) {
+			let executePath;
 
-    toast.warn('Exceed Pin Limit', {
-      position: 'bottom-center',
-      autoClose: false,
-      hideProgressBar: true,
-      closeOnClick: true,
-      pauseOnHover: false,
-      draggable: false,
-    });
+			setPaymentID( ( paymentID ) => {
+				executePath = API.v1.executePayment + paymentID;
+			} );
 
-    apiFetch({
-      path: duplicateTransactionPath,
-    })
-      .then((resp) => {
-        setCreatePaymentData(resp.data);
+			apiFetch( {
+				path: executePath
+			} )
+				.then( ( resp ) => {} )
+				.catch( ( err ) => {
+					setDuplicateTransactionExecuteFailed( true );
 
-        dcBkash.initBkash(
-          resp.data.merchantInvoiceNumber,
-          resp.data.amount,
-          resp.data,
-          executeExceedPinLimit,
-          true
-        );
-      })
-      .catch((err) => {});
-  };
+					updateStep( 'duplicateTransaction' );
 
-  /**
-   * After execute pin limit exceed
-   * @param {*} success
-   */
-  const executeExceedPinLimit = (success) => {
-    if (success) {
-      toast.dismiss();
-      setExceedPinLimit(true);
-    }
-  };
+					toast.dismiss();
 
-  /**
-   * Render the data of exceed pin limit
-   *
-   * @returns
-   */
-  const renderExceedPinLimit = () => {
-    if (exceedPinLimit) {
+					initVerificationLimitExceed();
+				} );
+		}
+	};
 
-      return (
-        <div>
-          <p className="strong">{__('Case #2', 'dc-bkash')}</p>
-          <p className="strong">{__('Invoice Number: ', 'dc-bkash')} {createPaymentData.merchantInvoiceNumber}</p>
-          <p className="strong">
-            {__('Time of Transaction: ', 'dc-bkash')}
-            {createPaymentData.createTime}
-          </p>
+	/**
+	 * Initialize verification limit exceed
+	 */
+	const initVerificationLimitExceed = () => {
+		toast.warn( 'Exceed Pin Limit. Please enter wrong pin.', {
+			position: 'bottom-center',
+			autoClose: false,
+			hideProgressBar: true,
+			closeOnClick: true,
+			pauseOnHover: false,
+			draggable: false
+		} );
 
-          <p className="strong">
-            {__('Screenshot', 'dc-bkash')}
-          </p>
+		apiFetch( {
+			path: API.v1.createPayment
+		} )
+			.then( ( resp ) => {
+				setCreatePaymentData( resp.data );
 
-          <img className="img-full" src={ExceedPinSS} alt="error-screenshot" />
-        </div>
-      );
-    }
-  };
+				dcBkash.initBkash(
+					resp.data.merchantInvoiceNumber,
+					resp.data.amount,
+					resp.data,
+					executeExceedPinLimit,
+					true
+				);
+			} )
+			.catch( ( err ) => {} );
+	};
 
-  /**
-   * Render duplicate transaction data
-   *
-   * @returns
-   */
-  const renderDuplicateTransaction = () => {
-    if (duplicateTransactionExecuteFailed) {
-      return (
-        <div>
-          <h3>
-            {__('Error Message Implimentation', 'dc-bkash')}
-          </h3>
-          <p className="strong">{__('Case #1', 'dc-bkash')}</p>
-          <p className="strong">{__('Invoice Number: ', 'dc-bkash')} {duplicateTransactionData.merchantInvoiceNumber}</p>
-          <p className="strong">
-            {__('Time of Transaction: ', 'dc-bkash')}
-            {duplicateTransactionData.createTime}
-          </p>
+	/**
+	 * After execute pin limit exceed
+	 * @param {*} success
+	 */
+	const executeExceedPinLimit = ( success ) => {
+		if ( success ) {
+			toast.dismiss();
+			updateStep( 'exceedPinLimit' );
+			setExceedPinLimit( true );
+		}
+	};
 
-          <p className="strong">
-            {__('Screenshot', 'dc-bkash')}
-          </p>
+	/**
+	 * Render the data of exceed pin limit
+	 *
+	 * @returns
+	 */
+	const renderExceedPinLimit = () => {
+		if ( exceedPinLimit ) {
+			return (
+				<div>
+					<p className="strong">{ __( 'Case #2', 'dc-bkash' ) }</p>
+					<p className="strong">
+						{ __( 'Invoice Number: ', 'dc-bkash' ) }{ ' ' }
+						{ createPaymentData.merchantInvoiceNumber }
+					</p>
+					<p className="strong">
+						{ __( 'Time of Transaction: ', 'dc-bkash' ) }
+						{ createPaymentData.createTime }
+					</p>
 
-          <img className="img-full" src={DuplicateSS} alt="error-screenshot" />
-        </div>
-      );
-    }
-  };
+					<p className="strong">{ __( 'Screenshot', 'dc-bkash' ) }</p>
 
-  /**
-   * Execute payment info after validate pin
-   * @returns
-   */
-  const renderExecutePayment = () => {
-    if (validatePin) {
-      let executePath = '/dc-bkash/v1/payment/execute-payment/' + paymentID;
-      let verifyPath = '/dc-bkash/v1/payment/query-payment/' + paymentID;
-      let searchPath = '/dc-bkash/v1/payment/search-payment/' + paymentID;
+					<img
+						className="img-full"
+						src={ ExceedPinSS }
+						alt="error-screenshot"
+					/>
+				</div>
+			);
+		}
+	};
 
-      return (
-        <div>
-          <ApiResponse path={executePath} />
-          <ApiResponse path={verifyPath} />
-          <ApiResponse path={searchPath} callback={initDuplicateTransaction} />
-        </div>
-      );
-    }
-  };
+	/**
+	 * Render duplicate transaction data
+	 *
+	 * @returns
+	 */
+	const renderDuplicateTransaction = () => {
+		if ( duplicateTransactionExecuteFailed ) {
+			return (
+				<div>
+					<h3>{ __( 'Error Message Implimentation', 'dc-bkash' ) }</h3>
+					<p className="strong">{ __( 'Case #1', 'dc-bkash' ) }</p>
+					<p className="strong">
+						{ __( 'Invoice Number: ', 'dc-bkash' ) }{ ' ' }
+						{ duplicateTransactionData.merchantInvoiceNumber }
+					</p>
+					<p className="strong">
+						{ __( 'Time of Transaction: ', 'dc-bkash' ) }
+						{ duplicateTransactionData.createTime }
+					</p>
 
-  return (
-    <div className="generator-container-area" id="doc-details">
-      <h2>{__('API Request/Response', 'dc-bkash')}</h2>
-      <ApiResponse path="/dc-bkash/v1/payment/get-token" />
+					<p className="strong">{ __( 'Screenshot', 'dc-bkash' ) }</p>
 
-      <ApiResponse
-        path="/dc-bkash/v1/payment/create-payment"
-        callback={handlePaymentID}
-      />
+					<img
+						className="img-full"
+						src={ DuplicateSS }
+						alt="error-screenshot"
+					/>
+				</div>
+			);
+		}
+	};
 
-      {renderExecutePayment()}
+	/**
+	 * Execute payment info after validate pin
+	 * @returns
+	 */
+	const renderExecutePayment = () => {
+		if ( validatePin ) {
+			let executePath = API.v1.executePayment + paymentID;
 
-      {renderDuplicateTransaction()}
+			return (
+				<div>
+					<ApiResponse path={ executePath } callback={ storeTrxId } />
+				</div>
+			);
+		}
+	};
 
-      {renderExceedPinLimit()}
-    </div>
-  );
+	/**
+	 * Render Query Payment
+	 * @returns
+	 */
+	const renderQueryPayment = () => {
+		let verifyPath = API.v1.queryPayment + paymentID;
+
+		return (
+			<div>
+				<ApiResponse path={ verifyPath } callback={ () => {
+					updateStep( 'queryPayment' );
+				} } />
+			</div>
+		);
+
+	};
+
+	/**
+	 * Render search payment
+	 * @returns {boolean}
+	 */
+	const renderSearchPayment = () => {
+		if ( transactionID ) {
+			let searchPath = API.v1.docSearchPayment + transactionID;
+
+			return (
+				<ApiResponse
+					path={ searchPath }
+					callback={ initDuplicateTransaction }
+				/>
+			);
+		}
+	};
+
+	const renderRefundPayment = ( title, status = false ) => {
+
+		// after exceedPinLimit.
+		if ( exceedPinLimit ) {
+			let refundPath = API.v1.docRefundPayment + firstPaymentID + '?trx_id=' + transactionID + '&amount=' + amount + '&title=' + title;
+
+			if ( status ) {
+				refundPath = API.v1.docRefundPayment + firstPaymentID + '?trx_id=' + transactionID + '&title=' + title;
+
+				return (
+					<ApiResponse path={ refundPath } callback={ () => {
+						toast.success( __( 'Doc Generation Done.', 'dc-bkash' ) );
+						afterComplete();
+					} } />
+				);
+			}
+
+			return (
+				<ApiResponse path={ refundPath } callback={ () => {
+					updateStep( 'refundPayment' );
+				} } />
+			);
+		}
+	};
+
+	return (
+		<div className="generator-container-area" id="doc-details">
+			<h2>{ __( 'API Request/Response', 'dc-bkash' ) }</h2>
+
+			<ApiResponse
+				path={ API.v1.getToken }
+				callback={ () => {
+					updateStep( 'getToken' );
+				} }
+			/>
+
+			{ /* after get token start create payment. */ }
+
+			{ docSteps.getToken && (
+				<ApiResponse
+					path={ API.v1.createPayment }
+					callback={ handlePaymentID }
+				/>
+			) }
+
+			{ docSteps.createPayment && renderExecutePayment() }
+
+			{ docSteps.executePayment && renderQueryPayment() }
+
+			{ docSteps.queryPayment && renderSearchPayment() }
+
+			{ renderDuplicateTransaction() }
+
+			{ renderExceedPinLimit() }
+
+			{ docSteps.exceedPinLimit && renderRefundPayment( 'Refund API' ) }
+
+			{ docSteps.refundPayment && renderRefundPayment( 'Refund Status API', true ) }
+		</div>
+	);
 }
 
 export default DocDataContainer;

@@ -5,126 +5,133 @@ import React, { useState, useEffect } from 'react';
  *
  * @param {*} field
  */
-function Fields({
-  field,
-  id,
-  handleChange,
-  value = '',
-  section_id,
-  allSettings,
-}) {
-  /**
-   * render by type
-   *
-   * @param {*} type
-   */
-  const renderByType = (field) => {
-    let type = field.type;
+function Fields( {
+	field,
+	id,
+	handleChange,
+	value = '',
+	section_id,
+	allSettings
+} ) {
 
-    switch (type) {
-      case 'text':
-      case 'password':
-        return (
-          <input
-            type={type}
-            className="widefat"
-            value={value}
-            onChange={(e) => handleChange(e.target.value, section_id, id)}
-          />
-        );
-      case 'checkbox':
-        return (
-          <>
-            <input
-              type="checkbox"
-              className="widefat"
-              id={id}
-              value={value}
-              onChange={(e) => handleChange(e.target.value, section_id, id)}
-            />
-            <label htmlFor={id}>{field.title}</label>
-          </>
-        );
+	/**
+	 * render by type
+	 *
+	 * @param {*} type
+	 */
+	const renderByType = ( field ) => {
+		let type = field.type;
 
-      case 'select':
-        let options = Object.entries(field.options);
+		switch ( type ) {
+		case 'text':
+		case 'password':
+			return (
+				<input
+					type={ type }
+					className="widefat"
+					value={ value }
+					onChange={ ( e ) =>
+						handleChange( e.target.value, section_id, id )
+					}
+				/>
+			);
+		case 'checkbox':
+			return (
+				<>
+					<input
+						type="checkbox"
+						className="widefat"
+						id={ id }
+						value={ value }
+						onChange={ ( e ) =>
+							handleChange( e.target.value, section_id, id )
+						}
+					/>
+					<label htmlFor={ id }>{ field.title }</label>
+				</>
+			);
 
-        return (
-          <>
-            <select
-              className="widefat"
-              value={value}
-              onChange={(e) => handleChange(e.target.value, section_id, id)}
-            >
-              {options.map((item, index) => {
-                return (
-                  <option key={index} value={item[0]}>
-                    {item[1]}
-                  </option>
-                );
-              })}
-            </select>
-          </>
-        );
+		case 'select':
+			let options = Object.entries( field.options );
 
-      case 'textarea':
-        return (
-          <>
-            <textarea
-              id={id}
-              cols="30"
-              rows="10"
-              className="widefat"
-            ></textarea>
-          </>
-        );
+			return (
+				<>
+					<select
+						className="widefat"
+						value={ value }
+						onChange={ ( e ) =>
+							handleChange( e.target.value, section_id, id )
+						}
+					>
+						{ options.map( ( item, index ) => {
+							return (
+								<option key={ index } value={ item[0] }>
+									{ item[1] }
+								</option>
+							);
+						} ) }
+					</select>
+				</>
+			);
 
-      default:
-        return '';
-    }
-  };
+		case 'textarea':
+			return (
+				<>
+					<textarea
+						id={ id }
+						cols="30"
+						rows="10"
+						className="widefat"
+					></textarea>
+				</>
+			);
 
-  /**
-   * decide wheather to show or hide this field
-   */
-  const showThisField = () => {
-    let options, optionValue;
-    let is_showing = false;
+		default:
+			return '';
+		}
+	};
 
-    //get deceisions by checking the conditions
-    let decisions = field.show_if.map((item) => {
-      options = allSettings?.[section_id]?.[item.key];
-      optionValue = options?.value ? options?.value : options?.default;
+	/**
+	 * decide wheather to show or hide this field
+	 */
+	const showThisField = () => {
+		let options, optionValue;
+		let is_showing = false;
 
-      return is_matched(item, optionValue);
-    });
+		//get deceisions by checking the conditions
+		let decisions = field.show_if.map( ( item ) => {
+			options = allSettings?.[section_id]?.[item.key];
+			optionValue = options?.value ? options?.value : options?.default;
 
-    //checking wheather all deceisions are true or not
-    return decisions.every((item) => {
-      return item === true;
-    });
-  };
+			return is_matched( item, optionValue );
+		} );
 
-  /** if show_if exists and do not match with the condition we are returning it */
-  if (field?.show_if && !showThisField()) {
-    return false;
-  }
+		//checking wheather all deceisions are true or not
+		return decisions.every( ( item ) => {
+			return true === item;
+		} );
+	};
 
-  value = value === '' ? field?.default : value;
+	/** if show_if exists and do not match with the condition we are returning it */
+	if ( field?.show_if && ! showThisField() ) {
+		return false;
+	}
 
-  return (
-    <>
-      <p className="label">{field?.title}</p>
+	value = '' === value ? field?.default : value;
 
-      {renderByType(field)}
+	return (
+		<>
+			<p className="label">{ field?.title }</p>
 
-      {field.description ? (
-        <p className="help-text">{field.description}</p>
-      ) : (
-        ''
-      )}
-    </>
-  );
+			{ renderByType( field ) }
+
+			{ field.description ? (
+				<p className="help-text">{ field.description }</p>
+			) : (
+				''
+			) }
+		</>
+	);
 }
 
 /**
@@ -133,15 +140,15 @@ function Fields({
  * @param {*} item
  * @param {*} optionValue
  */
-function is_matched(item, optionValue) {
-  switch (item?.condition) {
-    case 'equal':
-      if (optionValue === item.value) {
-        return true;
-      }
-  }
+function is_matched( item, optionValue ) {
+	switch ( item?.condition ) {
+	case 'equal':
+		if ( optionValue === item.value ) {
+			return true;
+		}
+	}
 
-  return false;
+	return false;
 }
 
 export default Fields;

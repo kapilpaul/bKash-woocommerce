@@ -8,24 +8,42 @@
 		"jquery": true
 	},
 	"rules": {
-		"camelcase": [1],
-		"space-in-parens": [1, "always"],
-		"no-trailing-spaces": [1],
-		"spaced-comment": [0],
-		"padded-blocks": [0],
-		"prefer-template": [0],
-		"max-len": [0],
-		"no-else-return": [0],
-		"func-names": [0],
-		"object-shorthand": [0],
-		"indent": ["error", "tab"],
+		"camelcase": [ 0 ],
+		"space-in-parens": [ 1, "always" ],
+		"no-trailing-spaces": [ 1 ],
+		"spaced-comment": [ 0 ],
+		"padded-blocks": [ 0 ],
+		"prefer-template": [ 0 ],
+		"max-len": [ 0 ],
+		"no-else-return": [ 0 ],
+		"func-names": [ 0 ],
+		"object-shorthand": [ 0 ],
+		"indent": [ "error", "tab" ],
 		"space-before-function-paren": 0,
+		"object-curly-spacing": ["error", "always"],
 		"no-tabs": 0,
 		"prefer-destructuring": 0,
 		"no-undef": 0,
-		"no-param-reassign": 0
+		"no-param-reassign": 0,
+		"key-spacing": [ "error", {
+			"beforeColon": false,
+			"afterColon": true
+		} ],
+		"react/jsx-curly-spacing": [ "warn", {
+			"when": "always",
+			"children": {
+				"when": "always"
+			}
+		} ]
 	},
+	"parser": "@babel/eslint-parser",
 	"parserOptions": {
-        "sourceType": "module"
-    }
+		"sourceType": "module",
+		"ecmaFeatures": {
+			"jsx": true
+		}
+	},
+	"plugins": [
+		"react"
+	]
 }

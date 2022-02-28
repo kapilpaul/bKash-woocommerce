@@ -1,6 +1,6 @@
 {
   "name": "payment-gateway-bkash-for-wc",
-  "version": "2.0.0",
+  "version": "2.1.0",
   "description": "An eCommerce payment method that helps you sell anything. Beautifully.",
   "author": "Kapil Paul <kapilpaul007@gmail.com>",
   "license": "GPL-3.0",
@@ -29,7 +29,7 @@
     "lint-js": "eslint assets/src/",
     "precommit": "npm run lint-js && npm run make-pot",
     "zip": "node build --zip",
-    "pre-release": "npm run make-pot && npm run build && node build",
+    "pre-release": "npm run make-pot && npm run build",
     "release": "npm run build && node build"
   },
   "dependencies": {
@@ -47,11 +47,13 @@
     "react-paginate": "^7.1.2",
     "react-router": "^5.2.0",
     "react-router-dom": "^5.2.0",
+    "react-select": "^5.2.2",
     "react-toastify": "^7.0.3",
     "sweetalert2": "^10.15.7"
   },
   "devDependencies": {
     "@babel/core": "^7.12.10",
+    "@babel/eslint-parser": "^7.17.0",
     "@babel/preset-env": "^7.12.11",
     "@babel/preset-react": "^7.12.10",
     "@hot-loader/react-dom": "^17.0.1+4.13.0",
@@ -63,6 +65,7 @@
     "eslint": "^7.22.0",
     "eslint-config-wordpress": "^2.0.0",
     "eslint-loader": "^2.1.1",
+    "eslint-plugin-react": "^7.28.0",
     "file-loader": "^6.2.0",
     "mini-css-extract-plugin": "^1.3.3",
     "node-sass": "^5.0.0",

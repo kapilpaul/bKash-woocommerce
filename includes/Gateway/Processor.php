@@ -56,6 +56,15 @@ class Processor {
 	public $payment_search_url;
 
 	/**
+	 * Refund payment url
+	 *
+	 * @since 2.1.0
+	 *
+	 * @var string
+	 */
+	public $refund_payment_url;
+
+	/**
 	 * Holds the version.
 	 *
 	 * @var string
@@ -78,6 +87,7 @@ class Processor {
 		$payment_query_base       = "https://$server.$env.bka.sh/{$this->version}/checkout/payment/";
 		$this->payment_query_url  = sprintf( '%squery/', $payment_query_base );
 		$this->payment_search_url = sprintf( '%ssearch/', $payment_query_base );
+		$this->refund_payment_url = sprintf( '%srefund/', $payment_query_base );
 	}
 
 	/**
@@ -287,34 +297,34 @@ class Processor {
 	/**
 	 * Search payment on bKash end.
 	 *
-	 * @param string $payment_id Payment ID.
+	 * @param string $trx_id Transaction ID.
 	 *
 	 * @since 2.0.0
 	 *
 	 * @return mixed|\WP_Error
 	 */
-	public function search_transaction( $payment_id ) {
+	public function search_transaction( $trx_id ) {
 		if ( $this->check_test_mode() && $this->get_test_mode_type( 'without_key' ) ) {
-			return false;
+			return new \WP_Error( 'dc_bkash_search_payment_error', __( 'No API keys available', 'dc-bkash' ), [ 'status' => 500 ] );
 		}
 
 		$token = $this->get_token();
 
 		if ( ! $token || is_wp_error( $token ) ) {
-			return false;
+			return new \WP_Error( 'dc_bkash_search_payment_error', $token, [ 'status' => 500 ] );
 		}
 
-		$url      = esc_url_raw( $this->payment_search_url . $payment_id );
+		$url      = esc_url_raw( $this->payment_search_url . $trx_id );
 		$response = wp_remote_get( $url, $this->get_authorization_header() );
 
 		if ( is_wp_error( $response ) ) {
-			return $response;
+			return new \WP_Error( 'dc_bkash_search_payment_error', $response, [ 'status' => 500 ] );
 		}
 
 		$result = json_decode( wp_remote_retrieve_body( $response ), true );
 
 		if ( isset( $result['errorCode'] ) && isset( $result['errorMessage'] ) ) {
-			return new \WP_Error( 'dc_bkash_search_payment_error', $result );
+			return new \WP_Error( 'dc_bkash_search_payment_error', $result, [ 'status' => 500 ] );
 		}
 
 		return $result;
@@ -329,7 +339,7 @@ class Processor {
 		try {
 			$token = $this->get_token();
 
-			if ( $token ) {
+			if ( ! is_wp_error( $token ) && $token ) {
 				$prefix = $this->get_test_mode_type( 'with_key' ) ? 'sandbox_' : '';
 
 				$headers = [
@@ -534,5 +544,43 @@ class Processor {
 			'app_key'    => $app_key,
 			'app_secret' => $app_secret,
 		];
+	}
+
+	/**
+	 * Refund payment.
+	 *
+	 * @param string $amount     Refund amount.
+	 * @param string $payment_id Payment ID.
+	 * @param string $trx_id     Transaction ID.
+	 * @param string $reason     Refund Reason.
+	 *
+	 * @since 2.1.0
+	 *
+	 * @return bool|mixed|string|\WP_Error
+	 */
+	public function refund( $amount, $payment_id, $trx_id, $reason = '' ) {
+		if ( $this->check_test_mode() && $this->get_test_mode_type( 'without_key' ) ) {
+			return false;
+		}
+
+		$refund_data = [
+			'amount'    => "$amount",
+			'paymentID' => $payment_id,
+			'trxID'     => $trx_id,
+			'sku'       => 'hello test',
+			'reason'    => empty( $reason ) ? __( 'Refund amount', 'dc-bkash' ) : $reason,
+		];
+
+		$response = $this->make_request( $this->refund_payment_url, $refund_data, $this->get_authorization_header() );
+
+		if ( is_wp_error( $response ) ) {
+			return new \WP_Error( 'dc_bkash_refund_payment_error', $response );
+		}
+
+		if ( isset( $response['transactionStatus'] ) && 'completed' === strtolower( $response['transactionStatus'] ) ) {
+			return $response;
+		}
+
+		return new \WP_Error( 'dc_bkash_refund_payment_error', $response );
 	}
 }

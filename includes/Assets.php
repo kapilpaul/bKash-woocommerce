@@ -11,6 +11,8 @@
 
 namespace DCoders\Bkash;
 
+use DCoders\Bkash\Gateway\Processor;
+
 /**
  * Scripts and Styles Class
  */
@@ -214,19 +216,22 @@ class Assets {
 		$bkash_script_url = dc_bkash()->gateway->processor()->get_script();
 
 		$localize_data = [
-			'ajaxurl'      => admin_url( 'admin-ajax.php' ),
-			'nonce'        => wp_create_nonce( 'dc_bkash_admin' ),
-			'rest'         => [
+			'ajaxurl'                => admin_url( 'admin-ajax.php' ),
+			'nonce'                  => wp_create_nonce( 'dc_bkash_admin' ),
+			'rest'                   => [
 				'root'    => esc_url_raw( get_rest_url() ),
 				'nonce'   => wp_create_nonce( 'wp_rest' ),
 				'version' => 'dc-bkash/v1',
 			],
-			'api'          => null,
-			'libs'         => [],
-			'current_time' => current_time( 'mysql' ),
-			'text_domain'  => 'dc-bkash',
-			'asset_url'    => BKASH_ASSETS,
-			'script_url'   => $bkash_script_url,
+			'api'                    => null,
+			'libs'                   => [],
+			'current_time'           => current_time( 'mysql' ),
+			'text_domain'            => 'dc-bkash',
+			'asset_url'              => BKASH_ASSETS,
+			'script_url'             => $bkash_script_url,
+			'test_mode'              => dc_bkash()->gateway->processor()->check_test_mode(),
+			'test_mode_with_key'     => dc_bkash()->gateway->processor()->get_test_mode_type( 'with_key' ),
+			'all_credentials_filled' => dc_bkash_check_all_api_keys_filled(),
 		];
 
 		return apply_filters( 'dc_bkash_admin_localize_script', $localize_data );
