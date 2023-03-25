@@ -130,7 +130,13 @@ class Payment extends BkashBaseRestController {
 		$bkash_processor = Processor::get_instance();
 		$amount          = $get_amount ? $get_amount : wp_rand( 10, 100 );
 		$invoice_id      = sprintf( 'TBP%s', str_pad( wp_rand( 10, 999 ), 5, 0, STR_PAD_LEFT ) );
-		$create_payment  = $bkash_processor->create_payment( (float) $amount, $invoice_id );
+		$create_payment  = $bkash_processor->create_payment(
+			(float) $amount,
+			$invoice_id,
+			false,
+			dc_bkash_get_callback_url( $invoice_id ),
+			'test'
+		);
 
 		if ( is_wp_error( $create_payment ) ) {
 			return new WP_Error(
@@ -261,7 +267,7 @@ class Payment extends BkashBaseRestController {
 		$response = [
 			'title'          => __( 'Search Transaction Details', 'dc-bkash' ),
 			'request_params' => $request_params,
-			'request_url'    => $bkash_processor->payment_search_url . $trx_id,
+			'request_url'    => $bkash_processor->payment_search_url,
 		];
 
 		if ( is_wp_error( $search_transaction ) ) {

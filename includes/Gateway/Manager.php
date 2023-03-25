@@ -52,6 +52,7 @@ class Manager {
 		add_action( 'woocommerce_review_order_before_order_total', [ $this, 'dc_bkash_display_transaction_charge' ] );
 		add_action( 'woocommerce_admin_order_totals_after_tax', [ $this, 'dc_bkash_display_transaction_charge_on_admin' ] );
 		add_action( 'woocommerce_pay_order_before_submit', [ $this, 'add_fields_on_order_pay' ] );
+		add_action( 'woocommerce_after_order_details', array( $this->bkash(), 'thank_you_page' ) );
 
 		/**
 		 * Filters
@@ -151,10 +152,13 @@ class Manager {
 
 			if ( ! $payment_info || is_wp_error( $payment_info ) ) {
 				$payment_info = $execute_payment;
+				$invoice_number = $payment_info['merchantInvoiceNumber'];
 			} elseif ( isset( $payment_info['transactionStatus'] ) && isset( $payment_info['trxID'] ) ) {
 				$verified = 1;
+				$invoice_number = $payment_info['merchantInvoice'];
 			} else {
 				$payment_info = $execute_payment;
+				$invoice_number = $payment_info['merchantInvoiceNumber'];
 			}
 
 			$insert_data = [
@@ -162,14 +166,14 @@ class Manager {
 				'payment_id'          => isset( $payment_info['paymentID'] ) ? $payment_info['paymentID'] : $payment_id,
 				'trx_id'              => isset( $payment_info['trxID'] ) ? $payment_info['trxID'] : '',
 				'transaction_status'  => isset( $payment_info['transactionStatus'] ) ? $payment_info['transactionStatus'] : '',
-				'invoice_number'      => isset( $payment_info['merchantInvoiceNumber'] ) ? $payment_info['merchantInvoiceNumber'] : '',
+				'invoice_number'      => $invoice_number,
 				'amount'              => isset( $payment_info['amount'] ) ? floatval( $payment_info['amount'] ) : $order_grand_total,
 				'verification_status' => $verified,
 			];
 
 			dc_bkash_insert_transaction( $insert_data );
 
-			/**
+			/**c
 			 * Fires after the execute payment insert
 			 */
 			do_action( 'dc_bkash_after_execute_payment', $order, $payment_info );
@@ -308,7 +312,7 @@ class Manager {
 			return;
 		}
 
-		$order_number = $verify_payment['merchantInvoiceNumber'];
+		$order_number = $verify_payment['merchantInvoice'];
 
 		$payment = dc_bkash_get_payment( $order_number );
 
