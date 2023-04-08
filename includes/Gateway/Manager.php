@@ -52,7 +52,7 @@ class Manager {
 		add_action( 'woocommerce_review_order_before_order_total', [ $this, 'dc_bkash_display_transaction_charge' ] );
 		add_action( 'woocommerce_admin_order_totals_after_tax', [ $this, 'dc_bkash_display_transaction_charge_on_admin' ] );
 		add_action( 'woocommerce_pay_order_before_submit', [ $this, 'add_fields_on_order_pay' ] );
-		add_action( 'woocommerce_after_order_details', array( $this->bkash(), 'thank_you_page' ) );
+		add_action( 'woocommerce_after_order_details', [ $this, 'view_order_bkash_payment_details' ] );
 
 		/**
 		 * Filters
@@ -431,5 +431,20 @@ class Manager {
 		}
 
 		echo '<input type="hidden" name="action" value="dc-bkash-order-pay">';
+	}
+
+	/**
+	 * View order bkash payment details.
+	 *
+	 * @param \WC_Order $order Order Instance.
+	 *
+	 * @return mixed
+	 */
+	public function view_order_bkash_payment_details( $order ) {
+		if ( ! is_view_order_page() ) {
+			return;
+		}
+
+		return $this->bkash()->thank_you_page( $order );
 	}
 }

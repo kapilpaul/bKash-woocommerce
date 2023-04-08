@@ -269,11 +269,15 @@ class Settings {
 
 		$fields = wp_parse_args( get_option( self::OPTION_KEY ), $this->get_settings_fields() );
 
-		foreach ( $this->get_settings_sections() as $key => $section ) {
+		foreach ( $this->get_settings_sections() as $section_key => $section ) {
 
-			$fields[ $key ] = wp_parse_args( $fields[ $key ], $this->get_settings_fields()[ $key ] );
+			foreach ( $this->get_settings_fields()[ $section_key ] as $field_key => $field_data ) {
+				$fields[ $section_key ][ $field_key ] = wp_parse_args( $fields[ $section_key ][ $field_key ], $this->get_settings_fields()[ $section_key ][ $field_key ] );
+			}
 
-			$settings['fields'][ $key ] = isset( $fields[ $key ] ) ? $fields[ $key ] : [];
+			$fields[ $section_key ] = wp_parse_args( $fields[ $section_key ], $this->get_settings_fields()[ $section_key ] );
+
+			$settings['fields'][ $section_key ] = isset( $fields[ $section_key ] ) ? $fields[ $section_key ] : [];
 		}
 
 		return apply_filters( 'dc_bkash_get_settings', $settings );

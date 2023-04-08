@@ -522,6 +522,13 @@ function dc_bkash_check_all_api_keys_filled() {
 	return true;
 }
 
+/**
+ * Callback url for bKash.
+ *
+ * @param $order_id
+ *
+ * @return string
+ */
 function dc_bkash_get_callback_url( $order_id ) {
 	$url = site_url() . '/wc-api/verify-bkash-payment?nonce=' . wp_create_nonce( 'verify-bkash-payment' ) . '&order_id=' . $order_id;
 

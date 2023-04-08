@@ -4,7 +4,7 @@ Contributors: [kapilpaul](https://kapilpaul.me)\
 Donate link: https://kapilpaul.me/ \
 Tags: bkash, mobile-banking, bkash-payment, bkash payment, bkashPayment, bkash payment method, woocommerce bkash, bkash Bangladesh, bkash wordpress, bkash woocommerce\
 Requires at least: 4.0\
-Tested up to: 5.7.1\
+Tested up to: 6.2\
 Stable tag: trunk\
 Requires PHP: 5.6\
 License: GPLv2 or later\

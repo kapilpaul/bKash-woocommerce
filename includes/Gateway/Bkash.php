@@ -194,21 +194,23 @@ class Bkash extends \WC_Payment_Gateway {
 			return;
 		}
 
-		if ( $this->id === $order->get_payment_method() ) {
-			$order_id = is_scalar( $order_id ) ? $order_id : $order->get_id();
-
-			$payment_data = dc_bkash_get_payment( $order_id, true );
-
-			$status = $order->needs_payment() ? 'NOT PAID' : 'Completed';
-
-			dc_bkash_get_template(
-				'frontend/payment-details',
-				[
-					'payment_data' => $payment_data,
-					'status' => $status,
-				]
-			);
+		if ( $this->id !== $order->get_payment_method() ) {
+			return;
 		}
+
+		$order_id = is_scalar( $order_id ) ? $order_id : $order->get_id();
+
+		$payment_data = dc_bkash_get_payment( $order_id, true );
+
+		$status = $order->needs_payment() ? 'NOT PAID' : 'Completed';
+
+		dc_bkash_get_template(
+			'frontend/payment-details',
+			[
+				'payment_data' => $payment_data,
+				'status' => $status,
+			]
+		);
 	}
 
 	/**
