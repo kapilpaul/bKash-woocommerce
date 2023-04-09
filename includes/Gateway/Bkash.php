@@ -144,10 +144,11 @@ class Bkash extends \WC_Payment_Gateway {
 		$bkash_script_url = dc_bkash()->gateway->processor()->get_script();
 
 		$data = [
-			'amount'     => $woocommerce->cart->cart_contents_total,
-			'nonce'      => wp_create_nonce( 'dc-bkash-nonce' ),
-			'ajax_url'   => admin_url( 'admin-ajax.php' ),
-			'script_url' => $bkash_script_url,
+			'amount'           => $woocommerce->cart->cart_contents_total,
+			'nonce'            => wp_create_nonce( 'dc-bkash-nonce' ),
+			'ajax_url'         => admin_url( 'admin-ajax.php' ),
+			'script_url'       => $bkash_script_url,
+			'integration_type' => dc_bkash_get_option( 'integration_type' ),
 		];
 
 		wp_localize_script( 'dc-bkash', 'dc_bkash', $data );
@@ -164,7 +165,13 @@ class Bkash extends \WC_Payment_Gateway {
 	 */
 	public function create_payment_request( \WC_Order $order ) {
 		$processor = dc_bkash()->gateway->processor();
-		$response  = $processor->create_payment( (float) $order->get_total(), $order->get_id() );
+		$response  = $processor->create_payment(
+			(float) $order->get_total(),
+			$order->get_order_number(),
+			false,
+			dc_bkash_get_callback_url( $order->get_id() ),
+			$order->get_billing_phone()
+		);
 
 		if ( is_wp_error( $response ) ) {
 			return $response;
@@ -187,20 +194,23 @@ class Bkash extends \WC_Payment_Gateway {
 			return;
 		}
 
-		if ( $this->id === $order->get_payment_method() ) {
-			$payment_data = dc_bkash_get_payment( $order_id );
-
-			$trx_id = $payment_data ? $payment_data->trx_id : '';
-			$status = $order->needs_payment() ? 'NOT PAID' : 'Completed';
-
-			dc_bkash_get_template(
-				'frontend/payment-details',
-				[
-					'trx_id' => $trx_id,
-					'status' => $status,
-				]
-			);
+		if ( $this->id !== $order->get_payment_method() ) {
+			return;
 		}
+
+		$order_id = is_scalar( $order_id ) ? $order_id : $order->get_id();
+
+		$payment_data = dc_bkash_get_payment( $order_id, true );
+
+		$status = $order->needs_payment() ? 'NOT PAID' : 'Completed';
+
+		dc_bkash_get_template(
+			'frontend/payment-details',
+			[
+				'payment_data' => $payment_data,
+				'status'       => $status,
+			]
+		);
 	}
 
 	/**

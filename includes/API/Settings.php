@@ -92,7 +92,7 @@ class Settings extends BkashBaseRestController {
 	 * @return \WP_Error|\WP_REST_Response
 	 */
 	public function update_items( $request ) {
-		$fields = $request->get_param( 'fields' );
+		$fields = $request->get_param( 'data' );
 
 		update_option( AdminSettings::OPTION_KEY, $fields, false );
 

@@ -75,13 +75,14 @@ function dc_bkash_insert_transaction( $data ) {
 /**
  * Get payment form bkash table.
  *
- * @param int $order_number Order Number.
+ * @param int  $order_number Order Number.
+ * @param bool $multiple     Fetch multiple data.
  *
  * @since 2.0.0
  *
  * @return array|object|null
  */
-function dc_bkash_get_payment( $order_number ) {
+function dc_bkash_get_payment( $order_number, $multiple = false ) {
 	global $wpdb;
 
 	$table_name = $wpdb->prefix . 'bkash_transactions';
@@ -89,7 +90,7 @@ function dc_bkash_get_payment( $order_number ) {
 	$query = sprintf( "SELECT * FROM %s WHERE order_number='%d'", $table_name, $order_number );
 
 	//phpcs:ignore
-	$item = $wpdb->get_row( $query );
+	$item = $multiple ? $wpdb->get_results( $query ) : $wpdb->get_row( $query );
 
 	return $item;
 }
@@ -519,4 +520,17 @@ function dc_bkash_check_all_api_keys_filled() {
 	}
 
 	return true;
+}
+
+/**
+ * Callback url for bKash.
+ *
+ * @param int $order_id Order ID.
+ *
+ * @return string
+ */
+function dc_bkash_get_callback_url( $order_id ) {
+	$url = site_url() . '/wc-api/verify-bkash-payment?nonce=' . wp_create_nonce( 'verify-bkash-payment' ) . '&order_id=' . $order_id;
+
+	return $url;
 }

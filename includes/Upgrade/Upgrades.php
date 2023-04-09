@@ -27,6 +27,7 @@ class Upgrades {
 		= [
 			'2.0.0' => Upgrades\V_2_0_0::class,
 			'2.1.0' => Upgrades\V_2_1_0::class,
+			'3.0.0' => Upgrades\V_3_0_0::class,
 		];
 
 	/**

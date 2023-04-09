@@ -3,7 +3,7 @@
  * Plugin Name: Payment Gateway bKash for WC
  * Plugin URI: https://wordpress.org/plugins/woo-payment-bkash/
  * Description: An eCommerce payment method that helps you sell anything. Beautifully.
- * Version: 2.1.0
+ * Version: 3.0.0
  * Author: Kapil Paul
  * Author URI: https://kapilpaul.me
  * License: GPLv2 or later

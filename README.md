@@ -4,7 +4,7 @@ Contributors: [kapilpaul](https://kapilpaul.me)\
 Donate link: https://kapilpaul.me/ \
 Tags: bkash, mobile-banking, bkash-payment, bkash payment, bkashPayment, bkash payment method, woocommerce bkash, bkash Bangladesh, bkash wordpress, bkash woocommerce\
 Requires at least: 4.0\
-Tested up to: 5.7.1\
+Tested up to: 6.2\
 Stable tag: trunk\
 Requires PHP: 5.6\
 License: GPLv2 or later\
@@ -39,6 +39,10 @@ bKash Wallet : 01770618575
 bKash OTP    : 123456
 bKash PIN    : 12121
 </pre>
+
+### Live Credentials
+
+Please provide necessary information here to receive live credentials: [bKash](https://pgw-integration.bkash.com/#/sign-up)
 
 ##### Demo Video
 [youtube](https://www.youtube.com/watch?v=U83RE3Kfy1A)
@@ -204,6 +208,12 @@ Integrating Appsero SDK **DOES NOT IMMEDIATELY** start gathering data, **without
 Learn more about how [Appsero collects and uses this data](https://appsero.com/privacy-policy/).
 
 #### Changelog
+
+= v3.0.0 (April 10, 2023) =
+* Add: Checkout URL
+* Refund ID in table
+* Support parent order note
+* other cosmetic changes
 
 = v2.1.0 (February 28, 2022) =
 * Add: Refund Transaction

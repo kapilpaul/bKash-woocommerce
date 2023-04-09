@@ -82,6 +82,10 @@ function Fields( {
 						cols="30"
 						rows="10"
 						className="widefat"
+						onChange={ ( e ) =>
+							handleChange( e.target.value, section_id, id )
+						}
+						value={ value || field?.default }
 					></textarea>
 				</>
 			);
