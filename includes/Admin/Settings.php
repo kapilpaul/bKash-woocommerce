@@ -11,6 +11,8 @@
 
 namespace DCoders\Bkash\Admin;
 
+use DCoders\Bkash\Admin\Settings as AdminSettings;
+
 /**
  * Class Settings
  */
@@ -35,6 +37,15 @@ class Settings {
 					'type'    => 'text',
 					'default' => __( 'bKash Payment', 'dc-bkash' ),
 				],
+				'integration_type'   => [
+					'title'   => __( 'Integration Type', 'dc-bkash' ),
+					'type'    => 'select',
+					'options' => [
+						'checkout'     => __( 'Checkout (Pop Up)', 'dc-bkash' ),
+						'checkout_url' => __( 'Checkout URL', 'dc-bkash' ),
+					],
+					'default' => __( 'checkout_url', 'dc-bkash' ),
+				],
 				'test_mode'          => [
 					'title'   => __( 'Test Mode', 'dc-bkash' ),
 					'type'    => 'select',
@@ -56,6 +67,11 @@ class Settings {
 						[
 							'key'       => 'test_mode',
 							'value'     => 'on',
+							'condition' => 'equal',
+						],
+						[
+							'key'       => 'integration_type',
+							'value'     => 'checkout',
 							'condition' => 'equal',
 						],
 					],
@@ -253,8 +269,15 @@ class Settings {
 
 		$fields = wp_parse_args( get_option( self::OPTION_KEY ), $this->get_settings_fields() );
 
-		foreach ( $this->get_settings_sections() as $key => $section ) {
-			$settings['fields'][ $key ] = isset( $fields[ $key ] ) ? $fields[ $key ] : [];
+		foreach ( $this->get_settings_sections() as $section_key => $section ) {
+
+			foreach ( $this->get_settings_fields()[ $section_key ] as $field_key => $field_data ) {
+				$fields[ $section_key ][ $field_key ] = wp_parse_args( $fields[ $section_key ][ $field_key ], $this->get_settings_fields()[ $section_key ][ $field_key ] );
+			}
+
+			$fields[ $section_key ] = wp_parse_args( $fields[ $section_key ], $this->get_settings_fields()[ $section_key ] );
+
+			$settings['fields'][ $section_key ] = isset( $fields[ $section_key ] ) ? $fields[ $section_key ] : [];
 		}
 
 		return apply_filters( 'dc_bkash_get_settings', $settings );
@@ -282,7 +305,7 @@ class Settings {
 		$value    = null;
 
 		if ( isset( $settings[ $section ] ) && isset( $settings[ $section ][ $option ] ) ) {
-			$value = isset( $settings[ $section ][ $option ]['value'] ) ? $settings[ $section ][ $option ]['value'] : $settings[ $section ][ $option ]['default'];
+			$value = isset( $settings[ $section ][ $option ]['value'] ) ? $settings[ $section ][ $option ]['value'] : ( isset( $settings[ $section ][ $option ]['default'] ) ? $settings[ $section ][ $option ]['default'] : '' );
 		}
 
 		return $value;

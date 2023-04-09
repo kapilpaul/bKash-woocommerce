@@ -67,11 +67,25 @@
 								result = result.data;
 							}
 
-							dc_bkash_payment.init_bkash(
-								result.order_number,
-								result.amount,
-								result.create_payment_data
-							);
+							if ( ! result.create_payment_data ) {
+								throw new Error( 'cannot make payment' );
+							}
+
+							switch ( dc_bkash.integration_type ) {
+								case 'checkout_url':
+									if ( result.create_payment_data?.bkashURL ) {
+										window.location = result.create_payment_data?.bkashURL;
+									}
+									break;
+
+								case 'checkout':
+									dc_bkash_payment.init_bkash(
+										result.order_number,
+										result.amount,
+										result.create_payment_data
+									);
+									break;
+							}
 
 							return;
 						} else if ( 'failure' === result.result ) {
@@ -231,22 +245,25 @@
 			} );
 		},
 		init: function () {
-			if ( dc_bkash_payment.is_bkash_selected() ) {
-				dc_bkash_payment.load_bkash_script();
-			}
 
-			//on change load payment script
-			dc_bkash_payment.checkout_form.on(
-				'change',
-				'input[name="payment_method"]',
-				function ( e ) {
-					$( 'body' ).trigger( 'update_checkout' );
-
-					if ( dc_bkash_payment.is_bkash_selected() ) {
-						dc_bkash_payment.load_bkash_script();
-					}
+			if ( dc_bkash.integration_type === 'checkout' ) {
+				if ( dc_bkash_payment.is_bkash_selected() ) {
+					dc_bkash_payment.load_bkash_script();
 				}
-			);
+
+				//on change load payment script
+				dc_bkash_payment.checkout_form.on(
+					'change',
+					'input[name="payment_method"]',
+					function ( e ) {
+						$( 'body' ).trigger( 'update_checkout' );
+
+						if ( dc_bkash_payment.is_bkash_selected() ) {
+							dc_bkash_payment.load_bkash_script();
+						}
+					}
+				);
+			}
 
 			dc_bkash_payment.checkout_form.on( 'click', '#place_order', function ( e ) {
 				if ( dc_bkash_payment.is_bkash_selected() ) {

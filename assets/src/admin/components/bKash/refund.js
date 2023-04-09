@@ -112,9 +112,14 @@ const Refund = () => {
 						<span className="help">{ __( 'You may type your order number or transaction ID here.', 'dc-bkash' ) }</span>
 
 						{ '1' === selectedValue.refund_status ? (
-							<span className='help warning'>
-								{ __( `This order is refunded once. Refund amount was ${ selectedValue.refund_amount }`, 'dc-bkash' ) }
-							</span>
+							<>
+								<span className='help warning'>
+									{ __( `This order is refunded once. Refund amount was ${ selectedValue.refund_amount }`, 'dc-bkash' ) }
+								</span>
+								<span className='help warning'>
+									{ __( 'A merchant can do refund only once for a transaction, it can be a full refund or partial amount refund.', 'dc-bkash' ) }
+								</span>
+							</>
 						) : '' }
 
 					</div>
@@ -138,6 +143,7 @@ const Refund = () => {
 						step={ 0.01 }
 						className={ `form-control ${ invalidAmount ? 'danger' : '' }` }
 						onChange={ ( e ) => handleChangeAmount( parseFloat( e.target.value ) ) }
+						readOnly={ '1' === selectedValue.refund_status ?? false }
 					/>
 					<span className="help">{ __( `You can only put value only between 1 to ${ selectedValue?.amount }`, 'dc-bkash' ) }</span>
 				</div>
@@ -149,6 +155,7 @@ const Refund = () => {
 						value={ refundReason }
 						className="form-control"
 						onChange={ ( e ) => setRefundReason( e.target.value ) }
+						readOnly={ '1' === selectedValue.refund_status ?? false }
 					/>
 				</div>
 
@@ -168,7 +175,7 @@ const Refund = () => {
 				<Button
 					type="submit"
 					isBusy={ isSubmitted }
-					disabled={ ! refundAmount || invalidAmount || isSubmitted }
+					disabled={ ! refundAmount || invalidAmount || isSubmitted || '1' === selectedValue.refund_status }
 					className="dc_bkash_save_btn"
 					isPrimary={ true }
 					onClick={ () => handleSubmit() }

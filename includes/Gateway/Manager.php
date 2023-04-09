@@ -52,6 +52,7 @@ class Manager {
 		add_action( 'woocommerce_review_order_before_order_total', [ $this, 'dc_bkash_display_transaction_charge' ] );
 		add_action( 'woocommerce_admin_order_totals_after_tax', [ $this, 'dc_bkash_display_transaction_charge_on_admin' ] );
 		add_action( 'woocommerce_pay_order_before_submit', [ $this, 'add_fields_on_order_pay' ] );
+		add_action( 'woocommerce_after_order_details', [ $this, 'view_order_bkash_payment_details' ] );
 
 		/**
 		 * Filters
@@ -123,14 +124,22 @@ class Manager {
 			$verified          = 0;
 
 			if ( (float) $execute_payment['amount'] === $order_grand_total ) {
-				$order->add_order_note(
-					sprintf(
-						/* translators: %1$s: Transaction ID, %2$s: Grand Total. */
-						__( 'bKash payment completed. Transaction ID #%1$s. Amount: %2$s', 'dc-bkash' ),
-						$execute_payment['trxID'],
-						$order_grand_total
-					)
+				$order_note_text = sprintf(
+					/* translators: %1$s: Transaction ID, %2$s: Grand Total. */
+					__( 'bKash payment completed. Transaction ID #%1$s. Amount: %2$s', 'dc-bkash' ),
+					$execute_payment['trxID'],
+					$order_grand_total
 				);
+
+				$order->add_order_note( $order_note_text );
+
+				if ( $order->get_parent_id() ) {
+					$parent_order = wc_get_order( $order->get_parent_id() );
+
+					if ( $parent_order instanceof \WC_Order ) {
+						$parent_order->add_order_note( $order_note_text );
+					}
+				}
 
 				$order->payment_complete();
 
@@ -150,11 +159,14 @@ class Manager {
 			$payment_info = $processor->verify_payment( $payment_id, $order_grand_total );
 
 			if ( ! $payment_info || is_wp_error( $payment_info ) ) {
-				$payment_info = $execute_payment;
+				$payment_info   = $execute_payment;
+				$invoice_number = $payment_info['merchantInvoiceNumber'];
 			} elseif ( isset( $payment_info['transactionStatus'] ) && isset( $payment_info['trxID'] ) ) {
-				$verified = 1;
+				$verified       = 1;
+				$invoice_number = $payment_info['merchantInvoice'];
 			} else {
-				$payment_info = $execute_payment;
+				$payment_info   = $execute_payment;
+				$invoice_number = $payment_info['merchantInvoiceNumber'];
 			}
 
 			$insert_data = [
@@ -162,7 +174,7 @@ class Manager {
 				'payment_id'          => isset( $payment_info['paymentID'] ) ? $payment_info['paymentID'] : $payment_id,
 				'trx_id'              => isset( $payment_info['trxID'] ) ? $payment_info['trxID'] : '',
 				'transaction_status'  => isset( $payment_info['transactionStatus'] ) ? $payment_info['transactionStatus'] : '',
-				'invoice_number'      => isset( $payment_info['merchantInvoiceNumber'] ) ? $payment_info['merchantInvoiceNumber'] : '',
+				'invoice_number'      => $invoice_number,
 				'amount'              => isset( $payment_info['amount'] ) ? floatval( $payment_info['amount'] ) : $order_grand_total,
 				'verification_status' => $verified,
 			];
@@ -308,7 +320,7 @@ class Manager {
 			return;
 		}
 
-		$order_number = $verify_payment['merchantInvoiceNumber'];
+		$order_number = $verify_payment['merchantInvoice'];
 
 		$payment = dc_bkash_get_payment( $order_number );
 
@@ -363,14 +375,21 @@ class Manager {
 			update_post_meta( $order_id, 'dc_bkash_refunded', 1 );
 			update_post_meta( $order_id, 'dc_bkash_refunded_amount', $refund_response['amount'] );
 
-			$order->add_order_note(
-				sprintf(
-					/* translators: %1$s: Refund Amount */
-					__( 'BDT %s has been refunded by bKash', 'dc-bkash' ),
-					$refund_response['amount']
-				),
-				1
+			$order_note_text = sprintf(
+				/* translators: %1$s: Refund Amount */
+				__( 'BDT %s has been refunded by bKash', 'dc-bkash' ),
+				$refund_response['amount']
 			);
+
+			$order->add_order_note( $order_note_text, 1 );
+
+			if ( $order->get_parent_id() ) {
+				$parent_order = wc_get_order( $order->get_parent_id() );
+
+				if ( $parent_order instanceof \WC_Order ) {
+					$parent_order->add_order_note( $order_note_text, 1 );
+				}
+			}
 
 			$refund_db = [
 				'data'   => [
@@ -382,6 +401,19 @@ class Manager {
 
 			if ( ! empty( $reason ) ) {
 				$refund_db['data']['refund_reason'] = $reason;
+				$refund_db['format'][]              = '%s';
+			}
+
+			$installed_version = get_option( dc_bkash()->get_db_version_key(), null );
+
+			// doing this for backward compatibility.
+			if ( $installed_version && version_compare( $installed_version, '3.0.0', '<' ) ) {
+				update_post_meta( $order_id, 'dc_bkash_refund_id', $refund_response['refundTrxID'] );
+				update_post_meta( $order_id, 'dc_bkash_refund_charge', $refund_response['charge'] );
+			} else {
+				$refund_db['data']['refund_id']     = $refund_response['refundTrxID'];
+				$refund_db['data']['refund_charge'] = $refund_response['charge'];
+				$refund_db['format'][]              = '%s';
 				$refund_db['format'][]              = '%s';
 			}
 
@@ -427,5 +459,20 @@ class Manager {
 		}
 
 		echo '<input type="hidden" name="action" value="dc-bkash-order-pay">';
+	}
+
+	/**
+	 * View order bkash payment details.
+	 *
+	 * @param \WC_Order $order Order Instance.
+	 *
+	 * @return mixed
+	 */
+	public function view_order_bkash_payment_details( $order ) {
+		if ( ! is_view_order_page() ) {
+			return;
+		}
+
+		return $this->bkash()->thank_you_page( $order );
 	}
 }

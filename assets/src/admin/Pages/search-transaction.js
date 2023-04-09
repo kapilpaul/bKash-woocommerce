@@ -2,7 +2,7 @@ import React, { useState, useEffect, useRef } from 'react';
 import { __ } from '@wordpress/i18n';
 import { Button } from '@wordpress/components';
 import apiFetch from '@wordpress/api-fetch';
-import { Link } from 'react-router-dom';
+import { Link, useLocation } from 'react-router-dom';
 import { toast } from 'react-toastify';
 import { API } from '../../constants';
 import '../styles/react-toastify.scss';
@@ -12,6 +12,12 @@ const SearchTransaction = () => {
 	const [ isSubmitted, setIsSubmitted ] = useState( false );
 	const [ transactionID, setTransactionID ] = useState( '' );
 	const [ transactionData, setTransactionData ] = useState( {} );
+
+	const { search } = useLocation();
+
+	useEffect( () => {
+		setTransactionID( search.replace( '?trx_id=', '' ) );
+	}, [ transactionID ] );
 
 	/**
 	 * If API keys not set then show this.

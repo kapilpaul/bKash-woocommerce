@@ -31,6 +31,8 @@ function Settings() {
 			dokan_integration: {}
 		}
 	} );
+
+	const [ settingsOption, setSettingsOption ] = useState( {} );
 	const [ sections, setSections ] = useState( [] );
 	const [ isFetching, setIsFetching ] = useState( true );
 	const [ currentTab, setCurrentTab ] = useState( '' );
@@ -58,7 +60,36 @@ function Settings() {
 				}
 			}
 		} );
+
+		setSettingsOption( {
+			[parent_id]: {
+				...settingsOption?.[parent_id],
+				[id]: {
+					value: inputVal
+				}
+			}
+		} );
 	};
+
+	const updateSettingsOption = ( settings ) => {
+		let options = {};
+		Object.keys( settings.fields ).map( ( key, i ) => {
+			Object.keys( settings?.fields[key] ).map( ( subkey, index ) => {
+				options = {
+					...options,
+					[key]: {
+						...options?.[key],
+						[subkey]: {
+							value: settings?.fields[key]?.[subkey]?.value || settings?.fields[key]?.[subkey]?.default
+						}
+					}
+				};
+			} );
+		} );
+
+		setSettingsOption( options );
+	};
+
 
 	/**
    * Save the value
@@ -69,12 +100,14 @@ function Settings() {
 		apiFetch( {
 			path: API.v1.settings,
 			method: 'POST',
-			data: settings
+			data: { data: settingsOption }
 		} )
 			.then( ( resp ) => {
 				setIsSubmitted( false );
 				setSettings( resp );
 				setSections( resp.sections );
+
+				updateSettingsOption( resp );
 
 				toast.success( __( 'Saved Successfully!', 'dc-bkash' ) );
 			} )
@@ -95,6 +128,8 @@ function Settings() {
 				setSettings( resp );
 				setSections( resp.sections );
 				setCurrentTab( 'gateway' );
+
+				updateSettingsOption( resp );
 			} )
 			.catch( ( err ) => {
 				setIsFetching( false );

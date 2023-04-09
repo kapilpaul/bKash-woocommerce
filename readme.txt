@@ -35,6 +35,10 @@ You can use the below information for a test transaction.
 `bKash OTP : 123456`
 `bKash PIN : 12121`
 
+= Live Credentials =
+
+Please provide necessary information here to receive live credentials: [bKash https://pgw-integration.bkash.com/#/sign-up]
+
 = Demo Video =
 
 [youtube https://www.youtube.com/watch?v=U83RE3Kfy1A]
@@ -97,6 +101,13 @@ Yes uou can refund from this plugin. Both automatic and manual payments are avai
 9. bKash Document Generator
 
 == Changelog ==
+= v3.0.0 (April 10, 2023) =
+* Add: Checkout URL
+* Refund ID in table
+* Support parent order note
+* other cosmetic changes
+
+
 = v2.1.0 (February 28, 2022) =
 * Add: Refund Transaction
 * Add: Manual and automatic refund

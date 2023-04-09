@@ -71,6 +71,8 @@ class Installer {
                   `verification_status` int(1) NOT NULL DEFAULT 0,
                   `refund_status` int(1) NOT NULL DEFAULT 0,
                   `refund_amount` float NOT NULL DEFAULT '0',
+                  `refund_charge` varchar(255) DEFAULT NULL,
+                  `refund_id` varchar(255) DEFAULT NULL,
                   `refund_reason` varchar(255) DEFAULT NULL,
                   `created_at` timestamp NULL DEFAULT CURRENT_TIMESTAMP,
                   `updated_at` timestamp NULL DEFAULT CURRENT_TIMESTAMP,
