@@ -167,7 +167,7 @@ class Bkash extends \WC_Payment_Gateway {
 		$processor = dc_bkash()->gateway->processor();
 		$response  = $processor->create_payment(
 			(float) $order->get_total(),
-			$order->get_id(),
+			$order->get_order_number(),
 			false,
 			dc_bkash_get_callback_url( $order->get_id() ),
 			$order->get_billing_phone()

@@ -3,6 +3,7 @@ import { __ } from '@wordpress/i18n';
 import apiFetch from '@wordpress/api-fetch';
 import { toast } from 'react-toastify';
 import ReactPaginate from 'react-paginate';
+import { NavLink } from 'react-router-dom';
 import Loader from '../components/loader';
 import { API } from '../../constants';
 import '../styles/react-toastify.scss';
@@ -209,15 +210,22 @@ const Transactions = () => {
 										) }
 									</td>
 									<td>{ transaction.payment_id }</td>
-									<td>{ transaction.trx_id }</td>
+									<td>{ <NavLink to={ {
+										pathname: '/search-transaction',
+										search: 'trx_id=' + transaction.trx_id
+									} }>{ transaction.trx_id }</NavLink> }</td>
 									<td>{ transaction.invoice_number }</td>
 									<td>{ transaction.transaction_status }</td>
 									<td>{ getVerificationLabel( transaction.verification_status ) }</td>
 									<td>{ transaction.created_at }</td>
 									<td>{ '1' === transaction.refund_status ? __( 'Refunded', 'dc-bkash' ) : '' }</td>
 									<td>{ '0' !== transaction.refund_amount ? transaction.refund_amount : '' }</td>
-									<td>{ '' !== transaction.refund_charge ? transaction.refund_charge : '' }</td>
-									<td>{ '' !== transaction.refund_id ? transaction.refund_id : '' }</td>
+									<td>{ transaction.refund_charge ?? '' }</td>
+									<td>{ <NavLink to={ {
+										pathname: '/search-transaction',
+										search: 'trx_id=' + transaction.refund_id
+									} }>{ transaction.refund_id }</NavLink> }
+									</td>
 									<td>{ transaction.refund_reason }</td>
 									<td>{ getVerificationButton( transaction.verification_status, transaction.payment_id ) }</td>
 								</tr>

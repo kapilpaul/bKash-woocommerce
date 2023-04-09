@@ -124,14 +124,22 @@ class Manager {
 			$verified          = 0;
 
 			if ( (float) $execute_payment['amount'] === $order_grand_total ) {
-				$order->add_order_note(
-					sprintf(
-						/* translators: %1$s: Transaction ID, %2$s: Grand Total. */
-						__( 'bKash payment completed. Transaction ID #%1$s. Amount: %2$s', 'dc-bkash' ),
-						$execute_payment['trxID'],
-						$order_grand_total
-					)
+				$order_note_text = sprintf(
+					/* translators: %1$s: Transaction ID, %2$s: Grand Total. */
+					__( 'bKash payment completed. Transaction ID #%1$s. Amount: %2$s', 'dc-bkash' ),
+					$execute_payment['trxID'],
+					$order_grand_total
 				);
+
+				$order->add_order_note( $order_note_text );
+
+				if ( $order->get_parent_id() ) {
+					$parent_order = wc_get_order( $order->get_parent_id() );
+
+					if ( $parent_order instanceof \WC_Order ) {
+						$parent_order->add_order_note( $order_note_text );
+					}
+				}
 
 				$order->payment_complete();
 
@@ -367,14 +375,21 @@ class Manager {
 			update_post_meta( $order_id, 'dc_bkash_refunded', 1 );
 			update_post_meta( $order_id, 'dc_bkash_refunded_amount', $refund_response['amount'] );
 
-			$order->add_order_note(
-				sprintf(
-					/* translators: %1$s: Refund Amount */
-					__( 'BDT %s has been refunded by bKash', 'dc-bkash' ),
-					$refund_response['amount']
-				),
-				1
+			$order_note_text = sprintf(
+				/* translators: %1$s: Refund Amount */
+				__( 'BDT %s has been refunded by bKash', 'dc-bkash' ),
+				$refund_response['amount']
 			);
+
+			$order->add_order_note( $order_note_text, 1 );
+
+			if ( $order->get_parent_id() ) {
+				$parent_order = wc_get_order( $order->get_parent_id() );
+
+				if ( $parent_order instanceof \WC_Order ) {
+					$parent_order->add_order_note( $order_note_text, 1 );
+				}
+			}
 
 			$refund_db = [
 				'data'   => [
