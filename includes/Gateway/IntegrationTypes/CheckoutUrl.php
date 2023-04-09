@@ -82,8 +82,8 @@ class CheckoutUrl extends BkashProcessor {
 	 * @param float   $amount                 Amount.
 	 * @param string  $invoice_id             Invoice ID.
 	 * @param boolean $calculate_final_amount Final amount calculation.
-	 * @param bool    $payer_reference        Payer reference.
 	 * @param bool    $callback_url           Callback URL.
+	 * @param bool    $payer_reference        Payer reference.
 	 *
 	 * @return \WP_Error|mixed
 	 */

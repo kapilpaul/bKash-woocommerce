@@ -54,7 +54,8 @@ class Menu {
 
 			$submenu[ $parent_slug ][] = [ __( 'Settings', 'dc-bkash' ), $capability, $this->get_submenu_url( 'settings' ) ]; // phpcs:ignore
 
-			// $submenu[ $parent_slug ][] = [ __( 'Generate Doc', 'dc-bkash' ), $capability, $this->get_submenu_url( 'generate-doc' ) ]; // phpcs:ignore
+			// phpcs:ignore Squiz.PHP.CommentedOutCode.Found
+			// $submenu[ $parent_slug ][] = [ __( 'Generate Doc', 'dc-bkash' ), $capability, $this->get_submenu_url( 'generate-doc' ) ];
 		}
 
 		add_action( 'load-' . $hook, [ $this, 'init_hooks' ] );
