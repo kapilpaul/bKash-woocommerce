@@ -37,7 +37,8 @@ You can use the below information for a test transaction.
 
 = Live Credentials =
 
-Please provide necessary information here to receive live credentials: [bKash https://pgw-integration.bkash.com/#/sign-up]
+Please provide necessary information here to receive live credentials:
+[bKash](https://pgw-integration.bkash.com/#/sign-up)
 
 = Demo Video =
 
