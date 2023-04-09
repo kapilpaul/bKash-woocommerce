@@ -159,13 +159,13 @@ class Manager {
 			$payment_info = $processor->verify_payment( $payment_id, $order_grand_total );
 
 			if ( ! $payment_info || is_wp_error( $payment_info ) ) {
-				$payment_info = $execute_payment;
+				$payment_info   = $execute_payment;
 				$invoice_number = $payment_info['merchantInvoiceNumber'];
 			} elseif ( isset( $payment_info['transactionStatus'] ) && isset( $payment_info['trxID'] ) ) {
-				$verified = 1;
+				$verified       = 1;
 				$invoice_number = $payment_info['merchantInvoice'];
 			} else {
-				$payment_info = $execute_payment;
+				$payment_info   = $execute_payment;
 				$invoice_number = $payment_info['merchantInvoiceNumber'];
 			}
 
@@ -181,7 +181,7 @@ class Manager {
 
 			dc_bkash_insert_transaction( $insert_data );
 
-			/**c
+			/**
 			 * Fires after the execute payment insert
 			 */
 			do_action( 'dc_bkash_after_execute_payment', $order, $payment_info );

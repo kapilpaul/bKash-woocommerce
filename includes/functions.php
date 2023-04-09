@@ -525,7 +525,7 @@ function dc_bkash_check_all_api_keys_filled() {
 /**
  * Callback url for bKash.
  *
- * @param $order_id
+ * @param int $order_id Order ID.
  *
  * @return string
  */

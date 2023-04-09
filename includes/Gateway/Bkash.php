@@ -208,7 +208,7 @@ class Bkash extends \WC_Payment_Gateway {
 			'frontend/payment-details',
 			[
 				'payment_data' => $payment_data,
-				'status' => $status,
+				'status'       => $status,
 			]
 		);
 	}

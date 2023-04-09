@@ -15,6 +15,11 @@ namespace DCoders\Bkash\Abstracts;
 
 use DCoders\Bkash\Gateway\Processor;
 
+/**
+ * Class BkashProcessor
+ *
+ * @package DCoders\Bkash\Abstracts
+ */
 abstract class BkashProcessor {
 	/**
 	 * Holds the processor class
@@ -152,8 +157,8 @@ abstract class BkashProcessor {
 	 * @param float   $amount                 Amount.
 	 * @param string  $invoice_id             Invoice ID.
 	 * @param boolean $calculate_final_amount Final amount calculation.
-	 * @param bool    $payer_reference
-	 * @param bool    $callback_url
+	 * @param bool    $payer_reference        Payer reference.
+	 * @param bool    $callback_url           Callback url where the api will hit.
 	 *
 	 * @since 3.0.0
 	 *
@@ -564,7 +569,7 @@ abstract class BkashProcessor {
 	 * @param string $payment_id Payment ID.
 	 * @param string $trx_id     Transaction ID.
 	 * @param string $reason     Refund Reason.
-	 * @param string $sku
+	 * @param string $sku        Refund product sku.
 	 *
 	 * @since 2.1.0
 	 *

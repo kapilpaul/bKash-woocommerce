@@ -37,7 +37,7 @@ class Settings {
 					'type'    => 'text',
 					'default' => __( 'bKash Payment', 'dc-bkash' ),
 				],
-				'integration_type' => [
+				'integration_type'   => [
 					'title'   => __( 'Integration Type', 'dc-bkash' ),
 					'type'    => 'select',
 					'options' => [

@@ -47,6 +47,11 @@ class API {
 		add_action( 'woocommerce_api_verify-bkash-payment', [ $this, 'verify_bkash_payment' ] );
 	}
 
+	/**
+	 * Verify bKash payment.
+	 *
+	 * @return void
+	 */
 	public function verify_bkash_payment() {
 
 		$data = wp_unslash( $_GET );
@@ -85,21 +90,6 @@ class API {
 			exit;
 		}
 
-
-//		array:12 [▼
-//		  "statusCode" => "0000"
-//		  "statusMessage" => "Successful"
-//		  "paymentID" => "TR00111I1679053331400"
-//		  "payerReference" => "dc_bkash64145212ee1ad"
-//		  "customerMsisdn" => "01717794286"
-//		  "trxID" => "ACH9JRYV7L"
-//		  "amount" => "2"
-//		  "transactionStatus" => "Completed"
-//		  "paymentExecuteTime" => "2023-03-17T17:42:47:127 GMT+0600"
-//		  "currency" => "BDT"
-//		  "intent" => "sale"
-//		  "merchantInvoiceNumber" => "69"
-//		]
 		exit;
 	}
 
