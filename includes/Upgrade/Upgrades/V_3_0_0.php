@@ -19,11 +19,24 @@ use DCoders\Bkash\Admin\Settings as AdminSettings;
  */
 class V_3_0_0 extends DcBkashUpgrader {
 
-	public static function update_bkash_settings_field() {
-		$settings_format = dc_bkash()->settings->get_settings();
+	/**
+	 * Update bKash transactions table and add `refund_status` & `refund_amount` column
+	 *
+	 * @since 3.0.0
+	 *
+	 * @return void
+	 */
+	public static function update_bkash_transactions_table() {
+		global $wpdb;
 
-		error_log( print_r( $settings_format, true ) );
+		$table_name = $wpdb->prefix . 'bkash_transactions';
 
-//		update_option( AdminSettings::OPTION_KEY, [ 'gateway' => $gateway_settings ], false );
+		// @codingStandardsIgnoreStart
+		$wpdb->query(
+			"ALTER TABLE `{$table_name}`
+            ADD COLUMN `refund_charge` varchar(255) DEFAULT NULL AFTER `refund_amount`,
+            ADD COLUMN `refund_id` varchar(255) DEFAULT NULL AFTER `refund_charge`"
+		);
+		// @codingStandardsIgnoreEnd
 	}
 }

@@ -564,12 +564,13 @@ abstract class BkashProcessor {
 	 * @param string $payment_id Payment ID.
 	 * @param string $trx_id     Transaction ID.
 	 * @param string $reason     Refund Reason.
+	 * @param string $sku
 	 *
 	 * @since 2.1.0
 	 *
 	 * @return bool|mixed|string|\WP_Error
 	 */
-	public function refund( $amount, $payment_id, $trx_id, $reason = '' ) {
+	public function refund( $amount, $payment_id, $trx_id, $reason = '', $sku = 'refund sku' ) {
 		if ( $this->check_test_mode() && $this->get_test_mode_type( 'without_key' ) ) {
 			return false;
 		}
@@ -578,7 +579,7 @@ abstract class BkashProcessor {
 			'amount'    => "$amount",
 			'paymentID' => $payment_id,
 			'trxID'     => $trx_id,
-			'sku'       => 'hello test',
+			'sku'       => $sku,
 			'reason'    => empty( $reason ) ? __( 'Refund amount', 'dc-bkash' ) : $reason,
 		];
 

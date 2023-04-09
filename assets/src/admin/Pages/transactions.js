@@ -190,6 +190,8 @@ const Transactions = () => {
 							<th scope="col">{ __( 'Payment Time', 'dc-bkash' ) }</th>
 							<th scope="col">{ __( 'Refund', 'dc-bkash' ) }</th>
 							<th scope="col">{ __( 'Refund Amount', 'dc-bkash' ) }</th>
+							<th scope="col">{ __( 'Refund Charge', 'dc-bkash' ) }</th>
+							<th scope="col">{ __( 'Refund ID', 'dc-bkash' ) }</th>
 							<th scope="col">{ __( 'Refund Reason', 'dc-bkash' ) }</th>
 							<th scope="col">{ __( 'Action', 'dc-bkash' ) }</th>
 						</tr>
@@ -214,6 +216,8 @@ const Transactions = () => {
 									<td>{ transaction.created_at }</td>
 									<td>{ '1' === transaction.refund_status ? __( 'Refunded', 'dc-bkash' ) : '' }</td>
 									<td>{ '0' !== transaction.refund_amount ? transaction.refund_amount : '' }</td>
+									<td>{ '' !== transaction.refund_charge ? transaction.refund_charge : '' }</td>
+									<td>{ '' !== transaction.refund_id ? transaction.refund_id : '' }</td>
 									<td>{ transaction.refund_reason }</td>
 									<td>{ getVerificationButton( transaction.verification_status, transaction.payment_id ) }</td>
 								</tr>

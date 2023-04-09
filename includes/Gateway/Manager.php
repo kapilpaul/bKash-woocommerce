@@ -389,6 +389,19 @@ class Manager {
 				$refund_db['format'][]              = '%s';
 			}
 
+			$installed_version = get_option( dc_bkash()->get_db_version_key(), null );
+
+			// doing this for backward compatibility.
+			if ( $installed_version && version_compare( $installed_version, '3.0.0', '<' ) ) {
+				update_post_meta( $order_id, 'dc_bkash_refund_id', $refund_response['refundTrxID'] );
+				update_post_meta( $order_id, 'dc_bkash_refund_charge', $refund_response['charge'] );
+			} else {
+				$refund_db['data']['refund_id']     = $refund_response['refundTrxID'];
+				$refund_db['data']['refund_charge'] = $refund_response['charge'];
+				$refund_db['format'][]              = '%s';
+				$refund_db['format'][]              = '%s';
+			}
+
 			// Update refund columns in DB.
 			dc_bkash_update_transaction(
 				$order_id,
