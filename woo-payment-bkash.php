@@ -88,8 +88,6 @@ final class DCoders_Bkash {
 		register_activation_hook( __FILE__, [ $this, 'activate' ] );
 		register_deactivation_hook( __FILE__, [ $this, 'deactivate' ] );
 
-		$this->init_appsero_tracker();
-
 		add_action( 'plugins_loaded', [ $this, 'init_plugin' ] );
 	}
 
@@ -225,9 +223,7 @@ final class DCoders_Bkash {
 	 */
 	public function init_hooks() {
 		add_action( 'init', [ $this, 'init_classes' ] );
-
-		// Localize our plugin.
-		add_action( 'init', [ $this, 'localization_setup' ] );
+		add_action( 'init', [ $this, 'init_appsero_tracker' ] );
 	}
 
 	/**

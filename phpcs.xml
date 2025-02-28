@@ -7,10 +7,6 @@
         <exclude name="WordPress.Files.FileName.InvalidClassFileName" />
     </rule>
 
-    <rule ref="PHPCompatibility">
-        <exclude name="Generic.Arrays.DisallowShortArraySyntax.Found"/>
-    </rule>
-
     <rule ref="PHPCompatibility"/>
     <config name="testVersion" value="7.4-"/>
 
