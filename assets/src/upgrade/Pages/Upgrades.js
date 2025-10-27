@@ -1,15 +1,15 @@
-import React, { useState, useEffect } from 'react';
-import { __ } from '@wordpress/i18n';
-import { Button } from '@wordpress/components';
 import apiFetch from '@wordpress/api-fetch';
+import { Button } from '@wordpress/components';
+import { __ } from '@wordpress/i18n';
+import React, { useState } from 'react';
 import { toast } from 'react-toastify';
-import { API } from '../../constants';
 import '../../admin/styles/react-toastify.scss';
+import { API } from '../../constants';
 
 /**
  * configure the toast
  */
-toast.configure( {
+toast.configure({
 	position: 'top-right',
 	autoClose: 5000,
 	closeOnClick: false,
@@ -17,43 +17,43 @@ toast.configure( {
 	draggable: false,
 	closeButton: false,
 	style: {
-		top: '3em'
-	}
-} );
+		top: '3em',
+	},
+});
 
 function Upgrades() {
-	const [ isSubmitted, setIsSubmitted ] = useState( false );
+	const [isSubmitted, setIsSubmitted] = useState(false);
 
 	/**
-   * Handle update from here.
-   */
+	 * Handle update from here.
+	 */
 	const handleUpdate = () => {
-		setIsSubmitted( true );
+		setIsSubmitted(true);
 
-		apiFetch( {
+		apiFetch({
 			path: API.v1.upgrade,
 			method: 'POST',
-			data: {}
-		} )
-			.then( ( resp ) => {
-				setIsSubmitted( false );
-				toast.success( __( 'Updated Successfully!', 'dc-bkash' ) );
+			data: {},
+		})
+			.then((resp) => {
+				setIsSubmitted(false);
+				toast.success(__('Updated Successfully!', 'dc-bkash'));
 
 				hideNotice();
-			} )
-			.catch( ( err ) => {
-				setIsSubmitted( false );
-				toast.error( err.data.status + ' : ' + err.message );
-			} );
+			})
+			.catch((err) => {
+				setIsSubmitted(false);
+				toast.error(err.data.status + ' : ' + err.message);
+			});
 	};
 
 	/**
-   * Hide notice container
-   */
+	 * Hide notice container
+	 */
 	const hideNotice = () => {
-		let noticeContainer = document.querySelector( '.dc-bkash-notice-info' );
+		let noticeContainer = document.querySelector('.dc-bkash-notice-info');
 
-		noticeContainer.classList.add( 'dc-bkash-notice-info-hide' );
+		noticeContainer.classList.add('dc-bkash-notice-info-hide');
 	};
 
 	return (
@@ -63,29 +63,29 @@ function Upgrades() {
 					<div id="dc-bkash-upgrade-notice-title">
 						<p>
 							<strong>
-								{ __( 'bKash Data Update Required', 'dc-bkash' ) }
+								{__('bKash Data Update Required', 'dc-bkash')}
 							</strong>
 						</p>
 					</div>
 					<div id="dc-bkash-upgrade-notice-content">
 						<p>
-							{ __(
+							{__(
 								'We need to update your install to the latest version',
 								'dc-bkash'
-							) }
+							)}
 						</p>
 					</div>
 
 					<Button
 						type="submit"
 						className="wc-update-now bg-bkash text-white"
-						onClick={ () => handleUpdate() }
-						isBusy={ isSubmitted }
-						disabled={ isSubmitted }
+						onClick={() => handleUpdate()}
+						isBusy={isSubmitted}
+						disabled={isSubmitted}
 					>
-						{ isSubmitted ?
-							__( 'Updating', 'dc-bkash' ) :
-							__( 'Update', 'dc-bkash' ) }
+						{isSubmitted
+							? __('Updating', 'dc-bkash')
+							: __('Update', 'dc-bkash')}
 					</Button>
 				</div>
 			</div>
