@@ -1,10 +1,10 @@
-import React, { useState, useEffect } from 'react';
+import React from 'react';
 
 function Header() {
 	return (
 		<div className="bkash_header_container">
 			<div className="header_logo">
-				<img src={ getLogo() } alt="" />
+				<img src={getLogo()} alt="" />
 			</div>
 		</div>
 	);
