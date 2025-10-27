@@ -75,7 +75,7 @@
     "postcss-pxtorem": "^6.0.0",
     "postcss-scss": "^3.0.5",
     "postcss-sort-media-queries": "^3.6.5",
-    "prettier": "^2.2.1",
+    "prettier": "^3.6.2",
     "sass-embedded": "^1.93.2",
     "sass-loader": "^10.1.0",
     "shelljs": "^0.8.4",
