@@ -1,15 +1,15 @@
-# Copyright (C) 2023 Kapil Paul
+# Copyright (C) 2025 Kapil Paul
 # This file is distributed under the GPLv2 or later.
 msgid ""
 msgstr ""
-"Project-Id-Version: Payment Gateway bKash for WC 3.0.0\n"
+"Project-Id-Version: Payment Gateway bKash for WC 3.1.0\n"
 "Report-Msgid-Bugs-To: https://wordpress.org/support/plugin/bKash-woocommerce\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"POT-Creation-Date: 2023-04-09T18:11:33+00:00\n"
+"POT-Creation-Date: 2025-10-27T13:51:22+00:00\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "X-Generator: WP-CLI 2.7.1\n"
 "X-Domain: dc-bkash\n"
@@ -34,7 +34,7 @@ msgstr ""
 msgid "https://kapilpaul.me"
 msgstr ""
 
-#: includes/Abstracts/BkashProcessor.php:588
+#: includes/Abstracts/BkashProcessor.php:587
 msgid "Refund amount"
 msgstr ""
 
@@ -69,7 +69,7 @@ msgstr ""
 
 #: includes/Admin/Settings.php:36
 #: assets/js/app.js:1
-#: assets/src/admin/Pages/search-transaction.js:100
+#: assets/src/admin/Pages/search-transaction.js:107
 msgid "Title"
 msgstr ""
 
@@ -82,7 +82,7 @@ msgid "Integration Type"
 msgstr ""
 
 #: includes/Admin/Settings.php:44
-msgid "Checkout (Pop Up)"
+msgid "Checkout (Pop Up) (not working anymore)"
 msgstr ""
 
 #: includes/Admin/Settings.php:45
@@ -94,7 +94,7 @@ msgid "checkout_url"
 msgstr ""
 
 #: includes/Admin/Settings.php:50
-msgid "Test Mode"
+msgid "Test/Sandbox Mode"
 msgstr ""
 
 #: includes/Admin/Settings.php:53
@@ -245,22 +245,22 @@ msgid "No API keys available"
 msgstr ""
 
 #. translators: %1$s: Transaction ID, %2$s: Grand Total.
-#: includes/Gateway/Manager.php:129
+#: includes/Gateway/Manager.php:128
 msgid "bKash payment completed. Transaction ID #%1$s. Amount: %2$s"
 msgstr ""
 
 #. translators: %1$s: Transaction ID, %2$s: Payment Amount.
-#: includes/Gateway/Manager.php:151
+#: includes/Gateway/Manager.php:150
 msgid "Partial payment. Transaction ID #%1$s! Amount: %2$s"
 msgstr ""
 
-#: includes/Gateway/Manager.php:300
+#: includes/Gateway/Manager.php:290
 #: templates/frontend/transaction-charge.php:12
 msgid "bKash Charge"
 msgstr ""
 
 #. translators: %1$s: Refund Amount
-#: includes/Gateway/Manager.php:380
+#: includes/Gateway/Manager.php:370
 msgid "BDT %s has been refunded by bKash"
 msgstr ""
 
@@ -328,78 +328,53 @@ msgid "Case #2"
 msgstr ""
 
 #: assets/js/app.js:1
-#: assets/src/admin/Pages/generatedoc.js:33
-msgid "Generate Doc"
-msgstr ""
-
-#: assets/js/app.js:1
-#: assets/src/admin/Pages/generatedoc.js:37
-msgid "You may generate API Request/Response doc from here."
-msgstr ""
-
-#: assets/js/app.js:1
-#: assets/src/admin/Pages/generatedoc.js:46
-msgid "In case, if you need sandbox mobile number and OTP then you may use the below number."
-msgstr ""
-
-#: assets/js/app.js:1
-#: assets/src/admin/Pages/generatedoc.js:76
-msgid "Generating"
-msgstr ""
-
-#: assets/js/app.js:1
-#: assets/src/admin/Pages/generatedoc.js:77
-msgid "Generate"
-msgstr ""
-
-#: assets/js/app.js:1
-#: assets/src/admin/Pages/generatedoc.js:89
-msgid "Download"
-msgstr ""
-
-#: assets/js/app.js:1
-#: assets/src/admin/Pages/generatedoc.js:95
-msgid "Before generate the doc, you must have to add sandbox keys in settings."
-msgstr ""
-
-#: assets/js/app.js:1
 #: assets/src/admin/Pages/refund-container.js:17
 msgid "Before refund, you must have to add API keys in "
 msgstr ""
 
 #: assets/js/app.js:1
-#: assets/src/admin/Pages/search-transaction.js:125
+#: assets/src/admin/components/bKash/api-response.js:40
+msgid "API Title: "
+msgstr ""
+
+#: assets/js/app.js:1
+#: assets/src/admin/components/bKash/api-response.js:44
+msgid "API URL: "
+msgstr ""
+
+#: assets/js/app.js:1
+#: assets/src/admin/Pages/search-transaction.js:132
 msgid "Search Transaction "
 msgstr ""
 
 #: assets/js/app.js:1
-#: assets/src/admin/Pages/search-transaction.js:70
+#: assets/src/admin/Pages/search-transaction.js:75
 msgid "Transaction ID"
 msgstr ""
 
 #: assets/js/app.js:1
-#: assets/src/admin/Pages/search-transaction.js:88
+#: assets/src/admin/Pages/search-transaction.js:95
 msgid "Searching"
 msgstr ""
 
 #: assets/js/app.js:1
-#: assets/src/admin/Pages/search-transaction.js:89
+#: assets/src/admin/Pages/search-transaction.js:96
 #: assets/src/admin/Pages/transactions.js:173
 msgid "Search"
 msgstr ""
 
 #: assets/js/app.js:1
-#: assets/src/admin/Pages/search-transaction.js:95
+#: assets/src/admin/Pages/search-transaction.js:102
 msgid "Transaction Details"
 msgstr ""
 
 #: assets/js/app.js:1
-#: assets/src/admin/Pages/search-transaction.js:101
+#: assets/src/admin/Pages/search-transaction.js:108
 msgid "Data"
 msgstr ""
 
 #: assets/js/app.js:1
-#: assets/src/admin/Pages/search-transaction.js:30
+#: assets/src/admin/Pages/search-transaction.js:35
 msgid "Before search transaction, you must have to add API keys in "
 msgstr ""
 
@@ -416,6 +391,16 @@ msgstr ""
 #: assets/js/app.js:1
 #: assets/src/admin/Pages/settings.js:199
 msgid "Save"
+msgstr ""
+
+#: assets/js/app.js:1
+#: assets/src/admin/utils/bkash.js:63
+msgid "bKash Processing..."
+msgstr ""
+
+#: assets/js/app.js:1
+#: assets/src/admin/components/loader.js:9
+msgid "Loading..."
 msgstr ""
 
 #: assets/js/app.js:1
@@ -506,16 +491,6 @@ msgid "Verify"
 msgstr ""
 
 #: assets/js/app.js:1
-#: assets/src/admin/components/bKash/api-response.js:40
-msgid "API Title: "
-msgstr ""
-
-#: assets/js/app.js:1
-#: assets/src/admin/components/bKash/api-response.js:44
-msgid "API URL: "
-msgstr ""
-
-#: assets/js/app.js:1
 #: assets/src/admin/components/bKash/refund.js:100
 msgid "Search Order ID"
 msgstr ""
@@ -556,13 +531,38 @@ msgid "Submit"
 msgstr ""
 
 #: assets/js/app.js:1
-#: assets/src/admin/components/loader.js:9
-msgid "Loading..."
+#: assets/src/admin/Pages/generatedoc.js:33
+msgid "Generate Doc"
 msgstr ""
 
 #: assets/js/app.js:1
-#: assets/src/admin/utils/bkash.js:63
-msgid "bKash Processing..."
+#: assets/src/admin/Pages/generatedoc.js:37
+msgid "You may generate API Request/Response doc from here."
+msgstr ""
+
+#: assets/js/app.js:1
+#: assets/src/admin/Pages/generatedoc.js:46
+msgid "In case, if you need sandbox mobile number and OTP then you may use the below number."
+msgstr ""
+
+#: assets/js/app.js:1
+#: assets/src/admin/Pages/generatedoc.js:76
+msgid "Generating"
+msgstr ""
+
+#: assets/js/app.js:1
+#: assets/src/admin/Pages/generatedoc.js:77
+msgid "Generate"
+msgstr ""
+
+#: assets/js/app.js:1
+#: assets/src/admin/Pages/generatedoc.js:89
+msgid "Download"
+msgstr ""
+
+#: assets/js/app.js:1
+#: assets/src/admin/Pages/generatedoc.js:95
+msgid "Before generate the doc, you must have to add sandbox keys in settings."
 msgstr ""
 
 #: assets/js/upgrade.js:1
