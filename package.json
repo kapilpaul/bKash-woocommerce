@@ -38,7 +38,7 @@
     "@wordpress/eslint-plugin": "^22.19.0",
     "@wordpress/i18n": "^3.18.0",
     "dom-to-image": "^2.6.0",
-    "eslint-plugin-jsdoc": "^32.3.4",
+    "eslint-plugin-jsdoc": "^61.1.9",
     "html2canvas": "^1.0.0-rc.7",
     "jquery": "^3.6.0",
     "react": "^17.0.1",
