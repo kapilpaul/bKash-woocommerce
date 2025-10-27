@@ -47,7 +47,7 @@ function dc_bkash_get_option( $option, $section = 'gateway' ) {
 function dc_bkash_insert_transaction( $data ) {
 	global $wpdb;
 
-	$table_name = $wpdb->prefix . 'bkash_transactions';
+	$table_name = dc_bkash_get_db_table_name();
 
 	$data = apply_filters( 'dc_bkash_before_insert_transaction', $data );
 
@@ -85,7 +85,7 @@ function dc_bkash_insert_transaction( $data ) {
 function dc_bkash_get_payment( $order_number, $multiple = false ) {
 	global $wpdb;
 
-	$table_name = $wpdb->prefix . 'bkash_transactions';
+	$table_name = dc_bkash_get_db_table_name();
 
 	$query = sprintf( "SELECT * FROM %s WHERE order_number='%d'", $table_name, $order_number );
 
@@ -116,7 +116,7 @@ function dc_bkash_get_payments_list( $args = [] ) {
 
 	$args = wp_parse_args( $args, $defaults );
 
-	$table_name = $wpdb->prefix . 'bkash_transactions';
+	$table_name = dc_bkash_get_db_table_name();
 
 	$query = sprintf( 'SELECT * FROM %s', $table_name );
 
@@ -145,7 +145,7 @@ function dc_bkash_get_payments_list( $args = [] ) {
 function dc_bkash_get_payments_count() {
 	global $wpdb;
 
-	$table_name = $wpdb->prefix . 'bkash_transactions';
+	$table_name = dc_bkash_get_db_table_name();
 
 	//phpcs:ignore
 	return (int) $wpdb->get_var( "SELECT COUNT(id) from $table_name" );
@@ -168,7 +168,7 @@ function dc_bkash_get_payments_count() {
 function dc_bkash_update_transaction( $order_number, array $data, array $format ) {
 	global $wpdb;
 
-	$table_name = $wpdb->prefix . 'bkash_transactions';
+	$table_name = dc_bkash_get_db_table_name();
 
 	//phpcs:ignore
 	return $wpdb->update(
@@ -191,10 +191,11 @@ function dc_bkash_update_transaction( $order_number, array $data, array $format 
  */
 function dc_bkash_delete_payment( $id ) {
 	global $wpdb;
+	$table_name = dc_bkash_get_db_table_name();
 
 	//phpcs:ignore
 	return $wpdb->delete(
-		$wpdb->prefix . 'bkash_transactions',
+		$table_name,
 		[ 'id' => $id ],
 		[ '%d' ]
 	);
@@ -211,7 +212,7 @@ function dc_bkash_delete_payment( $id ) {
  */
 function dc_bkash_delete_multiple_payments( array $ids ) {
 	global $wpdb;
-	$table_name = $wpdb->prefix . 'bkash_transactions';
+	$table_name = dc_bkash_get_db_table_name();
 
 	$ids = implode( ',', $ids );
 
@@ -533,4 +534,21 @@ function dc_bkash_get_callback_url( $order_id ) {
 	$url = site_url() . '/wc-api/verify-bkash-payment?nonce=' . wp_create_nonce( 'verify-bkash-payment' ) . '&order_id=' . $order_id;
 
 	return $url;
+}
+
+/**
+ * Get db table name based on version.
+ *
+ * @return string
+ */
+function dc_bkash_get_db_table_name() {
+	global $wpdb;
+	$installed_version = get_option( dc_bkash()->get_db_version_key(), null );
+
+	// doing this for backward compatibility.
+	if ( $installed_version && version_compare( $installed_version, '3.1.0', '>=' ) ) {
+		return $wpdb->prefix . 'dc_bkash_transactions';
+	}
+
+	return $wpdb->prefix . 'bkash_transactions';
 }

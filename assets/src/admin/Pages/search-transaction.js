@@ -8,16 +8,21 @@ import { API } from '../../constants';
 import '../styles/react-toastify.scss';
 
 const SearchTransaction = () => {
-
 	const [ isSubmitted, setIsSubmitted ] = useState( false );
 	const [ transactionID, setTransactionID ] = useState( '' );
 	const [ transactionData, setTransactionData ] = useState( {} );
 
 	const { search } = useLocation();
 
-	useEffect( () => {
-		setTransactionID( search.replace( '?trx_id=', '' ) );
-	}, [ transactionID ] );
+	useEffect(() => {
+		if ( !transactionID ) {
+			const params = new URLSearchParams(search);
+			const trx = params.get('trx_id') ?? '';
+			if (trx) setTransactionID(trx);
+		}
+		// eslint-disable-next-line react-hooks/exhaustive-deps
+	}, [ search ]); // still depend on search (optional) — don't depend on transactionID
+
 
 	/**
 	 * If API keys not set then show this.
@@ -72,7 +77,9 @@ const SearchTransaction = () => {
 							type="text"
 							className="form-control"
 							value={ transactionID }
-							onChange={ ( e ) => setTransactionID( e.target.value ) }
+							onChange={ ( e ) => {
+								setTransactionID( e.target.value )
+							} }
 						/>
 					</div>
 

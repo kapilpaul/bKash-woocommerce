@@ -1,9 +1,9 @@
 === Payment Gateway bKash for WC ===
 Contributors: kapilpaul
 Donate link: https://kapilpaul.me/
-Tags: bkash, woocommerce pgw, bdt, mobilebanking, bangladesh
+Tags: bkash, woocommerce payment, woocommerce gateway, woocommerce pgw, mobile banking, bangladesh, bdt, bkash payment, bkash checkout, bkash gateway, digital payment, ecommerce bangladesh, online payment, payment integration, woocommerc
 Requires at least: 4.0
-Tested up to: 6.7.2
+Tested up to: 6.8.3
 Stable tag: trunk
 Requires PHP: 5.6
 License: GPLv2 or later
@@ -15,7 +15,19 @@ You can easily pay via bKash.
 
 = bKash PAYMENT METHOD FOR WOOCOMMERCE =
 
-Woocommerce payment method for bKash for easy checkout.
+bKash Payment Method for WooCommerce enables seamless online payments for Bangladeshi merchants using the most popular mobile financial service bKash.
+This plugin allows your customers to pay securely and conveniently through bKash during checkout, providing a fast and trusted payment experience right from your WooCommerce store.
+
+With an easy setup process and full integration into WooCommerce’s checkout flow, this plugin is designed to make transactions smooth for both merchants and customers.
+
+= ⭐ Key Features =
+
+🔐 Secure and reliable bKash payment integration
+⚙️ Easy setup and configuration in WooCommerce settings
+💸 Real-time transaction validation with the bKash API
+🧾 Support for Refunds and Transaction Lookup
+🎨 Fully compatible with the WooCommerce checkout page and themes
+📱 Optimized for both desktop and mobile users
 
 = Installation Guide =
 
@@ -39,10 +51,15 @@ You can use the below information for a test transaction.
 
 Please provide necessary information here to receive live credentials:
 [bKash](https://pgw-integration.bkash.com/#/sign-up)
+NB: This link is not working anymore. You have to contact with your RM and request for the API access. They will provide it manually.
 
 = Demo Video =
 
 [youtube https://www.youtube.com/watch?v=U83RE3Kfy1A]
+
+= Why Choose This Plugin =
+
+Bring the convenience of bKash — one of Bangladesh’s most trusted mobile payment platforms — directly to your WooCommerce store. Give your customers a smooth checkout experience, boost conversion rates, and simplify your payment process with a native bKash solution built specifically for WooCommerce.
 
 = Privacy Policy =
 Payment Gateway bKash for WC uses [Appsero](https://appsero.com) SDK to collect some telemetry data upon user's confirmation. This helps us to troubleshoot problems faster & make product improvements.

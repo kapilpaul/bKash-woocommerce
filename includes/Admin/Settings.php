@@ -41,13 +41,13 @@ class Settings {
 					'title'   => __( 'Integration Type', 'dc-bkash' ),
 					'type'    => 'select',
 					'options' => [
-						'checkout'     => __( 'Checkout (Pop Up)', 'dc-bkash' ),
+						'checkout'     => __( 'Checkout (Pop Up) (not working anymore)', 'dc-bkash' ),
 						'checkout_url' => __( 'Checkout URL', 'dc-bkash' ),
 					],
 					'default' => __( 'checkout_url', 'dc-bkash' ),
 				],
 				'test_mode'          => [
-					'title'   => __( 'Test Mode', 'dc-bkash' ),
+					'title'   => __( 'Test/Sandbox Mode', 'dc-bkash' ),
 					'type'    => 'select',
 					'options' => [
 						'on'  => __( 'ON', 'dc-bkash' ),

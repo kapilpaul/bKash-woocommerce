@@ -281,11 +281,10 @@ abstract class BkashProcessor {
 	 * Verify payment on bKash end.
 	 *
 	 * @param string $payment_id  Payment ID.
-	 * @param float  $order_total Order Total.
 	 *
 	 * @return bool|mixed|string
 	 */
-	public function verify_payment( $payment_id, $order_total = null ) {
+	public function verify_payment( $payment_id ) {
 		$token = $this->get_token();
 
 		if ( ! $token || is_wp_error( $token ) ) {
