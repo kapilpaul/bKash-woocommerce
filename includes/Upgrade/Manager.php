@@ -94,7 +94,7 @@ class Manager {
 	/**
 	 * Run upgrades
 	 *
-	 * This will execute every method found in a upgrader class, execute `run` method defined
+	 * This will execute every method found in an upgrader class, execute `run` method defined
 	 * in `DcBkashUpgrader` abstract class and then finally, `update_db_version` will update the db version
 	 * reference in database.
 	 *

@@ -2,9 +2,10 @@
 
 Contributors: [kapilpaul](https://kapilpaul.me)\
 Donate link: https://kapilpaul.me/ \
-Tags: bkash, mobile-banking, bkash-payment, bkash payment, bkashPayment, bkash payment method, woocommerce bkash, bkash Bangladesh, bkash wordpress, bkash woocommerce\
+Tags: bkash, woocommerce payment, woocommerce gateway, woocommerce pgw, mobile banking, bangladesh, bdt, bkash payment, bkash checkout, bkash gateway, digital payment, ecommerce bangladesh, online payment, payment integration, woocommerc
+\
 Requires at least: 4.0\
-Tested up to: 6.7.2\
+Tested up to: 6.8.3\
 Stable tag: trunk\
 Requires PHP: 5.6\
 License: GPLv2 or later\
@@ -16,8 +17,19 @@ License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
 ##### bKash PAYMENT METHOD FOR WOOCOMMERCE
 
-Woocommerce payment method for bKash for easy checkout.
+bKash Payment Method for WooCommerce enables seamless online payments for Bangladeshi merchants using the most popular mobile financial service bKash.
+This plugin allows your customers to pay securely and conveniently through bKash during checkout, providing a fast and trusted payment experience right from your WooCommerce store.
 
+With an easy setup process and full integration into WooCommerce’s checkout flow, this plugin is designed to make transactions smooth for both merchants and customers.
+
+##### ⭐ Key Features
+
+🔐 Secure and reliable bKash payment integration\
+⚙️ Easy setup and configuration in WooCommerce settings\
+💸 Real-time transaction validation with the bKash API\
+🧾 Support for Refunds and Transaction Lookup\
+🎨 Fully compatible with the WooCommerce checkout page and themes\
+📱 Optimized for both desktop and mobile users
 
 ##### Installation Guide
 

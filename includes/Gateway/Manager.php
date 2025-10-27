@@ -53,6 +53,7 @@ class Manager {
 		add_action( 'woocommerce_admin_order_totals_after_tax', [ $this, 'dc_bkash_display_transaction_charge_on_admin' ] );
 		add_action( 'woocommerce_pay_order_before_submit', [ $this, 'add_fields_on_order_pay' ] );
 		add_action( 'woocommerce_after_order_details', [ $this, 'view_order_bkash_payment_details' ] );
+		add_action( 'dc_bkash_verify_payment', [ $this, 'dc_bkash_verify_payment_after_checkout' ], 10, 3 );
 
 		/**
 		 * Filters
@@ -60,7 +61,6 @@ class Manager {
 		add_filter( 'woocommerce_payment_gateways', [ $this, 'register_gateway' ] );
 		add_filter( 'woocommerce_calculated_total', [ $this, 'dc_bkash_calculate_total' ] );
 		add_filter( 'woocommerce_get_order_item_totals', [ $this, 'dc_bkash_get_order_item_totals' ], 10, 3 );
-
 	}
 
 	/**
@@ -121,7 +121,6 @@ class Manager {
 		try {
 			$payment_id        = sanitize_text_field( $execute_payment['paymentID'] );
 			$order_grand_total = (float) $order->get_total();
-			$verified          = 0;
 
 			if ( (float) $execute_payment['amount'] === $order_grand_total ) {
 				$order_note_text = sprintf(
@@ -154,38 +153,29 @@ class Manager {
 					)
 				);
 			}
-
-			$processor    = dc_bkash()->gateway->processor();
-			$payment_info = $processor->verify_payment( $payment_id, $order_grand_total );
-
-			if ( ! $payment_info || is_wp_error( $payment_info ) ) {
-				$payment_info   = $execute_payment;
-				$invoice_number = $payment_info['merchantInvoiceNumber'];
-			} elseif ( isset( $payment_info['transactionStatus'] ) && isset( $payment_info['trxID'] ) ) {
-				$verified       = 1;
-				$invoice_number = $payment_info['merchantInvoice'];
-			} else {
-				$payment_info   = $execute_payment;
-				$invoice_number = $payment_info['merchantInvoiceNumber'];
-			}
-
+			
 			$insert_data = [
 				'order_number'        => $order->get_id(),
-				'payment_id'          => isset( $payment_info['paymentID'] ) ? $payment_info['paymentID'] : $payment_id,
-				'trx_id'              => isset( $payment_info['trxID'] ) ? $payment_info['trxID'] : '',
-				'transaction_status'  => isset( $payment_info['transactionStatus'] ) ? $payment_info['transactionStatus'] : '',
-				'invoice_number'      => $invoice_number,
-				'amount'              => isset( $payment_info['amount'] ) ? floatval( $payment_info['amount'] ) : $order_grand_total,
-				'verification_status' => $verified,
+				'payment_id'          => $payment_id,
+				'trx_id'              => $execute_payment['trxID'],
+				'transaction_status'  => '',
+				'invoice_number'      => $order->get_order_number(),
+				'amount'              => isset( $execute_payment['amount'] ) ? floatval( $execute_payment['amount'] ) : $order_grand_total,
+				'verification_status' => 0,
 			];
 
 			dc_bkash_insert_transaction( $insert_data );
 
-			/**
-			 * Fires after the execute payment insert
-			 */
-			do_action( 'dc_bkash_after_execute_payment', $order, $payment_info );
-
+			$timestamp = time() + 60; // current time + 60 seconds (1 minute later).
+			as_schedule_single_action(
+				$timestamp,
+				'dc_bkash_verify_payment',
+				[
+					'payment_id'      => $payment_id,
+					'order'           => $order->get_id(),
+					'execute_payment' => $execute_payment,
+				]
+			);
 		} catch ( \Exception $e ) {
 			error_log( 'dc_bkash after execute payment ' . print_r( $e->getMessage() ) ); //phpcs:ignore
 		}
@@ -412,7 +402,7 @@ class Manager {
 				update_post_meta( $order_id, 'dc_bkash_refund_charge', $refund_response['charge'] );
 			} else {
 				$refund_db['data']['refund_id']     = $refund_response['refundTrxID'];
-				$refund_db['data']['refund_charge'] = $refund_response['charge'];
+				$refund_db['data']['refund_charge'] = isset( $refund_response['charge'] ) ? $refund_response['charge'] : 0;
 				$refund_db['format'][]              = '%s';
 				$refund_db['format'][]              = '%s';
 			}
@@ -474,5 +464,48 @@ class Manager {
 		}
 
 		return $this->bkash()->thank_you_page( $order );
+	}
+
+	/**
+	 * Bkash verify payment after checkout.
+	 *
+	 * @param string     $payment_id      Payment ID.
+	 * @param string|int $order_id        Order ID.
+	 * @param array      $execute_payment Execute payment.
+	 *
+	 * @return void
+	 */
+	public function dc_bkash_verify_payment_after_checkout( $payment_id, $order_id, $execute_payment ) {
+		$order        = wc_get_order( $order_id );
+		$processor    = dc_bkash()->gateway->processor();
+		$payment_info = $processor->verify_payment( $payment_id );
+		$verified     = 0;
+
+		if ( ! $payment_info || is_wp_error( $payment_info ) ) {
+			$payment_info   = $execute_payment;
+			$invoice_number = $payment_info['merchantInvoiceNumber'];
+		} elseif ( isset( $payment_info['transactionStatus'] ) && isset( $payment_info['trxID'] ) ) {
+			$verified       = 1;
+			$invoice_number = $payment_info['merchantInvoice'];
+		} else {
+			$payment_info   = $execute_payment;
+			$invoice_number = $payment_info['merchantInvoiceNumber'];
+		}
+
+		dc_bkash_update_transaction(
+			$order->get_id(),
+			[
+				'transaction_status'  => $payment_info['transactionStatus'],
+				'amount'              => $payment_info['amount'],
+				'invoice_number'      => $invoice_number,
+				'verification_status' => $verified,
+			],
+			[ '%s', '%d', '%s', '%d' ]
+		);
+
+		/**
+		 * Fires after the execute payment insert
+		 */
+		do_action( 'dc_bkash_after_execute_payment', $order, $payment_info );
 	}
 }

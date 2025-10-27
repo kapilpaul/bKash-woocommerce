@@ -57,8 +57,7 @@ class Installer {
 			require_once ABSPATH . 'wp-admin/includes/upgrade.php';
 		}
 
-		global $wpdb;
-		$table_name = $wpdb->prefix . 'bkash_transactions';
+		$table_name = dc_bkash_get_db_table_name();
 
 		$sql = "CREATE TABLE IF NOT EXISTS {$table_name} (
                   `id` int(11) unsigned NOT NULL AUTO_INCREMENT,

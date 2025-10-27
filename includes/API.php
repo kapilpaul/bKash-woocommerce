@@ -56,7 +56,9 @@ class API {
 
 		$data = wp_unslash( $_GET );
 
-		$order = wc_get_order( $data['order_id'] );
+		$order_id = apply_filters( 'dc_bkash_modify_order_number', $data['order_id'] );
+
+		$order = wc_get_order( $order_id );
 
 		// if it is not a valid order.
 		if ( ! $order instanceof \WC_Order ) {
